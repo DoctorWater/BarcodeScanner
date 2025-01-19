@@ -1,6 +1,0 @@
-D:\Labs\C#\BarcodeScanner\BarcodeScanner.App\obj\Debug\net8.0\BarcodeScanner.App.csproj.AssemblyReference.cache
-D:\Labs\C#\BarcodeScanner\BarcodeScanner.App\obj\Debug\net8.0\BarcodeScanner.App.GeneratedMSBuildEditorConfig.editorconfig
-D:\Labs\C#\BarcodeScanner\BarcodeScanner.App\obj\Debug\net8.0\BarcodeScanner.App.AssemblyInfoInputs.cache
-D:\Labs\C#\BarcodeScanner\BarcodeScanner.App\obj\Debug\net8.0\BarcodeScanner.App.AssemblyInfo.cs
-D:\Labs\C#\BarcodeScanner\BarcodeScanner.App\obj\Debug\net8.0\BarcodeScanner.App.csproj.CoreCompileInputs.cache
-D:\Labs\C#\BarcodeScanner\BarcodeScanner.App\obj\Debug\net8.0\BarcodeScanner.App.MvcApplicationPartsAssemblyInfo.cache
