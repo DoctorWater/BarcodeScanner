@@ -1,4 +1,4 @@
-using BarcodeScanner.App;
+using BarcodeDecodeLib;
 
 var builder = WebApplication.CreateBuilder(args);
 

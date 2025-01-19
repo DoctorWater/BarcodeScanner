@@ -7,14 +7,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.10.0.20241108" />
-      <PackageReference Include="System.Drawing.Common" Version="9.0.0" />
-      <PackageReference Include="ZXing.Net" Version="0.16.9" />
-      <PackageReference Include="ZXing.Net.Bindings.OpenCV.V4" Version="0.16.9" />
+      <Folder Include="tessdata\" />
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="tessdata\" />
+      <ProjectReference Include="..\BarcodeDecodeLib\BarcodeDecodeLib.csproj" />
     </ItemGroup>
 
 </Project>

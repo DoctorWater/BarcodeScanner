@@ -1,9 +1,9 @@
 ﻿@page "/"
 
-<PageTitle>Index</PageTitle>
+@using System.IO
+@using BarcodeDecodeLib
+@inject BarcodeDecoder Decoder;
 
-<h1>Hello, world!</h1>
+<h3>Загрузка изображения и разбивка на байты</h3>
 
-Welcome to your new app.
-
-<SurveyPrompt Title="How is Blazor working for you?"/>
+<InputFile OnChange="LoadFiles" multiple />

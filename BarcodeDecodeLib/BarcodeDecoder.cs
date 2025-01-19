@@ -1,9 +1,9 @@
 ﻿using OpenCvSharp;
 using ZXing;
 
-namespace BarcodeScanner.App;
+namespace BarcodeDecodeLib;
 
-class BarcodeDecoder
+public class BarcodeDecoder
 {
     public void ScanWithDifferentTechs(string path)
     {
@@ -48,8 +48,7 @@ class BarcodeDecoder
 
         var options = new ZXing.Common.DecodingOptions
         {
-            TryHarder = true,
-            PossibleFormats = new List<BarcodeFormat> { BarcodeFormat.CODE_128, BarcodeFormat.CODE_39 }
+            TryHarder = true
         };
 
         var barcodeReader = new ZXing.OpenCV.BarcodeReader
@@ -59,8 +58,7 @@ class BarcodeDecoder
 
 
         var barcodeResult = barcodeReader.Decode(image);
-
-
+        
         Console.WriteLine($"[Serialized] Decoded barcode text: {barcodeResult?.Text}");
         Console.WriteLine($"[Serialized] Barcode format: {barcodeResult?.BarcodeFormat}");
         return barcodeResult;
