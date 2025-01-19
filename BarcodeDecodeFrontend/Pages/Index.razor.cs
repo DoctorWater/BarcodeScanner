@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using BarcodeDecodeFrontend.Shared.Modals;
+using BarcodeDecodeLib.Data.Messages;
 using Blazored.Modal;
 using Blazored.Modal.Services;
 using Microsoft.AspNetCore.Components;
@@ -9,12 +10,11 @@ namespace BarcodeDecodeFrontend.Pages;
 
 public partial class Index
 {
-    private const int MAX_FILE_SIZE_MB = 100;
-    
     [CascadingParameter] public IModalService Modal { get; set; } = default!;
     
     private List<IBrowserFile> loadedFiles = new();
     private byte[] imageBytes;
+    private List<string> _recognizedBarcodes = new();
 
     private async Task LoadFiles(InputFileChangeEventArgs e)
     {
@@ -67,11 +67,20 @@ public partial class Index
             {
                 await using MemoryStream ms = new MemoryStream();
                 await file.OpenReadStream().CopyToAsync(ms);
-                Decoder.ScanSerializedWithDifferentTechs(ms.ToArray());
+                _recognizedBarcodes.Add(Decoder.DecodeFromSerializedImage(ms.ToArray()) ?? String.Empty);
             }
             catch (Exception ex)
             {
             }
         }
+    }
+
+    private Task OnBarcodeSubmit()
+    {
+        var messages = _recognizedBarcodes.Select(x => new BarcodeRequestMessage(x));
+        var message = new BarcodeRequestMessageBatch(messages.ToList());
+        //TODO: make send via massTransit
+        
+        return Task.CompletedTask;
     }
 }

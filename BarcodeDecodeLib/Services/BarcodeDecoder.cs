@@ -5,14 +5,14 @@ namespace BarcodeDecodeLib;
 
 public class BarcodeDecoder
 {
-    public void ScanWithDifferentTechs(string path)
+    public string? DecodeFromImage(string path)
     {
-        ScanWithOpenCV(path);
+        return ScanWithOpenCV(path)?.Text;
     }
 
-    public void ScanSerializedWithDifferentTechs(byte[] imageData)
+    public string? DecodeFromSerializedImage(byte[] imageData)
     {
-        ScanSerializedWithOpenCV(imageData);
+        return ScanSerializedWithOpenCV(imageData)?.Text;
     }
 
     private Result? ScanWithOpenCV(string path)
