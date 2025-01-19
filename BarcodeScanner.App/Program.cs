@@ -2,11 +2,10 @@ using BarcodeScanner.App;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSingleton<BarcodeDecoder>().AddSingleton<BarcodeDetector>();
+builder.Services.AddSingleton<BarcodeDecoder>();
 
 var app = builder.Build();
 var decoder = app.Services.GetRequiredService<BarcodeDecoder>();
-var detector = app.Services.GetRequiredService<BarcodeDetector>();
 
 //detector.DetectBarcode("C:\\Users\\malck\\Downloads\\Telegram Desktop\\photo_2024-12-11_21-22-26.jpg");
 

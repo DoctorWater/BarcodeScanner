@@ -55,25 +55,13 @@
               "target": "Package",
               "version": "[4.10.0.20241108, )"
             },
-            "SixLabors.ImageSharp.Drawing": {
-              "target": "Package",
-              "version": "[2.1.5, )"
-            },
             "System.Drawing.Common": {
               "target": "Package",
               "version": "[9.0.0, )"
             },
-            "Tesseract": {
-              "target": "Package",
-              "version": "[5.2.0, )"
-            },
             "ZXing.Net": {
               "target": "Package",
               "version": "[0.16.9, )"
-            },
-            "ZXing.Net.Bindings.ImageSharp.V2": {
-              "target": "Package",
-              "version": "[0.16.16, )"
             },
             "ZXing.Net.Bindings.OpenCV.V4": {
               "target": "Package",
