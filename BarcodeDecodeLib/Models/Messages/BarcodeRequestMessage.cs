@@ -1,4 +1,4 @@
-﻿namespace BarcodeDecodeLib.Data.Messages;
+﻿namespace BarcodeDecodeLib.Models.Messages;
 
 public class BarcodeRequestMessage : BrokerMessage
 {

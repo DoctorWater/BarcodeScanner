@@ -1,7 +1,7 @@
 ﻿using OpenCvSharp;
 using ZXing;
 
-namespace BarcodeDecodeLib;
+namespace BarcodeDecodeFrontend.Data.Services;
 
 public class BarcodeDecoder
 {

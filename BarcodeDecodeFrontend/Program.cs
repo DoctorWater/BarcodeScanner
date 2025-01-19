@@ -1,3 +1,4 @@
+using BarcodeDecodeFrontend.Data.Services;
 using BarcodeDecodeLib;
 using Blazored.Modal;
 var builder = WebApplication.CreateBuilder(args);

@@ -7,11 +7,11 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="tessdata\" />
+      <ProjectReference Include="..\BarcodeDecodeLib\BarcodeDecodeLib.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\BarcodeDecodeLib\BarcodeDecodeLib.csproj" />
+      <Folder Include="Services\" />
     </ItemGroup>
 
 </Project>

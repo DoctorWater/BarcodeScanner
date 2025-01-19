@@ -1,6 +1,6 @@
 ﻿using System.Text;
 using BarcodeDecodeFrontend.Shared.Modals;
-using BarcodeDecodeLib.Data.Messages;
+using BarcodeDecodeLib.Models.Messages;
 using Blazored.Modal;
 using Blazored.Modal.Services;
 using Microsoft.AspNetCore.Components;
