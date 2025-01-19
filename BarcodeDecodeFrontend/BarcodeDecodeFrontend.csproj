@@ -6,4 +6,22 @@
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
+    <ItemGroup>
+      <Folder Include="Data\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Blazored.Modal" Version="6.0.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Pages\Index.razor.cs">
+        <DependentUpon>Index.razor</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\BarcodeDecodeLib\BarcodeDecodeLib.csproj" />
+    </ItemGroup>
+
 </Project>
