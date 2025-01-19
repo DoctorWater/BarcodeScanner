@@ -1,0 +1,26 @@
+{
+  "version": 2,
+  "dgSpecHash": "tzgyHH5pxPw=",
+  "success": true,
+  "projectFilePath": "D:\\Labs\\C#\\BarcodeScanner\\BarcodeScanner.App\\BarcodeScanner.App.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\malck\\.nuget\\packages\\opencvsharp4\\4.7.0.20230115\\opencvsharp4.4.7.0.20230115.nupkg.sha512",
+    "C:\\Users\\malck\\.nuget\\packages\\opencvsharp4.runtime.win\\4.10.0.20241108\\opencvsharp4.runtime.win.4.10.0.20241108.nupkg.sha512",
+    "C:\\Users\\malck\\.nuget\\packages\\sixlabors.fonts\\2.0.8\\sixlabors.fonts.2.0.8.nupkg.sha512",
+    "C:\\Users\\malck\\.nuget\\packages\\sixlabors.imagesharp\\3.1.6\\sixlabors.imagesharp.3.1.6.nupkg.sha512",
+    "C:\\Users\\malck\\.nuget\\packages\\sixlabors.imagesharp.drawing\\2.1.5\\sixlabors.imagesharp.drawing.2.1.5.nupkg.sha512",
+    "C:\\Users\\malck\\.nuget\\packages\\system.drawing.common\\9.0.0\\system.drawing.common.9.0.0.nupkg.sha512",
+    "C:\\Users\\malck\\.nuget\\packages\\system.memory\\4.5.4\\system.memory.4.5.4.nupkg.sha512",
+    "C:\\Users\\malck\\.nuget\\packages\\system.reflection.emit\\4.7.0\\system.reflection.emit.4.7.0.nupkg.sha512",
+    "C:\\Users\\malck\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.0.0\\system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512",
+    "C:\\Users\\malck\\.nuget\\packages\\tesseract\\5.2.0\\tesseract.5.2.0.nupkg.sha512",
+    "C:\\Users\\malck\\.nuget\\packages\\zxing.net\\0.16.9\\zxing.net.0.16.9.nupkg.sha512",
+    "C:\\Users\\malck\\.nuget\\packages\\zxing.net.bindings.imagesharp.v2\\0.16.16\\zxing.net.bindings.imagesharp.v2.0.16.16.nupkg.sha512",
+    "C:\\Users\\malck\\.nuget\\packages\\zxing.net.bindings.opencv.v4\\0.16.9\\zxing.net.bindings.opencv.v4.0.16.9.nupkg.sha512",
+    "C:\\Users\\malck\\.nuget\\packages\\microsoft.netcore.app.ref\\6.0.33\\microsoft.netcore.app.ref.6.0.33.nupkg.sha512",
+    "C:\\Users\\malck\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\6.0.33\\microsoft.windowsdesktop.app.ref.6.0.33.nupkg.sha512",
+    "C:\\Users\\malck\\.nuget\\packages\\microsoft.aspnetcore.app.ref\\6.0.33\\microsoft.aspnetcore.app.ref.6.0.33.nupkg.sha512",
+    "C:\\Users\\malck\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\6.0.33\\microsoft.netcore.app.host.win-x64.6.0.33.nupkg.sha512"
+  ],
+  "logs": []
+}
