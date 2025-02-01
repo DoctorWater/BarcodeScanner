@@ -3,6 +3,7 @@
 @using BarcodeDecodeFrontend.Data.Services
 @using BarcodeDecodeLib
 @inject BarcodeDecoder Decoder;
+@inject VideoProcessor VideoProcessor;
 
 
 <div class="container">
@@ -10,7 +11,7 @@
         <div class="col-md-5 border-end">
             <h3>Загрузка изображения</h3>
             <div class=" control-group">
-                <InputFile class="form-control restricted-width" OnChange="LoadFiles" multiple/>
+                <InputFile class="form-control restricted-width" OnChange="LoadPhotoFiles" multiple/>
                 @if (_recognizedBarcodes.Count > 0)
                 {
                     <h3 class="mt-4">Проверьте корректность</h3>
@@ -26,6 +27,19 @@
 
         <div class="col-md-5 ms-5">
             <h3>Загрузка видео</h3>
+            <div class=" control-group">
+                <InputFile class="form-control restricted-width" OnChange="LoadVideoFiles" multiple/>
+                @if (_recognizedBarcodes.Count > 0)
+                {
+                <h3 class="mt-4">Проверьте корректность</h3>
+                @foreach (var barcode in _recognizedBarcodes)
+                {
+                var element = _recognizedBarcodes.First(x => x == barcode);
+                <input class="form-control w-75" @bind="element" type="text"/>
+                }
+                }
+                <input class="btn-primary btn" type="button" @onclick="@OnBarcodeSubmit" value="Submit"/>
+            </div>
         </div>
     </div>
 </div>

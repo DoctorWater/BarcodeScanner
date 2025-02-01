@@ -8,7 +8,8 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddBlazoredModal();
 
-builder.Services.AddScoped<BarcodeDecoder>();
+builder.Services.AddScoped<BarcodeDecoder>()
+    .AddScoped<VideoProcessor>();
 
 var app = builder.Build();
 

@@ -5,46 +5,27 @@ namespace BarcodeDecodeFrontend.Data.Services;
 
 public class BarcodeDecoder
 {
-    public string? DecodeFromImage(string path)
+
+    public string? Decode(byte[] imageData)
     {
-        return ScanWithOpenCV(path)?.Text;
+        return ScanWithOpenCV(imageData)?.Text;
     }
-
-    public string? DecodeFromSerializedImage(byte[] imageData)
+    
+    public string? Decode(Mat image)
     {
-        return ScanSerializedWithOpenCV(imageData)?.Text;
+        return ScanWithOpenCV(image)?.Text;
     }
-
-    private Result? ScanWithOpenCV(string path)
-    {
-        var options = new ZXing.Common.DecodingOptions
-        {
-            TryHarder = true,
-            PossibleFormats = new List<BarcodeFormat> { BarcodeFormat.CODE_128, BarcodeFormat.CODE_39 }
-        };
-        var barcodeReader = new ZXing.OpenCV.BarcodeReader
-        {
-            Options = options
-        };
-        Mat image = Cv2.ImRead(path, ImreadModes.Color);
-
-        Mat grayImage = new Mat();
-
-        Cv2.CvtColor(image, grayImage, ColorConversionCodes.BGR2GRAY);
-
-
-        var barcodeResult = barcodeReader.Decode(grayImage);
-        Cv2.ImWrite("corrected_image_decode.jpg", image);
-
-        Console.WriteLine($"Decoded barcode text: {barcodeResult?.Text}");
-        Console.WriteLine($"Barcode format: {barcodeResult?.BarcodeFormat}");
-        return barcodeResult;
-    }
-
-    private Result? ScanSerializedWithOpenCV(byte[] imageData)
+    
+    private Result? ScanWithOpenCV(byte[] imageData)
     {
 
         Mat image = Mat.FromImageData(imageData, ImreadModes.Color);
+
+        return ScanWithOpenCV(image);
+    }
+    
+    private Result? ScanWithOpenCV(Mat image)
+    {
 
         var options = new ZXing.Common.DecodingOptions
         {

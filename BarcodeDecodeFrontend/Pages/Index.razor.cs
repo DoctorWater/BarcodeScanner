@@ -16,10 +16,10 @@ public partial class Index
     private byte[] imageBytes;
     private List<string> _recognizedBarcodes = new();
 
-    private async Task LoadFiles(InputFileChangeEventArgs e)
+    private async Task LoadPhotoFiles(InputFileChangeEventArgs e)
     {
         var files = e.GetMultipleFiles();
-        var fileVerifyResult = VerifyFiles(files);
+        var fileVerifyResult = VerifyFiles(files, "image");
         var userMessage = CreateUserMessage(fileVerifyResult);
         if (userMessage != string.Empty)
         {
@@ -32,13 +32,30 @@ public partial class Index
         var imageFiles = fileVerifyResult.Where(p => p.Value is true).Select(x => x.Key).ToList();
         await UploadImageFiles(imageFiles);
     }
+    
+    private async Task LoadVideoFiles(InputFileChangeEventArgs e)
+    {
+        var files = e.GetMultipleFiles();
+        var fileVerifyResult = VerifyFiles(files, "video");
+        var userMessage = CreateUserMessage(fileVerifyResult);
+        if (userMessage != string.Empty)
+        {
+            var parameters = new ModalParameters();
+            parameters.Add(nameof(ModalAlert.Message), userMessage);
 
-    private Dictionary<IBrowserFile, bool> VerifyFiles(IReadOnlyList<IBrowserFile> files)
+            Modal.Show<ModalAlert>("ALERT", parameters);
+        }
+
+        var videoFiles = fileVerifyResult.Where(p => p.Value is true).Select(x => x.Key).ToList();
+        await UploadVideoFiles(videoFiles);
+    }
+
+    private Dictionary<IBrowserFile, bool> VerifyFiles(IReadOnlyList<IBrowserFile> files, string contentType)
     {
         Dictionary<IBrowserFile, bool> fileVerifyResult = new Dictionary<IBrowserFile, bool>();
         foreach (var file in files)
         {
-            fileVerifyResult.Add(file, file.ContentType.Contains("image"));
+            fileVerifyResult.Add(file, file.ContentType.Contains(contentType));
         }
 
         return fileVerifyResult;
@@ -51,7 +68,7 @@ public partial class Index
         {
             if (pair.Value is false)
             {
-                sb.AppendLine($"File {pair.Key.Name} is not an image");
+                sb.AppendLine($"File {pair.Key.Name} is invalid");
             }
         }
 
@@ -67,11 +84,56 @@ public partial class Index
             {
                 await using MemoryStream ms = new MemoryStream();
                 await file.OpenReadStream().CopyToAsync(ms);
-                _recognizedBarcodes.Add(Decoder.DecodeFromSerializedImage(ms.ToArray()) ?? String.Empty);
+                _recognizedBarcodes.Add(Decoder.Decode(ms.ToArray()) ?? String.Empty);
             }
             catch (Exception ex)
             {
             }
+        }
+    }
+    
+    private async Task UploadVideoFiles(IEnumerable<IBrowserFile> files)
+    {
+        loadedFiles.Clear();
+
+        foreach (var file in files)
+        {
+            string tempFolder = Path.GetTempPath();
+            string extension = Path.GetExtension(file.Name);
+            string tempFileName = Path.Combine(tempFolder, $"{Guid.NewGuid()}{extension}");
+            try
+            {
+                await using (var fileStream = File.Create(tempFileName))
+                {
+                    await using (var stream = file.OpenReadStream(10485760L))
+                    {
+                        await stream.CopyToAsync(fileStream);
+                    }
+                }
+                
+                var frames =VideoProcessor.GetVideoFrames(tempFileName, 4, extension);
+                foreach (var frame in frames)
+                {
+                    _recognizedBarcodes.Add(Decoder.Decode(frame) ?? String.Empty);
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Ошибка загрузки файла {file.Name}: {ex.Message}");
+            }
+            finally
+            {
+                try
+                {
+                    if (File.Exists(tempFileName))
+                        File.Delete(tempFileName);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Ошибка при удалении временного файла: {ex.Message}");
+                }
+            }
+            
         }
     }
 
