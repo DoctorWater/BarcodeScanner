@@ -4,7 +4,8 @@ namespace BarcodeDecodeFrontend.Data.Services;
 
 public class VideoProcessor
 {
-    public List<Mat> GetVideoFrames(string tempFilePath, int frameStep = 1, string fileExtension = ".mp4")
+    private const int OVERALL_FRAME_COUNT = 20;
+    public List<Mat> GetVideoFrames(string tempFilePath, string fileExtension = ".mp4")
     {
         List<Mat> frames = new List<Mat>();
 
@@ -12,6 +13,7 @@ public class VideoProcessor
         {
             using (VideoCapture capture = new VideoCapture(tempFilePath))
             {
+                var frameStep = capture.FrameCount / OVERALL_FRAME_COUNT;
                 if (!capture.IsOpened())
                 {
                     Console.WriteLine("Ошибка: не удалось открыть видеофайл из сериализованных данных.");

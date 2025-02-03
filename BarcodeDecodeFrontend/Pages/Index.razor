@@ -1,45 +1,35 @@
 ﻿@page "/"
 
 @using BarcodeDecodeFrontend.Data.Services
-@using BarcodeDecodeLib
 @inject BarcodeDecoder Decoder;
 @inject VideoProcessor VideoProcessor;
 
 
 <div class="container">
     <div class="row">
-        <div class="col-md-5 border-end">
-            <h3>Загрузка изображения</h3>
+        <div class="@(_recognizedImageBarcodes.Count > 0 ? "col-md-5 border-end" : "col-md-12") ">
+            <h3>Загрузка изображения или видео</h3>
             <div class=" control-group">
-                <InputFile class="form-control restricted-width" OnChange="LoadPhotoFiles" multiple/>
-                @if (_recognizedBarcodes.Count > 0)
-                {
-                    <h3 class="mt-4">Проверьте корректность</h3>
-                    @foreach (var barcode in _recognizedBarcodes)
-                    {
-                        var element = _recognizedBarcodes.First(x => x == barcode);
-                        <input class="form-control w-75" @bind="element" type="text"/>
-                    }
-                }
-                <input class="btn-primary btn" type="button" @onclick="@OnBarcodeSubmit" value="Submit"/>
+                <InputFile class="form-control restricted-width" OnChange="LoadFiles" multiple/>
             </div>
         </div>
 
-        <div class="col-md-5 ms-5">
-            <h3>Загрузка видео</h3>
-            <div class=" control-group">
-                <InputFile class="form-control restricted-width" OnChange="LoadVideoFiles" multiple/>
-                @if (_recognizedBarcodes.Count > 0)
+        @if (_recognizedImageBarcodes.Count > 0)
+        {
+            <div class="col-md-5 ms-5">
+                <h3>Проверьте корректность</h3>
+                @foreach (var barcode in _recognizedImageBarcodes)
                 {
-                <h3 class="mt-4">Проверьте корректность</h3>
-                @foreach (var barcode in _recognizedBarcodes)
-                {
-                var element = _recognizedBarcodes.First(x => x == barcode);
-                <input class="form-control w-75" @bind="element" type="text"/>
+                    var element = _recognizedImageBarcodes.First(x => x == barcode);
+                    <div class="input-group mb-2">
+                        <input class="form-control w-75" @bind="@element" type="text"/>
+                        <button class="btn btn-danger" type="button" @onclick="(() => RemoveBarcode(barcode))">
+                            &#x2715;
+                        </button>
+                    </div>
                 }
-                }
-                <input class="btn-primary btn" type="button" @onclick="@OnBarcodeSubmit" value="Submit"/>
+                <input class="btn-primary btn mt-2" type="button" @onclick="@OnBarcodeSubmit" value="Submit"/>
             </div>
-        </div>
+        }
     </div>
 </div>
