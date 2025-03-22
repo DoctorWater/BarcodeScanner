@@ -7,13 +7,15 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="Microsoft.AspNet.Mvc" Version="5.3.0" />
+      <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.3.0" />
+      <ProjectReference Include="..\BarcodeDecodeDataAccess\BarcodeDecodeDataAccess.csproj" />
       <ProjectReference Include="..\BarcodeDecodeLib\BarcodeDecodeLib.csproj" />
         <PackageReference Include="MassTransit.RabbitMQ" Version="8.4.0" />
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Services\Interfaces\" />
-      <Folder Include="Services\Processing\" />
+      <Folder Include="Services\Messaging\" />
     </ItemGroup>
 
 </Project>

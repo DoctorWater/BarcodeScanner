@@ -5,9 +5,9 @@ namespace BarcodeDecodeDataAccess;
 
 public class BarcodeDecodeDbContext : DbContext
 {
-    DbSet<TransportStorageUnit> TransportStorageUnits { get; set; }
-    DbSet<TransportOrder> TransportOrders { get; set; }
-    DbSet<LocationTicket> LocationTickets { get; set; }
+    public DbSet<TransportStorageUnit> TransportStorageUnits { get; set; }
+    public DbSet<TransportOrder> TransportOrders { get; set; }
+    public DbSet<LocationTicket> LocationTickets { get; set; }
         
     public BarcodeDecodeDbContext() { }
     public BarcodeDecodeDbContext(DbContextOptions<BarcodeDecodeDbContext> options) : base(options) { }

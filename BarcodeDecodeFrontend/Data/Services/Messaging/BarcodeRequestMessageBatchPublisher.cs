@@ -1,19 +1,26 @@
-﻿using BarcodeDecodeLib.Models.Messages;
+﻿using BarcodeDecodeLib.Models.Dtos;
+using BarcodeDecodeLib.Models.Messages;
 using MassTransit;
+using Microsoft.Extensions.Options;
 
 namespace BarcodeDecodeFrontend.Data.Services.Messaging;
 
 public class BarcodeRequestMessageBatchPublisher
 {
-    private IBus _bus;
+    private HttpAddresses _addresses;
 
-    public BarcodeRequestMessageBatchPublisher(IBus bus)
+    public BarcodeRequestMessageBatchPublisher(IOptions<HttpAddresses> addresses)
     {
-        _bus = bus;
+        _addresses = addresses.Value;
     }
 
     public async Task SendBarcodeRequest(BarcodeRequestMessageBatch message)
     {
-        await _bus.Publish(message);
+        using var client = new HttpClient
+        {
+            BaseAddress = new Uri(_addresses.BarcodeDecodeBackendAddress)
+        };
+        
+        await client.PostAsJsonAsync("api/barcode/batch", message);
     }
 }
