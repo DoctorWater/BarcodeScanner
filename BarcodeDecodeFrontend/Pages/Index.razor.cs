@@ -144,12 +144,10 @@ public partial class Index
         return sb.ToString();
     }
 
-    private Task OnBarcodeSubmit()
+    private async Task OnBarcodeSubmit()
     {
         var messages = _recognizedImageBarcodes.Select(x => new BarcodeRequestMessage(x));
         var message = new BarcodeRequestMessageBatch(messages.ToList());
-        //TODO: make send via massTransit
-
-        return Task.CompletedTask;
+        await BarcodePublisher.SendBarcodeRequest(message);
     }
 }
