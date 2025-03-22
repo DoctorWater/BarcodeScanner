@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\BarcodeDecodeLib\BarcodeDecodeLib.csproj" />
+        <PackageReference Include="MassTransit.RabbitMQ" Version="8.4.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Services\Interfaces\" />
+      <Folder Include="Services\Processing\" />
+    </ItemGroup>
+
+</Project>

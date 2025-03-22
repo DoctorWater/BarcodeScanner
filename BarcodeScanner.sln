@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BarcodeDecodeFrontend", "Ba
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BarcodeDecodeLib", "BarcodeDecodeLib\BarcodeDecodeLib.csproj", "{4205EAE4-FCE3-4C8E-878F-A8A6CD6BF6A8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BarcodeDecodeBackend", "BarcodeDecodeBackend\BarcodeDecodeBackend.csproj", "{940CA7B0-9596-4FB5-89B7-FDB5246EFE1D}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BarcodeDecodeDataAccess", "BarcodeDecodeDataAccess\BarcodeDecodeDataAccess.csproj", "{03162007-2F63-4848-A2F1-362BBCD188B8}"
 EndProject
 Global
@@ -26,6 +28,10 @@ Global
 		{4205EAE4-FCE3-4C8E-878F-A8A6CD6BF6A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4205EAE4-FCE3-4C8E-878F-A8A6CD6BF6A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4205EAE4-FCE3-4C8E-878F-A8A6CD6BF6A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{940CA7B0-9596-4FB5-89B7-FDB5246EFE1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{940CA7B0-9596-4FB5-89B7-FDB5246EFE1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{940CA7B0-9596-4FB5-89B7-FDB5246EFE1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{940CA7B0-9596-4FB5-89B7-FDB5246EFE1D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{03162007-2F63-4848-A2F1-362BBCD188B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{03162007-2F63-4848-A2F1-362BBCD188B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{03162007-2F63-4848-A2F1-362BBCD188B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
