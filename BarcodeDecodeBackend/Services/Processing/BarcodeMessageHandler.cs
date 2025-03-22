@@ -1,4 +1,5 @@
-﻿using BarcodeDecodeBackend.Services.Interfaces;
+﻿using System.Diagnostics;
+using BarcodeDecodeBackend.Services.Interfaces;
 using BarcodeDecodeDataAccess;
 using BarcodeDecodeLib.Models.Messages;
 
@@ -13,14 +14,14 @@ public class BarcodeMessageHandler : IBarcodeMessageHandler
         _dbContext = dbContext;
     }
 
-    public Task HandleBarcodes(IEnumerable<string> barcodes)
+    public Task<BarcodeResponseMessageBatch> HandleBarcodes(IEnumerable<string> barcodes)
     {
         var result = barcodes.Select(CreateBarcodeResponse).ToList();
-        var message = new BarcodeResponseMessageBatch()
+        BarcodeResponseMessageBatch message = new BarcodeResponseMessageBatch()
         {
             Messages = result
         };
-        return Task.CompletedTask;
+        return Task.FromResult(message);
     }
 
     private BarcodeResponseMessage CreateBarcodeResponse(string barcode)

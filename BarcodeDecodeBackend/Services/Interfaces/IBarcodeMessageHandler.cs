@@ -4,5 +4,5 @@ namespace BarcodeDecodeBackend.Services.Interfaces;
 
 public interface IBarcodeMessageHandler
 {
-    Task HandleBarcodes(IEnumerable<string> barcodes);
+    Task<BarcodeResponseMessageBatch> HandleBarcodes(IEnumerable<string> barcodes);
 }

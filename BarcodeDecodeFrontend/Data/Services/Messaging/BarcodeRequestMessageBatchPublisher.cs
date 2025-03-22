@@ -14,13 +14,21 @@ public class BarcodeRequestMessageBatchPublisher
         _addresses = addresses.Value;
     }
 
-    public async Task SendBarcodeRequest(BarcodeRequestMessageBatch message)
+    public async Task<BarcodeResponseMessageBatch> SendBarcodeRequest(BarcodeRequestMessageBatch message)
     {
         using var client = new HttpClient
         {
             BaseAddress = new Uri(_addresses.BarcodeDecodeBackendAddress)
         };
         
-        await client.PostAsJsonAsync("api/barcode/batch", message);
+        HttpResponseMessage response = await client.PostAsJsonAsync("api/barcode/batch", message);
+        if (response?.Content is null || response.IsSuccessStatusCode is false)
+        {
+            throw new HttpRequestException(
+                $"Ошибка при отправке запроса. Статус: {response?.StatusCode.ToString() ?? "нет ответа"}. Причина: {response?.ReasonPhrase}");
+        }
+
+        BarcodeResponseMessageBatch responseBatch = await response.Content.ReadFromJsonAsync<BarcodeResponseMessageBatch>();
+        return responseBatch;
     }
 }

@@ -24,10 +24,14 @@
                 {
                     var element = _recognizedImageBarcodes.First(x => x == barcode);
                     <div class="input-group mb-2">
-                        <input class="form-control w-75" @bind="@element" type="text"/>
-                        <button class="btn btn-danger" type="button" @onclick="(() => RemoveBarcode(barcode))">
-                            &#x2715;
-                        </button>
+                        <EditForm Model="element">
+                            <div class="d-flex align-items-center gap-2">
+                                <InputText @bind-Value="@element.Barcode" class="form-control" />
+                                <button class="btn btn-danger" type="button" @onclick="(() => RemoveBarcode(barcode))">
+                                    &#x2715;
+                                </button>
+                            </div>
+                        </EditForm>
                     </div>
                 }
                 <input class="btn-primary btn mt-2" type="button" @onclick="@OnBarcodeSubmit" value="Submit"/>

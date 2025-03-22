@@ -13,8 +13,8 @@ public class TransportStorageUnit
     public DateTimeOffset CreatedOn { get; init; }
     public DateTimeOffset UpdatedOn { get; set; }
     public TsuStatusEnum Status { get; set; }
-    public string Barcode { get; set; }
-    public List<LocationTicket> LocationTickets { get; set; } = new();
+    public string Barcode { get; }
+    public List<LocationTicket> LocationTickets { get; init; } = new();
     //public TransportDataHistory TransportDataHistory { get; set; } = new();
     public TransportStorageUnit(string barcode)
     {

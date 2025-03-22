@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using BarcodeDecodeFrontend.Data.Models;
 using BarcodeDecodeFrontend.Shared.Modals;
 using BarcodeDecodeLib.Models.Messages;
 using Blazored.Modal;
@@ -14,7 +15,7 @@ public partial class Index
 
     private List<IBrowserFile> loadedFiles = new();
     private byte[] imageBytes;
-    private List<string> _recognizedImageBarcodes = new();
+    private List<BarcodeModel> _recognizedImageBarcodes = new();
 
     private async Task LoadFiles(InputFileChangeEventArgs e)
     {
@@ -44,7 +45,7 @@ public partial class Index
             {
                 await using MemoryStream ms = new MemoryStream();
                 await file.OpenReadStream().CopyToAsync(ms);
-                _recognizedImageBarcodes.Add(Decoder.Decode(ms.ToArray()) ?? String.Empty);
+                _recognizedImageBarcodes.Add(new BarcodeModel(Decoder.Decode(ms.ToArray()) ?? String.Empty));
             }
             catch (Exception ex)
             {
@@ -52,9 +53,9 @@ public partial class Index
         }
     }
 
-    private async Task RemoveBarcode(string barcode)
+    private async Task RemoveBarcode(BarcodeModel barcodeModel)
     {
-        _recognizedImageBarcodes.Remove(barcode);
+        _recognizedImageBarcodes.Remove(barcodeModel);
         await InvokeAsync(StateHasChanged);
     }
     
@@ -84,7 +85,7 @@ public partial class Index
                     var result = Decoder.Decode(frame);
                     if (result is not null)
                     {
-                        _recognizedImageBarcodes.Add(result);
+                        _recognizedImageBarcodes.Add(new BarcodeModel(result));
                         break;
                     }
                 }
@@ -146,8 +147,9 @@ public partial class Index
 
     private async Task OnBarcodeSubmit()
     {
-        var messages = _recognizedImageBarcodes.Select(x => new BarcodeRequestMessage(x));
+        var messages = _recognizedImageBarcodes.Select(x => new BarcodeRequestMessage(x.Barcode));
         var message = new BarcodeRequestMessageBatch(messages.ToList());
-        await BarcodePublisher.SendBarcodeRequest(message);
+        var response = await BarcodePublisher.SendBarcodeRequest(message);
+        Console.WriteLine(response.Messages.First().TransportStorageUnits.First().Barcode);
     }
 }

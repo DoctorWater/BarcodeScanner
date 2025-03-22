@@ -7,7 +7,7 @@ namespace BarcodeDecodeBackend.Services.Controllers;
 
 [Controller]
 [Route("api/[controller]")]
-public class BarcodeController
+public class BarcodeController : ControllerBase
 {
     private readonly IBarcodeMessageHandler _barcodeMessageHandler;
 
@@ -17,15 +17,15 @@ public class BarcodeController
     }
     
     [HttpPost("batch")]
-    public async Task<StatusCodeResult> ProcessBarcodeBatch([FromBody] BarcodeRequestMessageBatch request)
+    public async Task<ActionResult<BarcodeResponseMessageBatch>> ProcessBarcodeBatch([FromBody] BarcodeRequestMessageBatch request)
     {
         if (request == null || request.Messages == null)
         {
-            return new StatusCodeResult((int)HttpStatusCode.BadRequest);
+            return BadRequest("Некорректный запрос");
         }
-        
-        await _barcodeMessageHandler.HandleBarcodes(request.Messages.Select(x => x.Text));
             
-        return new StatusCodeResult((int)HttpStatusCode.OK);
+        BarcodeResponseMessageBatch response = await _barcodeMessageHandler.HandleBarcodes(request.Messages.Select(x => x.Text));
+                
+        return Ok(response);
     }
 }

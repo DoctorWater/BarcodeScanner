@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using BarcodeDecodeLib.Models.Enums;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,4 +19,7 @@ public class LocationTicket
     public int SortingErrorCode { get; set; } // LlcSortReportError
     [MaxLength(30, ErrorMessage = "Error message can not be longer than 30")]
     public string? ErrorMessage { get; set; }
+    public int TransportStorageUnitId { get; set; }
+    [ForeignKey(nameof(TransportStorageUnitId))]
+    public TransportStorageUnit TransportStorageUnit { get; set; } = null!;
 }
