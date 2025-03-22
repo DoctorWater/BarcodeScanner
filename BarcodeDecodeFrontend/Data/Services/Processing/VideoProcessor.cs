@@ -1,8 +1,9 @@
-﻿using OpenCvSharp;
+﻿using BarcodeDecodeFrontend.Data.Services.Interfaces;
+using OpenCvSharp;
 
-namespace BarcodeDecodeFrontend.Data.Services;
+namespace BarcodeDecodeFrontend.Data.Services.Processing;
 
-public class VideoProcessor
+public class VideoProcessor : IVideoProcessor
 {
     private const int OVERALL_FRAME_COUNT = 20;
     public List<Mat> GetVideoFrames(string tempFilePath, string fileExtension = ".mp4")

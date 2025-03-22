@@ -1,9 +1,10 @@
-﻿using OpenCvSharp;
+﻿using BarcodeDecodeFrontend.Data.Services.Interfaces;
+using OpenCvSharp;
 using ZXing;
 
-namespace BarcodeDecodeFrontend.Data.Services;
+namespace BarcodeDecodeFrontend.Data.Services.Processing;
 
-public class BarcodeDecoder
+public class BarcodeDecoder : IBarcodeDecoder
 {
 
     public string? Decode(byte[] imageData)

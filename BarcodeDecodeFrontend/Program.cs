@@ -1,5 +1,8 @@
 using BarcodeDecodeFrontend.Data.Services;
+using BarcodeDecodeFrontend.Data.Services.Interfaces;
+using BarcodeDecodeFrontend.Data.Services.Processing;
 using BarcodeDecodeLib;
+using BarcodeDecodeLib.Models.Dtos;
 using Blazored.Modal;
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +14,8 @@ builder.Services.AddBlazoredModal();
 builder.Services.AddScoped<BarcodeDecoder>()
     .AddScoped<VideoProcessor>();
 
+builder.Services.AddScoped<IBarcodeDecoder, BarcodeDecoder>()
+    .AddScoped<IVideoProcessor, VideoProcessor>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

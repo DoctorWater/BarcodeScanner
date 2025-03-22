@@ -1,9 +1,11 @@
 ﻿@page "/"
 
-@using BarcodeDecodeFrontend.Data.Services
-@inject BarcodeDecoder Decoder;
-@inject VideoProcessor VideoProcessor;
 
+@using BarcodeDecodeFrontend.Data.Services.Interfaces
+@using BarcodeDecodeFrontend.Data.Services.Messaging
+@inject IBarcodeDecoder Decoder;
+@inject IVideoProcessor VideoProcessor;
+@inject BarcodeRequestMessageBatchPublisher BarcodePublisher;
 
 <div class="container">
     <div class="row">
