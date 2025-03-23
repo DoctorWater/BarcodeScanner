@@ -7,6 +7,7 @@ namespace BarcodeDecodeLib.Entities;
 [Index(nameof(DepartureLocation), IsUnique = false)]
 [Index(nameof(ArrivedAtLocation), IsUnique = false)]
 [Index(nameof(CreatedOn), IsUnique = false)]
+[Index(nameof(TransportStorageUnitId), IsUnique = false)]
 public class LocationTicket
 {
     public int Id { get; set; }
@@ -20,6 +21,4 @@ public class LocationTicket
     [MaxLength(30, ErrorMessage = "Error message can not be longer than 30")]
     public string? ErrorMessage { get; set; }
     public int TransportStorageUnitId { get; set; }
-    [ForeignKey(nameof(TransportStorageUnitId))]
-    public TransportStorageUnit TransportStorageUnit { get; set; } = null!;
 }

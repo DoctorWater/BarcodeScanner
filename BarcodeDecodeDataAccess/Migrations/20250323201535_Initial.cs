@@ -85,20 +85,20 @@ namespace BarcodeDecodeDataAccess.Migrations
             migrationBuilder.InsertData(
                 table: "transport_orders",
                 columns: new[] { "id", "barcode", "closed_on", "created_on", "destinations", "external_id", "status" },
-                values: new object[] { 1, "SomeBarcode1", null, new DateTimeOffset(new DateTime(2025, 3, 22, 23, 48, 50, 185, DateTimeKind.Unspecified).AddTicks(3174), new TimeSpan(0, 3, 0, 0, 0)), new List<int> { 13 }, "1aae532d-ccc5-4ea7-aae2-c4db55b6ecbb", 2 });
+                values: new object[] { 1, "SomeBarcode1", null, new DateTimeOffset(new DateTime(2025, 3, 23, 23, 14, 34, 913, DateTimeKind.Unspecified).AddTicks(4612), new TimeSpan(0, 3, 0, 0, 0)), new List<int> { 13 }, "ee8732d0-b8e9-4d57-92d9-e80fae0a05bd", 2 });
 
             migrationBuilder.InsertData(
                 table: "transport_storage_units",
                 columns: new[] { "id", "barcode", "created_on", "status", "transport_order_id", "updated_on" },
-                values: new object[] { 1, "SomeBarcode1", new DateTimeOffset(new DateTime(2025, 3, 22, 23, 48, 50, 185, DateTimeKind.Unspecified).AddTicks(3236), new TimeSpan(0, 3, 0, 0, 0)), 1, 1, new DateTimeOffset(new DateTime(2025, 3, 22, 23, 48, 50, 185, DateTimeKind.Unspecified).AddTicks(3238), new TimeSpan(0, 3, 0, 0, 0)) });
+                values: new object[] { 1, "SomeBarcode1", new DateTimeOffset(new DateTime(2025, 3, 23, 23, 14, 34, 913, DateTimeKind.Unspecified).AddTicks(4706), new TimeSpan(0, 3, 0, 0, 0)), 1, 1, new DateTimeOffset(new DateTime(2025, 3, 23, 23, 14, 34, 913, DateTimeKind.Unspecified).AddTicks(4709), new TimeSpan(0, 3, 0, 0, 0)) });
 
             migrationBuilder.InsertData(
                 table: "location_tickets",
                 columns: new[] { "id", "arrived_at_location", "arrived_on", "created_on", "departure_location", "error_message", "planned_locations", "sorting_error_code", "status", "transport_storage_unit_id" },
                 values: new object[,]
                 {
-                    { 1, 11, new DateTimeOffset(new DateTime(2025, 3, 22, 23, 49, 20, 185, DateTimeKind.Unspecified).AddTicks(3241), new TimeSpan(0, 3, 0, 0, 0)), new DateTimeOffset(new DateTime(2025, 3, 22, 23, 49, 10, 185, DateTimeKind.Unspecified).AddTicks(3242), new TimeSpan(0, 3, 0, 0, 0)), 10, null, new List<int> { 11, 12 }, 0, 3, 1 },
-                    { 2, null, new DateTimeOffset(new DateTime(2025, 3, 22, 23, 49, 40, 185, DateTimeKind.Unspecified).AddTicks(3246), new TimeSpan(0, 3, 0, 0, 0)), new DateTimeOffset(new DateTime(2025, 3, 22, 23, 49, 30, 185, DateTimeKind.Unspecified).AddTicks(3248), new TimeSpan(0, 3, 0, 0, 0)), 11, null, new List<int> { 13 }, 0, 2, 1 }
+                    { 1, 11, new DateTimeOffset(new DateTime(2025, 3, 23, 23, 15, 4, 913, DateTimeKind.Unspecified).AddTicks(4714), new TimeSpan(0, 3, 0, 0, 0)), new DateTimeOffset(new DateTime(2025, 3, 23, 23, 14, 54, 913, DateTimeKind.Unspecified).AddTicks(4718), new TimeSpan(0, 3, 0, 0, 0)), 10, null, new List<int> { 11, 12 }, 0, 3, 1 },
+                    { 2, null, new DateTimeOffset(new DateTime(2025, 3, 23, 23, 15, 24, 913, DateTimeKind.Unspecified).AddTicks(4726), new TimeSpan(0, 3, 0, 0, 0)), new DateTimeOffset(new DateTime(2025, 3, 23, 23, 15, 14, 913, DateTimeKind.Unspecified).AddTicks(4728), new TimeSpan(0, 3, 0, 0, 0)), 11, null, new List<int> { 13 }, 0, 2, 1 }
                 });
 
             migrationBuilder.CreateIndex(

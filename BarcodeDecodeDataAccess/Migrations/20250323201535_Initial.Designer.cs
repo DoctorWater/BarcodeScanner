@@ -13,7 +13,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BarcodeDecodeDataAccess.Migrations
 {
     [DbContext(typeof(BarcodeDecodeDbContext))]
-    [Migration("20250322204950_Initial")]
+    [Migration("20250323201535_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -95,8 +95,8 @@ namespace BarcodeDecodeDataAccess.Migrations
                         {
                             Id = 1,
                             ArrivedAtLocation = 11,
-                            ArrivedOn = new DateTimeOffset(new DateTime(2025, 3, 22, 23, 49, 20, 185, DateTimeKind.Unspecified).AddTicks(3241), new TimeSpan(0, 3, 0, 0, 0)),
-                            CreatedOn = new DateTimeOffset(new DateTime(2025, 3, 22, 23, 49, 10, 185, DateTimeKind.Unspecified).AddTicks(3242), new TimeSpan(0, 3, 0, 0, 0)),
+                            ArrivedOn = new DateTimeOffset(new DateTime(2025, 3, 23, 23, 15, 4, 913, DateTimeKind.Unspecified).AddTicks(4714), new TimeSpan(0, 3, 0, 0, 0)),
+                            CreatedOn = new DateTimeOffset(new DateTime(2025, 3, 23, 23, 14, 54, 913, DateTimeKind.Unspecified).AddTicks(4718), new TimeSpan(0, 3, 0, 0, 0)),
                             DepartureLocation = 10,
                             PlannedLocations = new List<int> { 11, 12 },
                             SortingErrorCode = 0,
@@ -106,8 +106,8 @@ namespace BarcodeDecodeDataAccess.Migrations
                         new
                         {
                             Id = 2,
-                            ArrivedOn = new DateTimeOffset(new DateTime(2025, 3, 22, 23, 49, 40, 185, DateTimeKind.Unspecified).AddTicks(3246), new TimeSpan(0, 3, 0, 0, 0)),
-                            CreatedOn = new DateTimeOffset(new DateTime(2025, 3, 22, 23, 49, 30, 185, DateTimeKind.Unspecified).AddTicks(3248), new TimeSpan(0, 3, 0, 0, 0)),
+                            ArrivedOn = new DateTimeOffset(new DateTime(2025, 3, 23, 23, 15, 24, 913, DateTimeKind.Unspecified).AddTicks(4726), new TimeSpan(0, 3, 0, 0, 0)),
+                            CreatedOn = new DateTimeOffset(new DateTime(2025, 3, 23, 23, 15, 14, 913, DateTimeKind.Unspecified).AddTicks(4728), new TimeSpan(0, 3, 0, 0, 0)),
                             DepartureLocation = 11,
                             PlannedLocations = new List<int> { 13 },
                             SortingErrorCode = 0,
@@ -174,9 +174,9 @@ namespace BarcodeDecodeDataAccess.Migrations
                         {
                             Id = 1,
                             Barcode = "SomeBarcode1",
-                            CreatedOn = new DateTimeOffset(new DateTime(2025, 3, 22, 23, 48, 50, 185, DateTimeKind.Unspecified).AddTicks(3174), new TimeSpan(0, 3, 0, 0, 0)),
+                            CreatedOn = new DateTimeOffset(new DateTime(2025, 3, 23, 23, 14, 34, 913, DateTimeKind.Unspecified).AddTicks(4612), new TimeSpan(0, 3, 0, 0, 0)),
                             Destinations = new List<int> { 13 },
-                            ExternalId = "1aae532d-ccc5-4ea7-aae2-c4db55b6ecbb",
+                            ExternalId = "ee8732d0-b8e9-4d57-92d9-e80fae0a05bd",
                             Status = 2
                         });
                 });
@@ -233,23 +233,21 @@ namespace BarcodeDecodeDataAccess.Migrations
                         {
                             Id = 1,
                             Barcode = "SomeBarcode1",
-                            CreatedOn = new DateTimeOffset(new DateTime(2025, 3, 22, 23, 48, 50, 185, DateTimeKind.Unspecified).AddTicks(3236), new TimeSpan(0, 3, 0, 0, 0)),
+                            CreatedOn = new DateTimeOffset(new DateTime(2025, 3, 23, 23, 14, 34, 913, DateTimeKind.Unspecified).AddTicks(4706), new TimeSpan(0, 3, 0, 0, 0)),
                             Status = 1,
                             TransportOrderId = 1,
-                            UpdatedOn = new DateTimeOffset(new DateTime(2025, 3, 22, 23, 48, 50, 185, DateTimeKind.Unspecified).AddTicks(3238), new TimeSpan(0, 3, 0, 0, 0))
+                            UpdatedOn = new DateTimeOffset(new DateTime(2025, 3, 23, 23, 14, 34, 913, DateTimeKind.Unspecified).AddTicks(4709), new TimeSpan(0, 3, 0, 0, 0))
                         });
                 });
 
             modelBuilder.Entity("BarcodeDecodeLib.Entities.LocationTicket", b =>
                 {
-                    b.HasOne("BarcodeDecodeLib.Entities.TransportStorageUnit", "TransportStorageUnit")
+                    b.HasOne("BarcodeDecodeLib.Entities.TransportStorageUnit", null)
                         .WithMany("LocationTickets")
                         .HasForeignKey("TransportStorageUnitId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_location_tickets_transport_storage_units_transport_storage_");
-
-                    b.Navigation("TransportStorageUnit");
                 });
 
             modelBuilder.Entity("BarcodeDecodeLib.Entities.TransportStorageUnit", b =>
