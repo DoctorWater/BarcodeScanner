@@ -1,12 +1,14 @@
-﻿namespace BarcodeDecodeLib.Utils.Time;
+﻿using Microsoft.Extensions.Options;
+
+namespace BarcodeDecodeLib.Utils.Time;
 
 public sealed class TimeConverter : ITimeConverter
 {
     private readonly TimeZoneSettings _timeZoneSettings;
 
-    public TimeConverter(TimeZoneSettings timeZoneSettings)
+    public TimeConverter(IOptions<TimeZoneSettings> timeZoneSettings)
     {
-        _timeZoneSettings = timeZoneSettings ?? throw new ArgumentNullException(nameof(timeZoneSettings));
+        _timeZoneSettings = timeZoneSettings.Value ?? throw new ArgumentNullException(nameof(timeZoneSettings));
     }
 
     public TimeZoneInfo GetTimeZone()

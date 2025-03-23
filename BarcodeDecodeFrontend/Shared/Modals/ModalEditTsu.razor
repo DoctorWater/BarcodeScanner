@@ -34,50 +34,56 @@
     </form>
     @if (Item.LocationTickets.Count > 0)
     {
-        <div class="mt-3">
-            <i>
-                <b>Location tickets</b>
-            </i> <br>
-            <table>
-                <thead>
-                <th class="p-1">Id</th>
-                <th class="p-1">Departure from</th>
-                <th class="p-1">Planed</th>
-                <th class="p-1">Arrived to</th>
-                <th class="p-1">Status</th>
-                <th class="p-1">ArrivedOn</th>
-                </thead>
-                <tbody>
-                @foreach (var ticket in Item.LocationTickets.OrderBy(h => h.Id))
-                {
-                    var colorClass = ticket.PlannedLocations is not null && ticket.ArrivedAtLocation == ticket.PlannedLocations.First() ? "text-success" : "text-danger";
-                    <tr>
-                        <td class="p-1">@ticket.Id</td>
-                        <td class="p-1">@ticket.DepartureLocation</td>
-                        <td class="p-1">
-                            @if (ticket.PlannedLocations != null)
-                            {
-                                @ticket.PlannedLocations.First()
-                            }
-                        </td>
-                        <td class="@colorClass p-1">@ticket.ArrivedAtLocation</td>
-                        <td class="p-1">@ticket.Status</td>
-                        <td class="p-1">@TimeConverter.ConvertToNeededTimeZoneByFormat(ticket.ArrivedOn, WebUiConstants.DateTimeFormat)</td>
-                    </tr>
-                }
-                </tbody>
-            </table>
-        </div>
+    <div class="mt-3">
+        <i>
+            <b>Location tickets</b>
+        </i> <br>
+        <table>
+            <thead>
+            <th class="p-1">Id</th>
+            <th class="p-1">Departure from</th>
+            <th class="p-1">Planed</th>
+            <th class="p-1">Arrived to</th>
+            <th class="p-1">Status</th>
+            <th class="p-1">ArrivedOn</th>
+            </thead>
+            <tbody>
+            @foreach (var ticket in Item.LocationTickets.OrderBy(h => h.Id))
+            {
+            var colorClass = ticket.PlannedLocations is not null && ticket.ArrivedAtLocation == ticket.PlannedLocations.First() ? "text-success" : "text-danger";
+            <tr>
+                <td class="p-1">@ticket.Id</td>
+                <td class="p-1">@ticket.DepartureLocation</td>
+                <td class="p-1">
+                    @if (ticket.PlannedLocations != null)
+                    {
+                    @ticket.PlannedLocations.First()
+                    }
+                </td>
+                <td class="@colorClass p-1">@ticket.ArrivedAtLocation</td>
+                <td class="p-1">@ticket.Status</td>
+                <td class="p-1">@TimeConverter.ConvertToNeededTimeZoneByFormat(ticket.ArrivedOn, WebUiConstants.DateTimeFormat)</td>
+            </tr>
+            }
+            </tbody>
+        </table>
+    </div>
     }
     <button type="submit" class="mt-2 btn btn-primary" @onclick="SaveChanges">Submit</button>
 </div>
 
+<style>
+    table, th, td {
+        border: 1px solid;
+    }
+</style>
+
 @code {
 
-    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
+[CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
 
-    [Parameter] public TsuDto Item { get; set; }
+[Parameter] public TsuDto Item { get; set; }
 
-    private async Task SaveChanges() => await BlazoredModal.CloseAsync(ModalResult.Ok(Item));
+private async Task SaveChanges() => await BlazoredModal.CloseAsync(ModalResult.Ok(Item));
 
 }

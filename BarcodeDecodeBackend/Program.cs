@@ -31,6 +31,7 @@ builder.Services.AddOptions<HttpAddresses>()
 
 var app = builder.Build();
 
+app.UseHttpsRedirection();
 
 app.MapControllers();
 
