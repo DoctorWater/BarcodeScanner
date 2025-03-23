@@ -1,0 +1,58 @@
+﻿@using BarcodeDecodeFrontend.Data.Dtos
+@using BarcodeDecodeLib.Models.Enums
+@namespace BarcodeDecodeFrontend.Shared.Modals
+
+<div>
+    <form>
+        <div>
+            <label for="barcode">
+                <b>Barcode</b>
+            </label>:<br>
+            <input class="form-control" type="text" id="barcode" @bind="@Result.Barcode"/>
+        </div>
+        <br>
+
+        <div>
+            <label for="status">
+                <b>Status</b>
+            </label>:<br>
+            <select class="form-control" id="status" @bind="@Result.Status">
+                <option value="@TransportOrderStatusEnum.Active">Активен</option>
+                <option value="@TransportOrderStatusEnum.Closed">Закрыт</option>
+                <option value="@TransportOrderStatusEnum.Cancelled">Отменен</option>
+                <option value="@TransportOrderStatusEnum.Created">Создан</option>
+                <option value="@TransportOrderStatusEnum.Error">Ошибка</option>
+            </select>
+        </div>
+        <br>
+
+        
+    </form>
+    <br>
+    @*<button class="btn btn-primary" @onclick="CancelOrder">Cancel order</button>*@
+    <button class="btn btn-primary" type="button" @onclick="SaveChanges">Submit</button>
+</div>
+
+@code {
+
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
+
+    [Parameter] public OrderDto Item { get; set; }
+    public OrderEditDto Result { get; set; } = new();
+    
+    protected override void OnParametersSet()
+    {
+        Result.Barcode = Item.Barcode;
+        Result.Status = Item.Status.ToString();
+        InvokeAsync(StateHasChanged);
+    }
+
+    /*private async Task CancelOrder()
+    {
+        await ManagementService.BrokerSendCancelOrderProcessing(Item.ExternalId, default);
+        await BlazoredModal.CancelAsync();
+    }*/
+
+    private async Task SaveChanges() => await BlazoredModal.CloseAsync(ModalResult.Ok(Result));
+
+}

@@ -2,6 +2,7 @@
 using BarcodeDecodeBackend.Services.Interfaces;
 using BarcodeDecodeDataAccess;
 using BarcodeDecodeLib.Models.Messages;
+using Microsoft.EntityFrameworkCore;
 
 namespace BarcodeDecodeBackend.Services.Processing;
 
@@ -26,7 +27,7 @@ public class BarcodeMessageHandler : IBarcodeMessageHandler
 
     private BarcodeResponseMessage CreateBarcodeResponse(string barcode)
     {
-        var tsus = _dbContext.TransportStorageUnits.Where(x => x.Barcode == barcode).ToList();
+        var tsus = _dbContext.TransportStorageUnits.Where(x => x.Barcode == barcode).Include(x => x.LocationTickets).ToList();
         var orders = _dbContext.TransportOrders.Where(x => x.Barcode == barcode).ToList();
         return new BarcodeResponseMessage()
         {

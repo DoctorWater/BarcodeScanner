@@ -1,0 +1,209 @@
+﻿@using BarcodeDecodeFrontend.Data.Services.Messaging
+@inject BarcodeMessagePublisher BarcodeMessagePublisher
+
+<div class="card-body border border-primary border-2 rounded-3" style="padding: 0.3rem 1rem">
+    <div class="row">
+        <div class="col-md-2 border-end">
+            <p>Barcode:</p>
+        </div>
+        <div class="col-md-3 border-end @GetTsuStatusColor()">
+            <p>
+                TSU:
+                @{
+                    if (Tsu is not null)
+                    {
+                        @Tsu.Status
+                    }
+                    else
+                    {
+                        <span>No TSU Available</span>
+                    }
+                }
+            </p>
+        </div>
+        <div class="col-md-3 border-end @GetOrderStatusColor()">
+            <p>
+                Order:
+                @{
+                    if (Order is not null)
+                    {
+                        @Order.Status
+                    }
+                    else
+                    {
+                        <span>No Order Available</span>
+                    }
+                }
+            </p>
+        </div>
+        <div class="col-md-3">
+            <p>Last Location:</p>
+        </div>
+        <div class="col-md-1">
+            <button class="btn border border-primary rounded-circle p-2" @onclick="GetAdditionalInfo" style="width: 40px; height: 40px;">
+                <i class="bi @(IsExtended ? "bi-chevron-up" : "bi-chevron-down")"></i>
+            </button>
+        </div>
+    </div>
+    <div class="row @GetBorder()">
+        <div class="col-md-2 border-end">
+            <p>
+                @{
+                    if (Tsu is not null)
+                    {
+                        @Tsu.Barcode
+                    }
+                    else
+                    {
+                        @Order.Barcode
+                    }
+                }
+            </p>
+        </div>
+        <div class="col-md-3 border-end">
+            <p>
+                TSU Created:
+                @{
+                    if (Tsu is not null)
+                    {
+                        @Tsu.CreatedOn
+                    }
+                    else
+                    {
+                        <span>No TSU Available</span>
+                    }
+                }
+            </p>
+        </div>
+        <div class="col-md-3 border-end">
+            <p>
+                Order Created:
+                @{
+                    if (Order is not null)
+                    {
+                        @Order.CreatedOn
+                    }
+                    else
+                    {
+                        <span>No Order Available</span>
+                    }
+                }
+            </p>
+        </div>
+        <div class="col-md-3">
+            <p>
+                @{
+                    if (Tsu is not null)
+                    {
+                        @((Tsu.LocationTickets.OrderBy(x => x.Id).LastOrDefault(x => x.ArrivedAtLocation is not null)?.ArrivedAtLocation ?? 0))
+                    }
+                    else
+                    {
+                        <span>No TSU Available</span>
+                    }
+                }
+            </p>
+        </div>
+    </div>
+    @if (IsExtended)
+    {
+        <div class="row mt-4">
+            @if (Tsu is not null)
+            {
+                <div class="col-md-3 border-end">
+                    <h5>Transport Storage Unit Details</h5>
+                    <p>
+                        <strong>Id:</strong> @Tsu.Id
+                    </p>
+                    <p>
+                        <strong>Main Barcode:</strong> @(Tsu.Barcode ?? "No Bar Code Available")
+                    </p>
+                    <p>
+                        <strong>Status:</strong> @Tsu.Status
+                    </p>
+                    <p>
+                        <strong>Created On:</strong> @Tsu.CreatedOn.ToString("g")
+                    </p>
+                    <p>
+                        <strong>Updated On:</strong> @Tsu.UpdatedOn.ToString("g")
+                    </p>
+                    @if (Tsu.TransportOrder != null)
+                    {
+                        <p>
+                            <strong>Associated Transport Order:</strong> @Tsu.TransportOrder.ExternalId
+                        </p>
+                    }
+                </div>
+            }
+
+            @if (Order is not null)
+            {
+                <div class="col-md-2 border-end">
+                    <h5>Transport Order Details</h5>
+                    <p>
+                        <strong>Id:</strong> @Order.Id
+                    </p>
+                    <p>
+                        <strong>Barcode:</strong> @Order.Barcode
+                    </p>
+                    <p>
+                        <strong>External ID:</strong> @Order.ExternalId
+                    </p>
+                    <p>
+                        <strong>Status:</strong> @Order.Status
+                    </p>
+                    <p>
+                        <strong>Created On:</strong> @Order.CreatedOn.ToString("g")
+                    </p>
+                    @if (Order.ClosedOn != null)
+                    {
+                        <p>
+                            <strong>Closed On:</strong> @Order.ClosedOn?.ToString("g")
+                        </p>
+                    }
+                </div>
+            }
+            @if (Tsu is not null && Tsu.LocationTickets.Any())
+            {
+                <div class="col-md-6">
+                    <table class="table-bordered table">
+                        <thead>
+                        <th class="p-1">Id</th>
+                        <th class="p-1">Departure from</th>
+                        <th class="p-1">Planned</th>
+                        <th class="p-1">Arrived to</th>
+                        <th class="p-1">Status</th>
+                        <th class="p-1">ArrivedOn</th>
+                        <th class="p-1">Low Level Error</th>
+                        </thead>
+                        <tbody>
+                        @foreach (var ticket in Tsu.LocationTickets.OrderBy(h => h.Id))
+                        {
+                            var colorClass = ticket.ArrivedAtLocation is not null && ticket.PlannedLocations is not null && ticket.ArrivedAtLocation == ticket.PlannedLocations.First() ? "text-success" : "text-danger";
+                            <tr>
+                                <td class="p-1">@ticket.Id</td>
+                                <td class="p-1">@(ticket.DepartureLocation)</td>
+                                <td class="p-1">
+                                    @if (ticket.PlannedLocations != null)
+                                    {
+                                        @ticket.PlannedLocations.First()
+                                    }
+                                </td>
+                                <td class="@colorClass p-1">@((ticket.ArrivedAtLocation ?? 0))</td>
+                                <td class="p-1">@ticket.Status</td>
+                                <td class="p-1">@ticket.ArrivedOn</td>
+                                <td class="p-1">@ticket.ErrorMessage</td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+
+            }
+            <div class="col-md-1">
+                <button class="btn btn-primary" @onclick="EditTsu" disabled=@(Tsu is null)>Edit Tsu</button>
+                <button class="btn btn-primary mt-2" @onclick="EditOrder" disabled=@(Order is null)>Edit Order</button>
+            </div>
+        </div>
+    }
+</div>

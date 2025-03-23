@@ -19,7 +19,7 @@ builder.Services.AddOptions<HttpAddresses>().Bind(builder.Configuration.GetSecti
 
 builder.Services.AddScoped<IBarcodeDecoder, BarcodeDecoder>()
     .AddScoped<IVideoProcessor, VideoProcessor>()
-    .AddScoped<BarcodeRequestMessageBatchPublisher>();
+    .AddScoped<BarcodeMessagePublisher>();
 
 var url = builder.Configuration.GetRequiredSection("ApplicationUrl").Value!;
 builder.WebHost.UseUrls(url);

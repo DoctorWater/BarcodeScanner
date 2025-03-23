@@ -5,7 +5,7 @@
 @using BarcodeDecodeFrontend.Data.Services.Messaging
 @inject IBarcodeDecoder Decoder;
 @inject IVideoProcessor VideoProcessor;
-@inject BarcodeRequestMessageBatchPublisher BarcodePublisher;
+@inject BarcodeMessagePublisher BarcodePublisher;
 
 <div class="container">
     <div class="row">
@@ -36,6 +36,29 @@
                 }
                 <input class="btn-primary btn mt-2" type="button" @onclick="@OnBarcodeSubmit" value="Submit"/>
             </div>
+        }
+        @if (_foundTsu.Any() || _foundOrders.Any())
+        {
+        <div class="row mt-3">
+            @foreach (var tsu in _foundTsu)
+            {
+            <div class="mt-2">
+                <OneLinePresentation Order="tsu.TransportOrder" Tsu="tsu"></OneLinePresentation>
+            </div>
+            }
+            @foreach (var order in _foundOrders.Where(order => _foundTsu.Select(t => t.TransportOrder?.ExternalId ?? "NULL").Contains(order.ExternalId) is false))
+            {
+            <div class="mt-2">
+                <OneLinePresentation Order="order" Tsu="@null"></OneLinePresentation>
+            </div>
+            }
+        </div>
+        }
+        else if (_hasSearched)
+        {
+        <div class="row mt-3">
+            <p>No result found.</p>
+        </div>
         }
     </div>
 </div>

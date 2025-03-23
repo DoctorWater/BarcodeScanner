@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using BarcodeDecodeFrontend.Data.Models;
 using BarcodeDecodeFrontend.Shared.Modals;
+using BarcodeDecodeLib.Entities;
 using BarcodeDecodeLib.Models.Messages;
 using Blazored.Modal;
 using Blazored.Modal.Services;
@@ -16,6 +17,10 @@ public partial class Index
     private List<IBrowserFile> loadedFiles = new();
     private byte[] imageBytes;
     private List<BarcodeModel> _recognizedImageBarcodes = new();
+    private List<TransportStorageUnit> _foundTsu = new();
+    private List<TransportOrder> _foundOrders = new();
+    private bool _hasSearched = false;
+    
 
     private async Task LoadFiles(InputFileChangeEventArgs e)
     {
@@ -150,6 +155,14 @@ public partial class Index
         var messages = _recognizedImageBarcodes.Select(x => new BarcodeRequestMessage(x.Barcode));
         var message = new BarcodeRequestMessageBatch(messages.ToList());
         var response = await BarcodePublisher.SendBarcodeRequest(message);
-        Console.WriteLine(response.Messages.First().TransportStorageUnits.First().Barcode);
+        _hasSearched = true;
+        await UpdatePresentations(response);
+    }
+
+    private async Task UpdatePresentations(BarcodeResponseMessageBatch barcodeResponse)
+    {
+        _foundTsu = barcodeResponse.Messages.SelectMany(x => x.TransportStorageUnits).ToList();
+        _foundOrders = barcodeResponse.Messages.SelectMany(x => x.TransportOrders).ToList();
+        await InvokeAsync(StateHasChanged);
     }
 }

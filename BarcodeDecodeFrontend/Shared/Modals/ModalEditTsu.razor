@@ -1,0 +1,83 @@
+﻿@using BarcodeDecodeFrontend.Data.Dtos
+@using BarcodeDecodeLib
+@using BarcodeDecodeLib.Models.Enums
+@using BarcodeDecodeLib.Utils.Time
+
+
+@namespace BarcodeDecodeFrontend.Shared.Modals
+
+@inject ITimeConverter TimeConverter
+
+<div>
+    <form>
+        <div>
+            <label for="id">
+                <b>Id</b>
+                <p id="id">@Item.Id</p>
+            </label>
+        </div>
+        <div>
+            <label for="barcode">
+                <b>Barcode</b>
+            </label>:<br>
+            <input class="form-control" type="text" id="barcode" @bind="Item.Barcode"/>
+        </div>
+        <div class="mt-2">
+            <label for="status">
+                <b>Status</b>
+            </label>:<br>
+            <select class="form-control" id="status" @bind="@Item.Status">
+                <option value="@TsuStatusEnum.Active">Активен</option>
+                <option value="@TsuStatusEnum.Closed">Закрыт</option>
+            </select>
+        </div>
+    </form>
+    @if (Item.LocationTickets.Count > 0)
+    {
+        <div class="mt-3">
+            <i>
+                <b>Location tickets</b>
+            </i> <br>
+            <table>
+                <thead>
+                <th class="p-1">Id</th>
+                <th class="p-1">Departure from</th>
+                <th class="p-1">Planed</th>
+                <th class="p-1">Arrived to</th>
+                <th class="p-1">Status</th>
+                <th class="p-1">ArrivedOn</th>
+                </thead>
+                <tbody>
+                @foreach (var ticket in Item.LocationTickets.OrderBy(h => h.Id))
+                {
+                    var colorClass = ticket.PlannedLocations is not null && ticket.ArrivedAtLocation == ticket.PlannedLocations.First() ? "text-success" : "text-danger";
+                    <tr>
+                        <td class="p-1">@ticket.Id</td>
+                        <td class="p-1">@ticket.DepartureLocation</td>
+                        <td class="p-1">
+                            @if (ticket.PlannedLocations != null)
+                            {
+                                @ticket.PlannedLocations.First()
+                            }
+                        </td>
+                        <td class="@colorClass p-1">@ticket.ArrivedAtLocation</td>
+                        <td class="p-1">@ticket.Status</td>
+                        <td class="p-1">@TimeConverter.ConvertToNeededTimeZoneByFormat(ticket.ArrivedOn, WebUiConstants.DateTimeFormat)</td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    }
+    <button type="submit" class="mt-2 btn btn-primary" @onclick="SaveChanges">Submit</button>
+</div>
+
+@code {
+
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
+
+    [Parameter] public TsuDto Item { get; set; }
+
+    private async Task SaveChanges() => await BlazoredModal.CloseAsync(ModalResult.Ok(Item));
+
+}
