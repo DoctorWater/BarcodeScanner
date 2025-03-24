@@ -21,4 +21,9 @@
       <ProjectReference Include="..\BarcodeDecodeLib\BarcodeDecodeLib.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Content Update="wwwroot\css\site.css">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
 </Project>

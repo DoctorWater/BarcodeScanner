@@ -20,6 +20,8 @@ public partial class Index
     private List<TransportStorageUnit> _foundTsu = new();
     private List<TransportOrder> _foundOrders = new();
     private bool _hasSearched = false;
+    private Dictionary<Guid, string> _imageUrls = new();
+    private bool _hoverOn = true;
     
 
     private async Task LoadFiles(InputFileChangeEventArgs e)
@@ -42,15 +44,20 @@ public partial class Index
 
     private async Task LoadPhotoFiles(Dictionary<IBrowserFile, string?> fileVerifyResult)
     {
+        _imageUrls.Clear();
         var imageFiles = fileVerifyResult.Where(p => p.Value == "image").Select(x => x.Key).ToList();
         loadedFiles.Clear();
         foreach (var file in imageFiles)
         {
             try
             {
+                var id = Guid.NewGuid();
                 await using MemoryStream ms = new MemoryStream();
                 await file.OpenReadStream().CopyToAsync(ms);
-                _recognizedImageBarcodes.Add(new BarcodeModel(Decoder.Decode(ms.ToArray()) ?? String.Empty));
+                var url = $"data:{file.ContentType};base64,{Convert.ToBase64String(ms.ToArray())}";
+                _imageUrls.Add(id, url);
+                await InvokeAsync(StateHasChanged);
+                _recognizedImageBarcodes.Add(new BarcodeModel(id, Decoder.Decode(ms.ToArray()) ?? String.Empty));
             }
             catch (Exception ex)
             {
@@ -61,6 +68,7 @@ public partial class Index
     private async Task RemoveBarcode(BarcodeModel barcodeModel)
     {
         _recognizedImageBarcodes.Remove(barcodeModel);
+        _imageUrls.Remove(barcodeModel.Id);
         await InvokeAsync(StateHasChanged);
     }
     
@@ -90,7 +98,7 @@ public partial class Index
                     var result = Decoder.Decode(frame);
                     if (result is not null)
                     {
-                        _recognizedImageBarcodes.Add(new BarcodeModel(result));
+                        _recognizedImageBarcodes.Add(new BarcodeModel(Guid.NewGuid(), result));
                         break;
                     }
                 }
@@ -164,5 +172,15 @@ public partial class Index
         _foundTsu = barcodeResponse.Messages.SelectMany(x => x.TransportStorageUnits).ToList();
         _foundOrders = barcodeResponse.Messages.SelectMany(x => x.TransportOrders).ToList();
         await InvokeAsync(StateHasChanged);
+    }
+
+    private void OpenImageModal(string imageUrl)
+    {
+        if (_hoverOn is false)
+        {
+            var parameters = new ModalParameters();
+            parameters.Add(nameof(ModalShowImage.ImageUrl), imageUrl);
+            Modal.Show<ModalShowImage>("Image", parameters);
+        }
     }
 }
