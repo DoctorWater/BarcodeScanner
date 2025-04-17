@@ -1,6 +1,6 @@
 ﻿using System.Net;
 using BarcodeDecodeBackend.Services.Interfaces;
-using BarcodeDecodeLib.Models.Messages;
+using BarcodeDecodeLib.Models.Dtos.Messages;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BarcodeDecodeBackend.Services.Controllers;
@@ -23,9 +23,9 @@ public class BarcodeController : ControllerBase
         {
             return BadRequest("Некорректный запрос");
         }
-            
-        BarcodeResponseMessageBatch response = await _barcodeMessageHandler.HandleBarcodes(request.Messages.Select(x => x.Text));
-                
+        
+        BarcodeResponseMessageBatch response = await _barcodeMessageHandler.HandleBarcodes(request.Messages.Select(x => x.BarcodeText));
+        response.CorrelationId = request.CorrelationId;
         return Ok(response);
     }
 }

@@ -3,6 +3,7 @@ using BarcodeDecodeBackend.Services.Interfaces;
 using BarcodeDecodeBackend.Services.Processing;
 using BarcodeDecodeDataAccess;
 using BarcodeDecodeLib.Models.Dtos;
+using BarcodeDecodeLib.Models.Dtos.Configs;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;

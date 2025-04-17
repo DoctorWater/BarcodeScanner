@@ -1,4 +1,4 @@
-﻿namespace BarcodeDecodeLib.Models.Dtos;
+﻿namespace BarcodeDecodeLib.Models.Dtos.Configs;
 
 public record NpgSqlConfig
 {

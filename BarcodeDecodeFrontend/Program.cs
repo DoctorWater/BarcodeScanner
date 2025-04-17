@@ -5,6 +5,7 @@ using BarcodeDecodeFrontend.Data.Services.Messaging;
 using BarcodeDecodeFrontend.Data.Services.Processing;
 using BarcodeDecodeLib;
 using BarcodeDecodeLib.Models.Dtos;
+using BarcodeDecodeLib.Models.Dtos.Configs;
 using BarcodeDecodeLib.Utils.Time;
 using Blazored.Modal;
 using MassTransit;

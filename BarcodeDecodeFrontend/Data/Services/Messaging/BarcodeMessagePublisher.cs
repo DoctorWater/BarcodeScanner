@@ -1,6 +1,7 @@
 ﻿using BarcodeDecodeLib.Entities;
 using BarcodeDecodeLib.Models.Dtos;
-using BarcodeDecodeLib.Models.Messages;
+using BarcodeDecodeLib.Models.Dtos.Configs;
+using BarcodeDecodeLib.Models.Dtos.Messages;
 using MassTransit;
 using Microsoft.Extensions.Options;
 

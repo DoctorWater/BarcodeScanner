@@ -2,7 +2,8 @@
 using BarcodeDecodeFrontend.Data.Models;
 using BarcodeDecodeFrontend.Shared.Modals;
 using BarcodeDecodeLib.Entities;
-using BarcodeDecodeLib.Models.Messages;
+using BarcodeDecodeLib.Models.Dtos.Messages;
+using BarcodeDecodeLib.Models.Dtos.Models;
 using Blazored.Modal;
 using Blazored.Modal.Services;
 using Microsoft.AspNetCore.Components;
@@ -160,7 +161,7 @@ public partial class Index
 
     private async Task OnBarcodeSubmit()
     {
-        var messages = _recognizedImageBarcodes.Select(x => new BarcodeRequestMessage(x.Barcode));
+        var messages = _recognizedImageBarcodes.Select(x => new BarcodeRequestModel(x.Barcode));
         var message = new BarcodeRequestMessageBatch(messages.ToList());
         var response = await BarcodePublisher.SendBarcodeRequest(message);
         _hasSearched = true;

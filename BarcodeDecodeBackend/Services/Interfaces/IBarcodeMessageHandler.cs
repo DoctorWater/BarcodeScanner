@@ -1,4 +1,4 @@
-﻿using BarcodeDecodeLib.Models.Messages;
+﻿using BarcodeDecodeLib.Models.Dtos.Messages;
 
 namespace BarcodeDecodeBackend.Services.Interfaces;
 
