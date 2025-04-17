@@ -1,7 +1,5 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BarcodeScanner.App", "BarcodeScanner.App\BarcodeScanner.App.csproj", "{33CE2DDD-8439-43D8-9CF7-42D87311EF53}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BarcodeDecodeFrontend", "BarcodeDecodeFrontend\BarcodeDecodeFrontend.csproj", "{8F552CAC-CB44-4EB8-86EC-56D07858EA2A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BarcodeDecodeLib", "BarcodeDecodeLib\BarcodeDecodeLib.csproj", "{4205EAE4-FCE3-4C8E-878F-A8A6CD6BF6A8}"
@@ -16,10 +14,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{33CE2DDD-8439-43D8-9CF7-42D87311EF53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{33CE2DDD-8439-43D8-9CF7-42D87311EF53}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{33CE2DDD-8439-43D8-9CF7-42D87311EF53}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{33CE2DDD-8439-43D8-9CF7-42D87311EF53}.Release|Any CPU.Build.0 = Release|Any CPU
 		{8F552CAC-CB44-4EB8-86EC-56D07858EA2A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{8F552CAC-CB44-4EB8-86EC-56D07858EA2A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8F552CAC-CB44-4EB8-86EC-56D07858EA2A}.Release|Any CPU.ActiveCfg = Release|Any CPU
