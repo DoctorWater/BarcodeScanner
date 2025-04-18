@@ -1,6 +1,8 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Immutable;
+using System.Diagnostics;
 using BarcodeDecodeBackend.Services.Interfaces;
 using BarcodeDecodeDataAccess;
+using BarcodeDecodeDataAccess.Interfaces;
 using BarcodeDecodeLib.Models.Dtos.Messages;
 using BarcodeDecodeLib.Models.Dtos.Models;
 using Microsoft.EntityFrameworkCore;
@@ -9,11 +11,13 @@ namespace BarcodeDecodeBackend.Services.Processing;
 
 public class BarcodeMessageHandler : IBarcodeMessageHandler
 {
-    private BarcodeDecodeDbContext _dbContext;
+    private readonly ITransportStorageUnitRepository _transportStorageUnitRepository;
+    private readonly ITrasportOrderRepository _transportOrderRepository;
 
-    public BarcodeMessageHandler(BarcodeDecodeDbContext dbContext)
+    public BarcodeMessageHandler(ITransportStorageUnitRepository transportStorageUnitRepository, ITrasportOrderRepository trasportOrderRepository)
     {
-        _dbContext = dbContext;
+        _transportStorageUnitRepository = transportStorageUnitRepository;
+        _transportOrderRepository = trasportOrderRepository;
     }
 
     public Task<BarcodeResponseMessageBatch> HandleBarcodes(IEnumerable<string> barcodes)
@@ -25,12 +29,12 @@ public class BarcodeMessageHandler : IBarcodeMessageHandler
 
     private BarcodeResponseModel CreateBarcodeResponse(string barcode)
     {
-        var tsus = _dbContext.TransportStorageUnits.Where(x => x.Barcode == barcode).Include(x => x.LocationTickets).ToList();
-        var orders = _dbContext.TransportOrders.Where(x => x.Barcode == barcode).ToList();
+        var transportStorageUnits = _transportStorageUnitRepository.GetTsuByBarcode(barcode);
+        var orders = _transportOrderRepository.GetTransportOrdersByBarcode(barcode);
         return new BarcodeResponseModel()
         {
             TransportOrders = orders,
-            TransportStorageUnits = tsus
+            TransportStorageUnits = transportStorageUnits
         };
     }
 }

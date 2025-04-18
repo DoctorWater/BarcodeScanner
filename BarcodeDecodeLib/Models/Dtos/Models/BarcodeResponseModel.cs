@@ -5,6 +5,6 @@ namespace BarcodeDecodeLib.Models.Dtos.Models;
 
 public class BarcodeResponseModel : HttpMessage
 {
-    public List<TransportStorageUnit> TransportStorageUnits { get; init; } = new();
-    public List<TransportOrder> TransportOrders { get; init; } = new();
+    public IEnumerable<TransportStorageUnit> TransportStorageUnits { get; init; } = new List<TransportStorageUnit>();
+    public IEnumerable<TransportOrder> TransportOrders { get; init; } = new List<TransportOrder>();
 }
