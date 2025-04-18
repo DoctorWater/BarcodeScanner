@@ -15,11 +15,12 @@ public class BarcodeDecodeDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        SeedData(modelBuilder).Wait();
+        SeedData(modelBuilder);
         base.OnModelCreating(modelBuilder);
     }
 
     private async Task SeedData(ModelBuilder modelBuilder)
+    private void SeedData(ModelBuilder modelBuilder)
     {
         var order1 = new TransportOrder("SomeBarcode1", Guid.NewGuid().ToString(), new List<int>(){13},  DateTime.Now - TimeSpan.FromMinutes(1), TransportOrderStatusEnum.Active)
         {
