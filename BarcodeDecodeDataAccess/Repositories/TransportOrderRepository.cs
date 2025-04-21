@@ -1,6 +1,7 @@
 ﻿using BarcodeDecodeDataAccess.Interfaces;
 using BarcodeDecodeLib.Entities;
 using BarcodeDecodeLib.Models.Dtos.Messages.TransportOrder;
+using BarcodeDecodeLib.Models.Enums;
 
 namespace BarcodeDecodeDataAccess.Repositories;
 
@@ -26,5 +27,13 @@ public class TransportOrderRepository : ITransportOrderRepository
         order.Barcode = message.Barcode ?? order.Barcode;
         await _dbContext.SaveChangesAsync();
         return order;
+    }
+
+    public async Task<bool> Relaunch(TransportOrderRelaunchMessage message)
+    {
+        var newOrder = new TransportOrder(message.Barcode, Guid.NewGuid().ToString(), message.Destinations,
+            DateTimeOffset.Now.ToUniversalTime(), TransportOrderStatusEnum.Created);
+        _dbContext.TransportOrders.Add(newOrder);
+        return await _dbContext.SaveChangesAsync() > 0;
     }
 }

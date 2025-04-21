@@ -7,4 +7,5 @@ namespace BarcodeDecodeBackend.Services.Interfaces;
 public interface ITransportOrderMessageHandler
 {
     Task<TransportOrder?> HandleOrderChange(TransportOrderChangeMessage tsuChangeMessage);
+    Task<bool> HandleOrderRelaunch(TransportOrderRelaunchMessage tsuChangeMessage);
 }

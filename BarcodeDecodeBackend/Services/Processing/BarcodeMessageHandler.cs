@@ -27,8 +27,8 @@ public class BarcodeMessageHandler : IBarcodeMessageHandler
 
     private BarcodeResponseModel CreateBarcodeResponse(string barcode)
     {
-        var transportStorageUnits = _transportStorageUnitRepository.GetByBarcode(barcode).Select(x => new TsuResponseDto(x));
-        var orders = _transportOrderRepository.GetByBarcode(barcode).Select(x => new TransportOrderResponseDto(x));
+        var transportStorageUnits = _transportStorageUnitRepository.GetByBarcode(barcode).Select(x => new TsuResponseMessage(x));
+        var orders = _transportOrderRepository.GetByBarcode(barcode).Select(x => new TransportOrderResponseMessage(x));
         return new BarcodeResponseModel()
         {
             TransportOrders = orders,

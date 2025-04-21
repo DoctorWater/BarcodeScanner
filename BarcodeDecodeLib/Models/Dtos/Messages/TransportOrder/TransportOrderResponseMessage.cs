@@ -3,9 +3,9 @@ using BarcodeDecodeLib.Models.Enums;
 
 namespace BarcodeDecodeLib.Models.Dtos.Messages.TransportOrder;
 
-public class TransportOrderResponseDto
+public class TransportOrderResponseMessage
 {
-    public TransportOrderResponseDto(Entities.TransportOrder order)
+    public TransportOrderResponseMessage(Entities.TransportOrder order)
     {
         Id = order.Id;
         ExternalId = order.ExternalId;
@@ -18,7 +18,7 @@ public class TransportOrderResponseDto
 
     //Used in deserialization
     [JsonConstructor]
-    public TransportOrderResponseDto(int id, string externalId, string barcode, DateTimeOffset createdOn, TransportOrderStatusEnum status, DateTimeOffset? closedOn)
+    public TransportOrderResponseMessage(int id, string externalId, string barcode, DateTimeOffset createdOn, TransportOrderStatusEnum status, DateTimeOffset? closedOn)
     {
         Id = id;
         ExternalId = externalId;

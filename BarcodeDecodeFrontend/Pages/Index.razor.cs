@@ -19,8 +19,8 @@ public partial class Index
     private List<IBrowserFile> loadedFiles = new();
     private byte[] imageBytes;
     private List<BarcodeModel> _recognizedImageBarcodes = new();
-    private List<TsuResponseDto> _foundTsu = new();
-    private List<TransportOrderResponseDto> _foundOrders = new();
+    private List<TsuResponseMessage> _foundTsu = new();
+    private List<TransportOrderResponseMessage> _foundOrders = new();
     private bool _hasSearched = false;
     private Dictionary<Guid, string> _imageUrls = new();
     private bool _hoverOn = true;
@@ -164,7 +164,7 @@ public partial class Index
     {
         var messages = _recognizedImageBarcodes.Select(x => new BarcodeRequestModel(x.Barcode));
         var message = new BarcodeRequestMessageBatch(messages.ToList());
-        var response = await BarcodePublisher.SendBarcodeRequest(message);
+        var response = await HttpPublisher.SendBarcodeRequest(message);
         _hasSearched = true;
         await UpdatePresentations(response);
     }

@@ -7,4 +7,5 @@ public interface ITransportOrderRepository
 {
     IEnumerable<TransportOrder> GetByBarcode(string barcode);
     Task<TransportOrder?> Update(TransportOrderChangeMessage message);
+    Task<bool> Relaunch(TransportOrderRelaunchMessage message);
 }

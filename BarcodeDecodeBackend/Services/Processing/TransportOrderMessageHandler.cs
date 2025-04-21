@@ -14,9 +14,14 @@ public class TransportOrderMessageHandler : ITransportOrderMessageHandler
         _transportOrderRepository = transportOrderRepository;
     }
 
-    public Task<TransportOrder?> HandleOrderChange(TransportOrderChangeMessage tsuChangeMessage)
+    public Task<TransportOrder?> HandleOrderChange(TransportOrderChangeMessage orderChangeMessage)
     {
-        var result = _transportOrderRepository.Update(tsuChangeMessage);
+        var result = _transportOrderRepository.Update(orderChangeMessage);
         return result;
+    }
+
+    public Task<bool> HandleOrderRelaunch(TransportOrderRelaunchMessage transportOrderRelaunchMessage)
+    {
+        return _transportOrderRepository.Relaunch(transportOrderRelaunchMessage);
     }
 }

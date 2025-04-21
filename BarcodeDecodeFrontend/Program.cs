@@ -9,6 +9,7 @@ using BarcodeDecodeLib.Models.Dtos.Configs;
 using BarcodeDecodeLib.Utils.Time;
 using Blazored.Modal;
 using MassTransit;
+using Microsoft.Extensions.Options;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,10 +20,15 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddBlazoredModal();
 builder.Services.AddOptions<HttpAddresses>().Bind(builder.Configuration.GetSection(nameof(HttpAddresses)));
 builder.Services.AddOptions<TimeZoneSettings>().Bind(builder.Configuration.GetSection(nameof(TimeZoneSettings)));
-
+builder.Services.AddHttpClient<HttpMessagePublisher>((sp, client) =>
+     {
+         var addresses = sp.GetRequiredService<IOptions<HttpAddresses>>().Value;
+         client.BaseAddress = new Uri(addresses.BarcodeDecodeBackendAddress);
+         client.Timeout = TimeSpan.FromSeconds(30);
+     });
+     builder.Services.AddScoped<HttpMessagePublisher>();
 builder.Services.AddScoped<IBarcodeDecoder, BarcodeDecoder>()
     .AddScoped<IVideoProcessor, VideoProcessor>()
-    .AddScoped<BarcodeMessagePublisher>()
     .AddScoped<ITimeConverter, TimeConverter>();
 
 var url = builder.Configuration.GetRequiredSection("ApplicationUrl").Value!;

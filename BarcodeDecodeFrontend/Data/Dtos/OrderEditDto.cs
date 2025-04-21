@@ -9,7 +9,7 @@ public class OrderEditDto
     public string? Barcode { get; set; }
     public TransportOrderStatusEnum Status { get; set; }
 
-    public static OrderEditDto? GetFrom(TransportOrderResponseDto? order)
+    public static OrderEditDto? GetFrom(TransportOrderResponseMessage? order)
     {
         if (order is null)
             return null;

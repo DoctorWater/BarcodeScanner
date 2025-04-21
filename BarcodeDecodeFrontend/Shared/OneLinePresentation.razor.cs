@@ -13,8 +13,8 @@ public partial class OneLinePresentation : ComponentBase
 {
     [CascadingParameter] IModalService Modal { get; set; } = default!;
 
-    [Parameter] public TsuResponseDto Tsu { get; set; }
-    [Parameter] public TransportOrderResponseDto TransportOrder { get; set; }
+    [Parameter] public TsuResponseMessage Tsu { get; set; }
+    [Parameter] public TransportOrderResponseMessage TransportOrder { get; set; }
 
     private bool IsExtended { get; set; } = false;
 
@@ -69,7 +69,7 @@ public partial class OneLinePresentation : ComponentBase
                 Barcode = result.Barcode,
                 Status = result.Status
             };
-            var updatedTsu = await BarcodeMessagePublisher.SendTsuChangeMessage(message);
+            var updatedTsu = await HttpMessagePublisher.SendTsuChangeMessage(message);
             if (updatedTsu is not null)
                 Tsu = updatedTsu;
             await InvokeAsync(StateHasChanged);
@@ -90,10 +90,24 @@ public partial class OneLinePresentation : ComponentBase
                 Status = result.Status,
                 Barcode = result.Barcode
             };
-            var updatedOrder = await BarcodeMessagePublisher.SendTransportOrderChangeMessage(message);
+            var updatedOrder = await HttpMessagePublisher.SendTransportOrderChangeMessage(message);
             if(updatedOrder is not null)
                 TransportOrder = updatedOrder;
             await InvokeAsync(StateHasChanged);
         }
+    }
+
+    private async Task RelaunchOrder()
+    {
+        var message = new TransportOrderRelaunchMessage(TransportOrder.Barcode)
+        {
+            Destinations = TransportOrder.Destinations
+        };
+        var sendTransportOrderRelaunchMessage = await HttpMessagePublisher.SendTransportOrderRelaunchMessage(message);
+        var userMessage = sendTransportOrderRelaunchMessage ? "Заказ успешно перезапущен" : "Произошла ошибка при перезапуске заказа";
+        var parameters = new ModalParameters();
+        parameters.Add(nameof(ModalAlert.Message), userMessage);
+
+        Modal.Show<ModalAlert>("ALERT", parameters);
     }
 }

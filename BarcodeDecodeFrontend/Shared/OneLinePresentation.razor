@@ -1,5 +1,5 @@
 ﻿@using BarcodeDecodeFrontend.Data.Services.Messaging
-@inject BarcodeMessagePublisher BarcodeMessagePublisher
+@inject HttpMessagePublisher HttpMessagePublisher
 
 <div class="card-body border border-primary border-2 rounded-3" style="padding: 0.3rem 1rem">
     <div class="row">
@@ -110,7 +110,7 @@
         <div class="row mt-4">
             @if (Tsu is not null)
             {
-                <div class="col-md-3 border-end">
+                <div class="col-md-2 border-end">
                     <h5>Transport Storage Unit Details</h5>
                     <p>
                         <strong>Id:</strong> @Tsu.Id
@@ -200,9 +200,10 @@
                 </div>
 
             }
-            <div class="col-md-1">
+            <div class="col-md-2">
                 <button class="btn btn-primary" @onclick="EditTsu" disabled=@(Tsu is null)>Edit Tsu</button>
-                <button class="btn btn-primary mt-2" @onclick="EditOrder" disabled=@(TransportOrder is null)>Edit Order</button>
+                <button class="btn btn-primary" @onclick="EditOrder" disabled=@(TransportOrder is null)>Edit Order</button>
+                <button class="btn btn-primary mt-2" @onclick="RelaunchOrder" disabled=@(TransportOrder is null)>Relaunch Order</button>
             </div>
         </div>
     }

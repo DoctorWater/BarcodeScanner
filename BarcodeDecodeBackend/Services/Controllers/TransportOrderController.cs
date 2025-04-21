@@ -17,11 +17,20 @@ public class TransportOrderController : ControllerBase
     }
 
     [HttpPost("change")]
-    public async Task<ActionResult<TsuResponseDto>> ProcessTsuChange([FromBody] TransportOrderChangeMessage request)
+    public async Task<ActionResult<TsuResponseMessage>> ProcessTransportOrderChange([FromBody] TransportOrderChangeMessage request)
     {
         var updateResult =await _orderMessageHandler.HandleOrderChange(request);
         if(updateResult is null)
             return NotFound("Order not found");
-        return Ok(new TransportOrderResponseDto(updateResult));
+        return Ok(new TransportOrderResponseMessage(updateResult));
+    }
+    
+    [HttpPost("relaunch")]
+    public async Task<ActionResult> ProcessTransportOrderRelaunch([FromBody] TransportOrderRelaunchMessage request)
+    {
+        var relaunchResult =await _orderMessageHandler.HandleOrderRelaunch(request);
+        if(relaunchResult)
+            return Ok();
+        return Problem();
     }
 }

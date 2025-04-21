@@ -16,11 +16,11 @@ public class TsuController : ControllerBase
     }
 
     [HttpPost("change")]
-    public async Task<ActionResult<TsuResponseDto>> ProcessTsuChange([FromBody] TsuChangeMessage request)
+    public async Task<ActionResult<TsuResponseMessage>> ProcessTsuChange([FromBody] TsuChangeMessage request)
     {
         var updateResult =await _tsuMessageHandler.HandleTsuChange(request);
         if(updateResult is null)
             return NotFound("Tsu not found");
-        return Ok(new TsuResponseDto(updateResult));
+        return Ok(new TsuResponseMessage(updateResult));
     }
 }

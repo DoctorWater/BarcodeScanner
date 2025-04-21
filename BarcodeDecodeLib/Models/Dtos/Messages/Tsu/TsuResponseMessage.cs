@@ -6,22 +6,22 @@ using BarcodeDecodeLib.Models.Enums;
 
 namespace BarcodeDecodeLib.Models.Dtos.Messages.Tsu;
 
-public class TsuResponseDto
+public class TsuResponseMessage
 {
-    public TsuResponseDto(TransportStorageUnit tsu)
+    public TsuResponseMessage(TransportStorageUnit tsu)
     {
         Id = tsu.Id;
         Barcode = tsu.Barcode;
         UpdatedOn = tsu.UpdatedOn;
         CreatedOn = tsu.CreatedOn;
         LocationTickets = tsu.LocationTickets.Select(x => new LocationTicketResponseDto(x)).ToList();
-        TransportOrder = tsu.TransportOrder is not null ? new TransportOrderResponseDto(tsu.TransportOrder) : null;
+        TransportOrder = tsu.TransportOrder is not null ? new TransportOrderResponseMessage(tsu.TransportOrder) : null;
         Status = tsu.Status;
     }
 
     //Used in deserialization
     [JsonConstructor]
-    public TsuResponseDto(int id, DateTimeOffset createdOn, DateTimeOffset updatedOn, TsuStatusEnum status, string barcode, TransportOrderResponseDto? transportOrder)
+    public TsuResponseMessage(int id, DateTimeOffset createdOn, DateTimeOffset updatedOn, TsuStatusEnum status, string barcode, TransportOrderResponseMessage? transportOrder)
     {
         Id = id;
         CreatedOn = createdOn;
@@ -39,5 +39,5 @@ public class TsuResponseDto
     
     public List<LocationTicketResponseDto> LocationTickets { get; init; } = new();
     
-    public TransportOrderResponseDto? TransportOrder { get; set; }
+    public TransportOrderResponseMessage? TransportOrder { get; set; }
 }

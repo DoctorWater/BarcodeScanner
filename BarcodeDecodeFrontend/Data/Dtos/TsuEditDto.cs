@@ -12,7 +12,7 @@ public class TsuEditDto
     public TsuStatusEnum Status { get; set; }
     public List<LocationTicketResponseDto> LocationTickets { get; set; }
 
-    public static TsuEditDto? GetFrom(TsuResponseDto unit)
+    public static TsuEditDto? GetFrom(TsuResponseMessage unit)
     {
         if (unit is null)
             return null;
