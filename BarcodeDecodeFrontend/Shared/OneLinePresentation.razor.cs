@@ -1,6 +1,7 @@
 ﻿using BarcodeDecodeFrontend.Data.Dtos;
 using BarcodeDecodeFrontend.Shared.Modals;
-using BarcodeDecodeLib.Entities;
+using BarcodeDecodeLib.Models.Dtos.Messages.TransportOrder;
+using BarcodeDecodeLib.Models.Dtos.Messages.Tsu;
 using BarcodeDecodeLib.Models.Enums;
 using Blazored.Modal;
 using Blazored.Modal.Services;
@@ -12,8 +13,8 @@ public partial class OneLinePresentation : ComponentBase
 {
     [CascadingParameter] IModalService Modal { get; set; } = default!;
 
-    [Parameter] public TransportStorageUnit? Tsu { get; set; }
-    [Parameter] public TransportOrder? Order { get; set; }
+    [Parameter] public TsuResponseDto Tsu { get; set; }
+    [Parameter] public TransportOrderResponseDto TransportOrder { get; set; }
 
     private bool IsExtended { get; set; } = false;
 
@@ -32,9 +33,9 @@ public partial class OneLinePresentation : ComponentBase
 
     private string GetOrderStatusColor()
     {
-        if (Order is null)
+        if (TransportOrder is null)
             return "text-danger";
-        return Order.Status switch
+        return TransportOrder.Status switch
         {
             TransportOrderStatusEnum.Created => "text-successful",
             TransportOrderStatusEnum.Active => "text-successful",
@@ -58,42 +59,41 @@ public partial class OneLinePresentation : ComponentBase
     private async Task EditTsu()
     {
         var parameters = new ModalParameters();
-        parameters.Add(nameof(ModalEditTsu.Item), TsuDto.GetFrom(Tsu));
+        parameters.Add(nameof(ModalEditTsu.Item), TsuEditDto.GetFrom(Tsu));
         var modal = Modal.Show<ModalEditTsu>(Tsu?.Barcode ?? "BARCODE NOT FOUND", parameters);
-        var result = (TsuDto?)(await modal.Result).Data;
+        var result = (TsuEditDto?)(await modal.Result).Data;
         if (result is not null)
         {
-            UpdateTsu(Tsu, result);
-            await BarcodeMessagePublisher.SendTsuChangeMessage(Tsu);
+            var message = new TsuChangeMessage(result.Id)
+            {
+                Barcode = result.Barcode,
+                Status = result.Status
+            };
+            var updatedTsu = await BarcodeMessagePublisher.SendTsuChangeMessage(message);
+            if (updatedTsu is not null)
+                Tsu = updatedTsu;
             await InvokeAsync(StateHasChanged);
         }
-    }
-
-    private void UpdateTsu(TransportStorageUnit tsu, TsuDto data)
-    {
-        tsu.Barcode = data.Barcode ?? tsu.Barcode;
-        tsu.UpdatedOn = data.UpdatedOn ?? tsu.UpdatedOn;
-        tsu.Status = data.Status;
     }
 
     private async Task EditOrder()
     {
         var parameters = new ModalParameters();
-        parameters.Add(nameof(ModalEditOrder.Item), OrderDto.GetFrom(Order));
-        var modal = Modal.Show<ModalEditOrder>(Order.Barcode, parameters);
+        parameters.Add(nameof(ModalEditOrder.Item), OrderEditDto.GetFrom(TransportOrder));
+        var modal = Modal.Show<ModalEditOrder>(TransportOrder.Barcode, parameters);
 
         var result = (OrderEditDto?)(await modal.Result).Data;
         if (result is not null)
         {
-            UpdateOrder(Order, result);
+            var message = new TransportOrderChangeMessage(result.Id)
+            {
+                Status = result.Status,
+                Barcode = result.Barcode
+            };
+            var updatedOrder = await BarcodeMessagePublisher.SendTransportOrderChangeMessage(message);
+            if(updatedOrder is not null)
+                TransportOrder = updatedOrder;
             await InvokeAsync(StateHasChanged);
         }
-    }
-
-    private void UpdateOrder(TransportOrder order, OrderEditDto resultData)
-    {
-        order.Barcode = resultData.Barcode ?? order.Barcode;
-        if (Enum.TryParse<TransportOrderStatusEnum>(resultData.Status, out var statusEnum))
-            order.Status = statusEnum;
     }
 }

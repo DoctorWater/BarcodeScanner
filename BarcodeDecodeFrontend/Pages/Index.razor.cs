@@ -1,8 +1,9 @@
 ﻿using System.Text;
 using BarcodeDecodeFrontend.Data.Models;
 using BarcodeDecodeFrontend.Shared.Modals;
-using BarcodeDecodeLib.Entities;
-using BarcodeDecodeLib.Models.Dtos.Messages;
+using BarcodeDecodeLib.Models.Dtos.Messages.Barcode;
+using BarcodeDecodeLib.Models.Dtos.Messages.TransportOrder;
+using BarcodeDecodeLib.Models.Dtos.Messages.Tsu;
 using BarcodeDecodeLib.Models.Dtos.Models;
 using Blazored.Modal;
 using Blazored.Modal.Services;
@@ -18,8 +19,8 @@ public partial class Index
     private List<IBrowserFile> loadedFiles = new();
     private byte[] imageBytes;
     private List<BarcodeModel> _recognizedImageBarcodes = new();
-    private List<TransportStorageUnit> _foundTsu = new();
-    private List<TransportOrder> _foundOrders = new();
+    private List<TsuResponseDto> _foundTsu = new();
+    private List<TransportOrderResponseDto> _foundOrders = new();
     private bool _hasSearched = false;
     private Dictionary<Guid, string> _imageUrls = new();
     private bool _hoverOn = true;

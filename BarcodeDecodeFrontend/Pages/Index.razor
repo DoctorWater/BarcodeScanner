@@ -56,13 +56,13 @@
             @foreach (var tsu in _foundTsu)
             {
             <div class="mt-2">
-                <OneLinePresentation Order="tsu.TransportOrder" Tsu="tsu"></OneLinePresentation>
+                <OneLinePresentation TransportOrder="tsu.TransportOrder" Tsu="tsu"></OneLinePresentation>
             </div>
             }
             @foreach (var order in _foundOrders.Where(order => _foundTsu.Select(t => t.TransportOrder?.ExternalId ?? "NULL").Contains(order.ExternalId) is false))
             {
             <div class="mt-2">
-                <OneLinePresentation Order="order" Tsu="@null"></OneLinePresentation>
+                <OneLinePresentation TransportOrder="order" Tsu="@null"></OneLinePresentation>
             </div>
             }
         </div>

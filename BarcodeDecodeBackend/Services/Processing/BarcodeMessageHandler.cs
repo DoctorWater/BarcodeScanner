@@ -1,23 +1,21 @@
-﻿using System.Collections.Immutable;
-using System.Diagnostics;
-using BarcodeDecodeBackend.Services.Interfaces;
-using BarcodeDecodeDataAccess;
+﻿using BarcodeDecodeBackend.Services.Interfaces;
 using BarcodeDecodeDataAccess.Interfaces;
-using BarcodeDecodeLib.Models.Dtos.Messages;
+using BarcodeDecodeLib.Models.Dtos.Messages.Barcode;
+using BarcodeDecodeLib.Models.Dtos.Messages.TransportOrder;
+using BarcodeDecodeLib.Models.Dtos.Messages.Tsu;
 using BarcodeDecodeLib.Models.Dtos.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace BarcodeDecodeBackend.Services.Processing;
 
 public class BarcodeMessageHandler : IBarcodeMessageHandler
 {
     private readonly ITransportStorageUnitRepository _transportStorageUnitRepository;
-    private readonly ITrasportOrderRepository _transportOrderRepository;
+    private readonly ITransportOrderRepository _transportOrderRepository;
 
-    public BarcodeMessageHandler(ITransportStorageUnitRepository transportStorageUnitRepository, ITrasportOrderRepository trasportOrderRepository)
+    public BarcodeMessageHandler(ITransportStorageUnitRepository transportStorageUnitRepository, ITransportOrderRepository transportOrderRepository)
     {
         _transportStorageUnitRepository = transportStorageUnitRepository;
-        _transportOrderRepository = trasportOrderRepository;
+        _transportOrderRepository = transportOrderRepository;
     }
 
     public Task<BarcodeResponseMessageBatch> HandleBarcodes(IEnumerable<string> barcodes)
@@ -29,8 +27,8 @@ public class BarcodeMessageHandler : IBarcodeMessageHandler
 
     private BarcodeResponseModel CreateBarcodeResponse(string barcode)
     {
-        var transportStorageUnits = _transportStorageUnitRepository.GetTsuByBarcode(barcode);
-        var orders = _transportOrderRepository.GetTransportOrdersByBarcode(barcode);
+        var transportStorageUnits = _transportStorageUnitRepository.GetByBarcode(barcode).Select(x => new TsuResponseDto(x));
+        var orders = _transportOrderRepository.GetByBarcode(barcode).Select(x => new TransportOrderResponseDto(x));
         return new BarcodeResponseModel()
         {
             TransportOrders = orders,

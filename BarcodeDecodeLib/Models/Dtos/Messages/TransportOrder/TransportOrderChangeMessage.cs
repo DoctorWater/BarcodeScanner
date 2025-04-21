@@ -1,0 +1,16 @@
+﻿using BarcodeDecodeLib.Models.Enums;
+
+namespace BarcodeDecodeLib.Models.Dtos.Messages.TransportOrder;
+
+public class TransportOrderChangeMessage
+{
+    public TransportOrderChangeMessage(int id)
+    {
+        Id = id;
+    }
+
+    public int Id { get; }
+    
+    public TransportOrderStatusEnum? Status { get; init; }
+    public string? Barcode { get; init; }
+}

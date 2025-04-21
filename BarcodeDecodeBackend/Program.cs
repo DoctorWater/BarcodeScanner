@@ -2,9 +2,9 @@ using System.Reflection;
 using BarcodeDecodeBackend.Services.Interfaces;
 using BarcodeDecodeBackend.Services.Processing;
 using BarcodeDecodeDataAccess;
-using BarcodeDecodeLib.Models.Dtos;
+using BarcodeDecodeDataAccess.Interfaces;
+using BarcodeDecodeDataAccess.Repositories;
 using BarcodeDecodeLib.Models.Dtos.Configs;
-using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Npgsql;
 var appName = Assembly.GetExecutingAssembly().GetName().Name ?? "<NO NAME>";
@@ -29,6 +29,10 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddOptions<HttpAddresses>()
     .Bind(builder.Configuration.GetSection(nameof(HttpAddresses)));
+builder.Services.AddScoped<ITransportStorageUnitRepository, TransportStorageUnitRepository>()
+    .AddScoped<ITransportOrderRepository, TransportOrderRepository>()
+    .AddScoped<ITransportOrderMessageHandler, TransportOrderMessageHandler>()
+    .AddScoped<ITsuMessageHandler, TsuMessageHandler>();
 
 var app = builder.Build();
 

@@ -1,8 +1,7 @@
-﻿using BarcodeDecodeLib.Entities;
-using BarcodeDecodeLib.Models.Dtos;
-using BarcodeDecodeLib.Models.Dtos.Configs;
-using BarcodeDecodeLib.Models.Dtos.Messages;
-using MassTransit;
+﻿using BarcodeDecodeLib.Models.Dtos.Configs;
+using BarcodeDecodeLib.Models.Dtos.Messages.Barcode;
+using BarcodeDecodeLib.Models.Dtos.Messages.TransportOrder;
+using BarcodeDecodeLib.Models.Dtos.Messages.Tsu;
 using Microsoft.Extensions.Options;
 
 namespace BarcodeDecodeFrontend.Data.Services.Messaging;
@@ -35,14 +34,23 @@ public class BarcodeMessagePublisher
         return responseBatch;
     }
 
-    public async Task<bool> SendTsuChangeMessage(TransportStorageUnit tsu)
+    public async Task<TsuResponseDto?> SendTsuChangeMessage(TsuChangeMessage message)
     {
         using var client = new HttpClient
         {
             BaseAddress = new Uri(_addresses.BarcodeDecodeBackendAddress)
         };
-
-        HttpResponseMessage response = await client.PostAsJsonAsync("api/tsu/change", tsu);
-        return response?.Content is not null && response.IsSuccessStatusCode;
+        HttpResponseMessage response = await client.PostAsJsonAsync("api/tsu/change", message);
+        return await response?.Content.ReadFromJsonAsync<TsuResponseDto>();
+    }
+    
+    public async Task<TransportOrderResponseDto?> SendTransportOrderChangeMessage(TransportOrderChangeMessage message)
+    {
+        using var client = new HttpClient
+        {
+            BaseAddress = new Uri(_addresses.BarcodeDecodeBackendAddress)
+        };
+        HttpResponseMessage response = await client.PostAsJsonAsync("api/order/change", message);
+        return await response?.Content.ReadFromJsonAsync<TransportOrderResponseDto>();
     }
 }

@@ -8,7 +8,7 @@
             <label for="barcode">
                 <b>Barcode</b>
             </label>:<br>
-            <input class="form-control" type="text" id="barcode" @bind="@Result.Barcode"/>
+            <input class="form-control" type="text" id="barcode" @bind="@Item.Barcode"/>
         </div>
         <br>
 
@@ -16,7 +16,7 @@
             <label for="status">
                 <b>Status</b>
             </label>:<br>
-            <select class="form-control" id="status" @bind="@Result.Status">
+            <select class="form-control" id="status" @bind="@Item.Status">
                 <option value="@TransportOrderStatusEnum.Active">Активен</option>
                 <option value="@TransportOrderStatusEnum.Closed">Закрыт</option>
                 <option value="@TransportOrderStatusEnum.Cancelled">Отменен</option>
@@ -37,22 +37,9 @@
 
     [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
 
-    [Parameter] public OrderDto Item { get; set; }
-    public OrderEditDto Result { get; set; } = new();
+    [Parameter] public OrderEditDto Item { get; set; }
     
-    protected override void OnParametersSet()
-    {
-        Result.Barcode = Item.Barcode;
-        Result.Status = Item.Status.ToString();
-        InvokeAsync(StateHasChanged);
-    }
 
-    /*private async Task CancelOrder()
-    {
-        await ManagementService.BrokerSendCancelOrderProcessing(Item.ExternalId, default);
-        await BlazoredModal.CancelAsync();
-    }*/
-
-    private async Task SaveChanges() => await BlazoredModal.CloseAsync(ModalResult.Ok(Result));
+    private async Task SaveChanges() => await BlazoredModal.CloseAsync(ModalResult.Ok(Item));
 
 }

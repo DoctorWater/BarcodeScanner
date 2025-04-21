@@ -25,9 +25,9 @@
             <p>
                 Order:
                 @{
-                    if (Order is not null)
+                    if (TransportOrder is not null)
                     {
-                        @Order.Status
+                        @TransportOrder.Status
                     }
                     else
                     {
@@ -55,7 +55,7 @@
                     }
                     else
                     {
-                        @Order.Barcode
+                        @TransportOrder.Barcode
                     }
                 }
             </p>
@@ -79,9 +79,9 @@
             <p>
                 Order Created:
                 @{
-                    if (Order is not null)
+                    if (TransportOrder is not null)
                     {
-                        @Order.CreatedOn
+                        @TransportOrder.CreatedOn
                     }
                     else
                     {
@@ -136,29 +136,29 @@
                 </div>
             }
 
-            @if (Order is not null)
+            @if (TransportOrder is not null)
             {
                 <div class="col-md-2 border-end">
                     <h5>Transport Order Details</h5>
                     <p>
-                        <strong>Id:</strong> @Order.Id
+                        <strong>Id:</strong> @TransportOrder.Id
                     </p>
                     <p>
-                        <strong>Barcode:</strong> @Order.Barcode
+                        <strong>Barcode:</strong> @TransportOrder.Barcode
                     </p>
                     <p>
-                        <strong>External ID:</strong> @Order.ExternalId
+                        <strong>External ID:</strong> @TransportOrder.ExternalId
                     </p>
                     <p>
-                        <strong>Status:</strong> @Order.Status
+                        <strong>Status:</strong> @TransportOrder.Status
                     </p>
                     <p>
-                        <strong>Created On:</strong> @Order.CreatedOn.ToString("g")
+                        <strong>Created On:</strong> @TransportOrder.CreatedOn.ToString("g")
                     </p>
-                    @if (Order.ClosedOn != null)
+                    @if (TransportOrder.ClosedOn != null)
                     {
                         <p>
-                            <strong>Closed On:</strong> @Order.ClosedOn?.ToString("g")
+                            <strong>Closed On:</strong> @TransportOrder.ClosedOn?.ToString("g")
                         </p>
                     }
                 </div>
@@ -202,7 +202,7 @@
             }
             <div class="col-md-1">
                 <button class="btn btn-primary" @onclick="EditTsu" disabled=@(Tsu is null)>Edit Tsu</button>
-                <button class="btn btn-primary mt-2" @onclick="EditOrder" disabled=@(Order is null)>Edit Order</button>
+                <button class="btn btn-primary mt-2" @onclick="EditOrder" disabled=@(TransportOrder is null)>Edit Order</button>
             </div>
         </div>
     }

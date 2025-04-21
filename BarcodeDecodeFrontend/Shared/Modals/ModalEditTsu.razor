@@ -82,7 +82,7 @@
 
 [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
 
-[Parameter] public TsuDto Item { get; set; }
+[Parameter] public TsuEditDto Item { get; set; }
 
 private async Task SaveChanges() => await BlazoredModal.CloseAsync(ModalResult.Ok(Item));
 

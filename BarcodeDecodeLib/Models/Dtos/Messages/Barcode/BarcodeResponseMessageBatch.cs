@@ -1,6 +1,6 @@
 ﻿using BarcodeDecodeLib.Models.Dtos.Models;
 
-namespace BarcodeDecodeLib.Models.Dtos.Messages;
+namespace BarcodeDecodeLib.Models.Dtos.Messages.Barcode;
 
 public class BarcodeResponseMessageBatch : HttpMessage
 {

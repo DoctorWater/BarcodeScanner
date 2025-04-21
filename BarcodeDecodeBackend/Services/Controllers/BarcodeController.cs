@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using BarcodeDecodeBackend.Services.Interfaces;
 using BarcodeDecodeLib.Models.Dtos.Messages;
+using BarcodeDecodeLib.Models.Dtos.Messages.Barcode;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BarcodeDecodeBackend.Services.Controllers;
