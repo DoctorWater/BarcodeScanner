@@ -23,8 +23,7 @@ public partial class Index
     private List<TransportOrderResponseMessage> _foundOrders = new();
     private bool _hasSearched = false;
     private Dictionary<Guid, string> _imageUrls = new();
-    private bool _hoverOn = true;
-    
+
 
     private async Task LoadFiles(InputFileChangeEventArgs e)
     {
@@ -70,7 +69,7 @@ public partial class Index
         _imageUrls.Remove(barcodeModel.Id);
         await InvokeAsync(StateHasChanged);
     }
-    
+
     private async Task LoadVideoFiles(Dictionary<IBrowserFile, string?> fileVerifyResult)
     {
         var videoFiles = fileVerifyResult.Where(p => p.Value == "video").Select(x => x.Key).ToList();
@@ -175,11 +174,8 @@ public partial class Index
 
     private void OpenImageModal(string imageUrl)
     {
-        if (_hoverOn is false)
-        {
-            var parameters = new ModalParameters();
-            parameters.Add(nameof(ModalShowImage.ImageUrl), imageUrl);
-            Modal.Show<ModalShowImage>("Image", parameters);
-        }
+        var parameters = new ModalParameters();
+        parameters.Add(nameof(ModalShowImage.ImageUrl), imageUrl);
+        Modal.Show<ModalShowImage>("Image", parameters);
     }
 }
