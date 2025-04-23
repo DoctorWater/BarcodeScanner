@@ -98,3 +98,16 @@ a, .btn-link {
     align-items: center;
     justify-content: center;
 }
+
+.blazored-toast {
+    min-width: 200px !important;
+    width: 20vw !important;
+}
+.blazored-toast-message {
+    font-size: clamp(12px, 0.8vw, 1.5rem) !important;
+    white-space: pre-line !important;
+}
+
+.blazored-toast-container, .blazored-toast-wrapper, .blazored-toast, .blazored-toast-body, .blazored-toast-message {
+    
+}

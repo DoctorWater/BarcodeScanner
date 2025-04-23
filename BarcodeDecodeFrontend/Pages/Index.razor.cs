@@ -33,10 +33,7 @@ public partial class Index
         var userMessage = CreateUserMessage(fileVerifyResult);
         if (userMessage != string.Empty)
         {
-            var parameters = new ModalParameters();
-            parameters.Add(nameof(ModalAlert.Message), userMessage);
-
-            Modal.Show<ModalAlert>("ALERT", parameters);
+            ToastService.ShowWarning(userMessage);
         }
 
         await LoadPhotoFiles(fileVerifyResult);
@@ -153,7 +150,7 @@ public partial class Index
         {
             if (pair.Value is null)
             {
-                sb.AppendLine($"File {pair.Key.Name} is invalid");
+                sb.AppendLine($"Файл {pair.Key.Name} имеет некорректный формат.");
             }
         }
 

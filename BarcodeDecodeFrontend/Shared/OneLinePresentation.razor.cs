@@ -103,11 +103,11 @@ public partial class OneLinePresentation : ComponentBase
         {
             Destinations = TransportOrder.Destinations
         };
-        var sendTransportOrderRelaunchMessage = await HttpMessagePublisher.SendTransportOrderRelaunchMessage(message);
-        var userMessage = sendTransportOrderRelaunchMessage ? "Заказ успешно перезапущен" : "Произошла ошибка при перезапуске заказа";
-        var parameters = new ModalParameters();
-        parameters.Add(nameof(ModalAlert.Message), userMessage);
-
-        Modal.Show<ModalAlert>("ALERT", parameters);
+        var isRelaunched = await HttpMessagePublisher.SendTransportOrderRelaunchMessage(message);
+        if(isRelaunched)
+            ToastService.ShowInfo("Заказ перезапущен");
+        else
+            ToastService.ShowError("Перезапуск не удался!");
+        
     }
 }

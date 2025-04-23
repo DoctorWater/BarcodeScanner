@@ -8,6 +8,7 @@ using BarcodeDecodeLib.Models.Dtos;
 using BarcodeDecodeLib.Models.Dtos.Configs;
 using BarcodeDecodeLib.Utils.Time;
 using Blazored.Modal;
+using Blazored.Toast;
 using MassTransit;
 using Microsoft.Extensions.Options;
 
@@ -17,7 +18,8 @@ builder.Services.AddControllers();
 
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-builder.Services.AddBlazoredModal();
+builder.Services.AddBlazoredModal()
+    .AddBlazoredToast();
 builder.Services.AddOptions<HttpAddresses>().Bind(builder.Configuration.GetSection(nameof(HttpAddresses)));
 builder.Services.AddOptions<TimeZoneSettings>().Bind(builder.Configuration.GetSection(nameof(TimeZoneSettings)));
 builder.Services.AddHttpClient<HttpMessagePublisher>((sp, client) =>

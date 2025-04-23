@@ -1,29 +1,32 @@
 ﻿@page "/"
 
 
+@using BarcodeDecodeFrontend.Data.Models
 @using BarcodeDecodeFrontend.Data.Services.Interfaces
 @using BarcodeDecodeFrontend.Data.Services.Messaging
 @inject IBarcodeDecoder Decoder;
 @inject IVideoProcessor VideoProcessor;
 @inject HttpMessagePublisher HttpPublisher;
+@inject IToastService ToastService;
 
 <div class="container">
     <div class="row">
         <div class="@(_recognizedImageBarcodes.Count > 0 ? "col-md-5 border-end" : "col-md-12") ">
             <h3>Загрузка изображения или видео</h3>
             <div class="form-check my-2">
-                <input class="form-check-input" type="checkbox" id="hoverToggle" @bind="_hoverOn" />
+                <input class="form-check-input" type="checkbox" id="hoverToggle" @bind="_hoverOn"/>
                 <label class="form-check-label" for="hoverToggle">
                     Увеличение при наведении
                 </label>
             </div>
             <div class="control-group">
                 <InputFile class="form-control restricted-width" OnChange="LoadFiles" multiple/>
+                <button class="btn-primary btn mt-2" @onclick="() => _recognizedImageBarcodes.Add(new BarcodeModel(Guid.NewGuid(), String.Empty))">Добавить штрихкод</button>
 
                 <div class="image-preview-container">
                     @foreach (var url in _imageUrls)
                     {
-                    <img src="@url.Value" alt="Загруженное изображение" class="preview-img" @onclick="() => OpenImageModal(url.Value)"/>
+                        <img src="@url.Value" alt="Загруженное изображение" class="preview-img" @onclick="() => OpenImageModal(url.Value)"/>
                     }
                 </div>
             </div>
@@ -31,54 +34,54 @@
 
         @if (_recognizedImageBarcodes.Count > 0)
         {
-        <div class="col-md-5 ms-5">
-            <h3>Проверьте корректность</h3>
-            @foreach (var barcode in _recognizedImageBarcodes)
-            {
-            var element = _recognizedImageBarcodes.First(x => x == barcode);
-            <div class="input-group mb-2">
-                <EditForm Model="element">
-                    <div class="d-flex align-items-center gap-2">
-                        <InputText @bind-Value="@element.Barcode" class="form-control"/>
-                        <button class="btn btn-danger" type="button" @onclick="(() => RemoveBarcode(barcode))">
-                            &#x2715;
-                        </button>
+            <div class="col-md-5 ms-5">
+                <h3>Проверьте корректность</h3>
+                @foreach (var barcode in _recognizedImageBarcodes)
+                {
+                    var element = _recognizedImageBarcodes.First(x => x == barcode);
+                    <div class="input-group mb-2">
+                        <EditForm Model="element">
+                            <div class="d-flex align-items-center gap-2">
+                                <InputText @bind-Value="@element.Barcode" class="form-control"/>
+                                <button class="btn btn-danger" type="button" @onclick="(() => RemoveBarcode(barcode))">
+                                    &#x2715;
+                                </button>
+                            </div>
+                        </EditForm>
                     </div>
-                </EditForm>
+                }
+                <input class="btn-primary btn mt-2" type="button" @onclick="@OnBarcodeSubmit" value="Submit"/>
             </div>
-            }
-            <input class="btn-primary btn mt-2" type="button" @onclick="@OnBarcodeSubmit" value="Submit"/>
-        </div>
         }
         @if (_foundTsu.Any() || _foundOrders.Any())
         {
-        <div class="row mt-3">
-            @foreach (var tsu in _foundTsu)
-            {
-            <div class="mt-2">
-                <OneLinePresentation TransportOrder="tsu.TransportOrder" Tsu="tsu"></OneLinePresentation>
+            <div class="row mt-3">
+                @foreach (var tsu in _foundTsu)
+                {
+                    <div class="mt-2">
+                        <OneLinePresentation TransportOrder="tsu.TransportOrder" Tsu="tsu"></OneLinePresentation>
+                    </div>
+                }
+                @foreach (var order in _foundOrders.Where(order => _foundTsu.Select(t => t.TransportOrder?.ExternalId ?? "NULL").Contains(order.ExternalId) is false))
+                {
+                    <div class="mt-2">
+                        <OneLinePresentation TransportOrder="order" Tsu="@null"></OneLinePresentation>
+                    </div>
+                }
             </div>
-            }
-            @foreach (var order in _foundOrders.Where(order => _foundTsu.Select(t => t.TransportOrder?.ExternalId ?? "NULL").Contains(order.ExternalId) is false))
-            {
-            <div class="mt-2">
-                <OneLinePresentation TransportOrder="order" Tsu="@null"></OneLinePresentation>
-            </div>
-            }
-        </div>
         }
         else if (_hasSearched)
         {
-        <div class="row mt-3">
-            <p>No result found.</p>
-        </div>
+            <div class="row mt-3">
+                <p>No result found.</p>
+            </div>
         }
     </div>
 </div>
 
 @if (_hoverOn)
 {
-<style>
+    <style>
     .preview-img:hover {
         transform: scale(2.5);
         z-index: 2;
