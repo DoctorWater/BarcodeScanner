@@ -6,6 +6,7 @@ using BarcodeDecodeDataAccess.Interfaces;
 using BarcodeDecodeDataAccess.Repositories;
 using BarcodeDecodeLib.Models.Dtos.Configs;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 using Npgsql;
 var appName = Assembly.GetExecutingAssembly().GetName().Name ?? "<NO NAME>";
 var builder = WebApplication.CreateBuilder(args);
@@ -23,6 +24,20 @@ builder.Services
             .UseSnakeCaseNamingConvention();
     });
 
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "My API",
+        Version = "v1",
+        Description = "Пример API с подключенным Swagger"
+    });
+    
+    var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    c.IncludeXmlComments(xmlPath);
+});
+
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
@@ -35,12 +50,22 @@ builder.Services.AddScoped<ITransportStorageUnitRepository, TransportStorageUnit
     .AddScoped<ITsuMessageHandler, TsuMessageHandler>();
 
 var app = builder.Build();
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+    // Генерируем JSON спецификацию
+    app.UseSwagger();
+    // Встраиваем UI по корню сайта
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+        c.RoutePrefix = "swagger";; // http://localhost:5000/
+    });
+}
 
 app.UseHttpsRedirection();
 
 app.MapControllers();
-
-app.MapGet("/", () => "Hello World!");
 
 app.Run();
 

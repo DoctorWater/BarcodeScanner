@@ -2,35 +2,75 @@
 using BarcodeDecodeLib.Models.Dtos.Messages.TransportOrder;
 using BarcodeDecodeLib.Models.Dtos.Messages.Tsu;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace BarcodeDecodeBackend.Services.Controllers;
 
+/// <summary>
+/// Операции по управлению заказами.
+/// </summary>
 [Controller]
-[Route("api/order")]
+[Route("api/[controller]")]
 public class TransportOrderController : ControllerBase
 {
     private readonly ITransportOrderMessageHandler _orderMessageHandler;
 
-    public TransportOrderController(ITransportOrderMessageHandler tsuMessageHandler)
+    public TransportOrderController(ITransportOrderMessageHandler orderMessageHandler)
     {
-        _orderMessageHandler = tsuMessageHandler;
+        _orderMessageHandler = orderMessageHandler;
     }
 
+    /// <summary>
+    /// Изменить параметры существующего заказа.
+    /// </summary>
+    /// <remarks>
+    /// Принимает DTO с информацией об изменениях.  
+    /// Возвращает обновлённую сущность заказа.
+    /// </remarks>
+    /// <param name="request">DTO с данными для изменения заказа.</param>
+    /// <returns>Обновлённый заказ в теле ответа.</returns>
     [HttpPost("change")]
-    public async Task<ActionResult<TsuResponseMessage>> ProcessTransportOrderChange([FromBody] TransportOrderChangeMessage request)
+    [SwaggerOperation(
+        Summary = "Изменить заказ",
+        Description = "Обрабатывает запрос на изменение заказа и возвращает обновлённый объект заказа.",
+        Tags = new[] { "TransportOrder" }
+    )]
+    [SwaggerResponse(200, "Заказ успешно изменён", typeof(TransportOrderResponseMessage))]
+    [SwaggerResponse(404, "Заказ не найден")]
+    public async Task<ActionResult<TransportOrderResponseMessage>> ProcessTransportOrderChange(
+        [FromBody] TransportOrderChangeMessage request)
     {
-        var updateResult =await _orderMessageHandler.HandleOrderChange(request);
-        if(updateResult is null)
+        var updateResult = await _orderMessageHandler.HandleOrderChange(request);
+        if (updateResult is null)
             return NotFound("Order not found");
+
         return Ok(new TransportOrderResponseMessage(updateResult));
     }
-    
+
+    /// <summary>
+    /// Повторный запуск (relaunch) заказа.
+    /// </summary>
+    /// <remarks>
+    /// Принимает DTO для повторного запуска.  
+    /// Возвращает 200 OK при успехе или 500 Problem в случае ошибки.
+    /// </remarks>
+    /// <param name="request">DTO с данными для релонча заказа.</param>
+    /// <returns>Статус выполнения операции.</returns>
     [HttpPost("relaunch")]
-    public async Task<ActionResult> ProcessTransportOrderRelaunch([FromBody] TransportOrderRelaunchMessage request)
+    [SwaggerOperation(
+        Summary = "Повторно запустить заказ",
+        Description = "Пробует повторно запустить обработку заказа. Возвращает 200 OK при успехе.",
+        Tags = new[] { "TransportOrder" }
+    )]
+    [SwaggerResponse(200, "Заказ успешно перезапущен")]
+    [SwaggerResponse(500, "Не удалось перезапустить заказ")]
+    public async Task<ActionResult> ProcessTransportOrderRelaunch(
+        [FromBody] TransportOrderRelaunchMessage request)
     {
-        var relaunchResult =await _orderMessageHandler.HandleOrderRelaunch(request);
-        if(relaunchResult)
+        bool relaunchResult = await _orderMessageHandler.HandleOrderRelaunch(request);
+        if (relaunchResult)
             return Ok();
-        return Problem();
+
+        return Problem("Ошибка при повторном запуске заказа");
     }
 }
