@@ -28,9 +28,9 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "My API",
+        Title = "BarcodeDecodeBackend API",
         Version = "v1",
-        Description = "Пример API с подключенным Swagger"
+        Description = "Платформа для тестирования API бэкенда проекта BarcodeDecode"
     });
     
     var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
@@ -53,13 +53,11 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
-    // Генерируем JSON спецификацию
     app.UseSwagger();
-    // Встраиваем UI по корню сайта
     app.UseSwaggerUI(c =>
     {
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
-        c.RoutePrefix = "swagger";; // http://localhost:5000/
+        c.RoutePrefix = "swagger";
     });
 }
 
