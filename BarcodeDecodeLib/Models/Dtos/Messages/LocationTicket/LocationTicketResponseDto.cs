@@ -32,17 +32,17 @@ public class LocationTicketResponseDto
         ErrorMessage = errorMessage;
     }
 
-    public int Id { get; set; }
+    public int Id { get; init; }
     public DateTimeOffset CreatedOn { get; init; }
     
     public int DepartureLocation { get; init; }
-    public TransportLocationTicketStatus Status { get; set; }
+    public TransportLocationTicketStatus Status { get; init; }
     
-    public List<int> PlannedLocations { get; set; } = new();
+    public List<int> PlannedLocations { get; init; } = new();
 
-    public int? ArrivedAtLocation { get; set; }
-    public DateTimeOffset? ArrivedOn { get; set; }
+    public int? ArrivedAtLocation { get; init; }
+    public DateTimeOffset? ArrivedOn { get; init; }
 
-    public int SortingErrorCode { get; set; }
-    public string? ErrorMessage { get; set; }
+    public int SortingErrorCode { get; init; }
+    public string? ErrorMessage { get; init; }
 }

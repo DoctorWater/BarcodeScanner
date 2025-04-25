@@ -46,6 +46,6 @@ public class TsuController : ControllerBase
         if (updateResult is null)
             return NotFound("Tsu not found");
 
-        return Ok(new TsuResponseMessage(updateResult));
+        return Ok(new TsuResponseMessage(request.CorrelationId, updateResult));
     }
 }

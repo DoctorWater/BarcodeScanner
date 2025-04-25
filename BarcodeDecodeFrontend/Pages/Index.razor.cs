@@ -158,7 +158,7 @@ public partial class Index
 
     private async Task OnBarcodeSubmit()
     {
-        var messages = _recognizedImageBarcodes.Select(x => new BarcodeRequestModel(x.Barcode));
+        var messages = _recognizedImageBarcodes.Select(x => new BarcodeRequestMessage(x.Barcode));
         var message = new BarcodeRequestMessageBatch(messages.ToList());
         var response = await HttpPublisher.SendBarcodeRequest(message);
         _hasSearched = true;

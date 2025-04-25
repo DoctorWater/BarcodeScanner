@@ -2,10 +2,11 @@
 
 namespace BarcodeDecodeLib.Models.Dtos.Messages.TransportOrder;
 
-public class TransportOrderChangeMessage
+public class TransportOrderChangeMessage : HttpMessage
 {
     public TransportOrderChangeMessage(int id)
     {
+        CorrelationId = Guid.NewGuid();
         Id = id;
     }
 

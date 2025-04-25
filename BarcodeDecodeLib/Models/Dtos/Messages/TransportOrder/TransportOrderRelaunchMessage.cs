@@ -2,16 +2,18 @@
 
 namespace BarcodeDecodeLib.Models.Dtos.Messages.TransportOrder;
 
-public class TransportOrderRelaunchMessage
+public class TransportOrderRelaunchMessage : HttpMessage
 {
     public TransportOrderRelaunchMessage(string barcode)
     {
+        CorrelationId = Guid.NewGuid();
         Barcode = barcode;
     }
 
     [JsonConstructor]
-    public TransportOrderRelaunchMessage(string barcode, List<int> destinations)
+    public TransportOrderRelaunchMessage(Guid correlationId, string barcode, List<int> destinations)
     {
+        CorrelationId = correlationId;
         Barcode = barcode;
         Destinations = destinations;
     }

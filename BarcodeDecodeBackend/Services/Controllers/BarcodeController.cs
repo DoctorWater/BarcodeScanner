@@ -53,9 +53,8 @@ public class BarcodeController : ControllerBase
         }
 
         var decoded = await _barcodeMessageHandler.HandleBarcodes(
-            request.Messages.Select(x => x.BarcodeText));
-
-        decoded.CorrelationId = request.CorrelationId;
+            request.CorrelationId ?? Guid.NewGuid(), request.Messages.Select(x => x.BarcodeText));
+        
         return Ok(decoded);
     }
 }

@@ -18,17 +18,17 @@ public class BarcodeMessageHandler : IBarcodeMessageHandler
         _transportOrderRepository = transportOrderRepository;
     }
 
-    public Task<BarcodeResponseMessageBatch> HandleBarcodes(IEnumerable<string> barcodes)
+    public Task<BarcodeResponseMessageBatch> HandleBarcodes(Guid correlationId, IEnumerable<string> barcodes)
     {
-        var result = barcodes.Select(CreateBarcodeResponse).ToList();
+        var result = barcodes.Select(x => CreateBarcodeResponse(correlationId, x)).ToList();
         BarcodeResponseMessageBatch message = new BarcodeResponseMessageBatch(result);
         return Task.FromResult(message);
     }
 
-    private BarcodeResponseModel CreateBarcodeResponse(string barcode)
+    private BarcodeResponseModel CreateBarcodeResponse(Guid correlationId, string barcode)
     {
-        var transportStorageUnits = _transportStorageUnitRepository.GetByBarcode(barcode).Select(x => new TsuResponseMessage(x));
-        var orders = _transportOrderRepository.GetByBarcode(barcode).Select(x => new TransportOrderResponseMessage(x));
+        var transportStorageUnits = _transportStorageUnitRepository.GetByBarcode(barcode).Select(x => new TsuResponseMessage(correlationId, x));
+        var orders = _transportOrderRepository.GetByBarcode(barcode).Select(x => new TransportOrderResponseMessage(correlationId, x));
         return new BarcodeResponseModel()
         {
             TransportOrders = orders,

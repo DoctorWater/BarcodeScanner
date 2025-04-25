@@ -2,10 +2,11 @@
 
 namespace BarcodeDecodeLib.Models.Dtos.Messages.Tsu;
 
-public class TsuChangeMessage
+public class TsuChangeMessage : HttpMessage
 {
     public TsuChangeMessage(int id)
     {
+        CorrelationId = Guid.NewGuid();
         Id = id;
     }
 

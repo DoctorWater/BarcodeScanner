@@ -44,7 +44,7 @@ public class TransportOrderController : ControllerBase
         if (updateResult is null)
             return NotFound("Order not found");
 
-        return Ok(new TransportOrderResponseMessage(updateResult));
+        return Ok(new TransportOrderResponseMessage(request.CorrelationId, updateResult));
     }
 
     /// <summary>

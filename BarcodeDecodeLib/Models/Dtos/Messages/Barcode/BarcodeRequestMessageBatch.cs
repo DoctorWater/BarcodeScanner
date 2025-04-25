@@ -4,9 +4,9 @@ namespace BarcodeDecodeLib.Models.Dtos.Messages.Barcode;
 
 public class BarcodeRequestMessageBatch : HttpMessage
 {
-    public List<BarcodeRequestModel> Messages { get; }
+    public List<BarcodeRequestMessage> Messages { get; }
 
-    public BarcodeRequestMessageBatch(List<BarcodeRequestModel> messages)
+    public BarcodeRequestMessageBatch(List<BarcodeRequestMessage> messages)
     {
         CorrelationId = Guid.NewGuid();
         Messages = messages;

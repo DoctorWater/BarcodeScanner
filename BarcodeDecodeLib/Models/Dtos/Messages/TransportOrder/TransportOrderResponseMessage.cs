@@ -3,10 +3,11 @@ using BarcodeDecodeLib.Models.Enums;
 
 namespace BarcodeDecodeLib.Models.Dtos.Messages.TransportOrder;
 
-public class TransportOrderResponseMessage
+public class TransportOrderResponseMessage : HttpMessage
 {
-    public TransportOrderResponseMessage(Entities.TransportOrder order)
+    public TransportOrderResponseMessage(Guid? correlationId, Entities.TransportOrder order)
     {
+        CorrelationId = correlationId;
         Id = order.Id;
         ExternalId = order.ExternalId;
         Barcode = order.Barcode;
@@ -18,8 +19,9 @@ public class TransportOrderResponseMessage
 
     //Used in deserialization
     [JsonConstructor]
-    public TransportOrderResponseMessage(int id, string externalId, string barcode, DateTimeOffset createdOn, TransportOrderStatusEnum status, DateTimeOffset? closedOn)
+    public TransportOrderResponseMessage(Guid? correlationId, int id, string externalId, string barcode, DateTimeOffset createdOn, TransportOrderStatusEnum status, DateTimeOffset? closedOn)
     {
+        CorrelationId = correlationId;
         Id = id;
         ExternalId = externalId;
         Barcode = barcode;
@@ -28,13 +30,13 @@ public class TransportOrderResponseMessage
         ClosedOn = closedOn;
     }
 
-    public int Id { get; set; }
+    public int Id { get; init; }
     public string ExternalId { get; init; }
-    public string Barcode { get; set; }
+    public string Barcode { get; init; }
     
-    public List<int> Destinations { get; set; } = new();
+    public List<int> Destinations { get; init; } = new();
 
     public DateTimeOffset CreatedOn { get; init; }
-    public TransportOrderStatusEnum Status { get; set; }
-    public DateTimeOffset? ClosedOn { get; set; }
+    public TransportOrderStatusEnum Status { get; init; }
+    public DateTimeOffset? ClosedOn { get; init; }
 }
