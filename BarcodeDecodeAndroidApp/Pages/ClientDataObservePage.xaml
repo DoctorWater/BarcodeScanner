@@ -9,7 +9,7 @@
         <CollectionView ItemsSource="{Binding ClientPresentations}">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
-                    <local:OneLinePresentation ClientPresentation="{Binding}" />
+                    <local:AndroidOneLinePresentation ClientPresentation="{Binding}" />
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>

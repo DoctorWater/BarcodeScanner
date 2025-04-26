@@ -36,8 +36,8 @@ public partial class AndroidOneLinePresentation : ContentView
 		OnPropertyChanged(nameof(LocationTickets));
 	}
 
-	public OrderDto Order => ClientPresentation?.Order;
-	public IEnumerable<LocationTicketDto> LocationTickets => ClientPresentation?.LocationTickets;
+	public TransportOrderViewModel Order => ClientPresentation?.Order;
+	public IEnumerable<LocationTicketViewModel> LocationTickets => ClientPresentation?.LocationTickets;
 
 	public new event PropertyChangedEventHandler PropertyChanged;
 	protected new void OnPropertyChanged([CallerMemberName] string propertyName = null)

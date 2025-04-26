@@ -11,12 +11,18 @@ public class BarcodeService
 
     public BarcodeService()
     {
-        _httpClient = new HttpClient();
+        //УБРАТЬ! СДЕЛАТЬ НОРМАЛЬНЫЙ СЕРТИФИКАТ!!!
+        var handler = new HttpClientHandler
+        {
+            ServerCertificateCustomValidationCallback = HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+        };
+        _httpClient = new HttpClient(handler);
 
         string serverAddress = Preferences.Get("ServerAddress", "192.168.1.104");
-        string serverPort = Preferences.Get("ServerPort", "7214");
+        string serverPort = Preferences.Get("ServerPort", "21101");
 
-        _baseUrl = $"http://{serverAddress}:{serverPort}/api/barcode/info";
+        _baseUrl = $"https://{serverAddress}:{serverPort}";
+        _httpClient.BaseAddress = new Uri(_baseUrl);
     }
 
     public async Task<BarcodeResponseMessageBatch> SendBarcodeRequest(

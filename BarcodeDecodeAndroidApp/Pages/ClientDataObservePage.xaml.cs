@@ -10,7 +10,7 @@ public partial class ClientDataObservePage : ContentPage
 	{
 		InitializeComponent();
 
-		ClientPresentations = new ObservableCollection<ClientPresentationDto>(dtos){};
+		ClientPresentations = new ObservableCollection<ClientPresentationDto>(dtos) { };
 
 		BindingContext = this;
 	}

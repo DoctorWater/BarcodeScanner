@@ -8,13 +8,13 @@ namespace MauiAndroid.App.Pages
 {
     public partial class LocationTicketsPage : ContentPage
     {
-        public ObservableCollection<LocationTicketResponseDto> LocationTickets { get; set; }
+        public ObservableCollection<LocationTicketViewModel> LocationTickets { get; set; }
 
         public LocationTicketsPage(ICollection<LocationTicketResponseDto> locationTickets)
         {
             InitializeComponent();
 
-            LocationTickets = new ObservableCollection<LocationTicketResponseDto>(locationTickets.OrderBy(t => t.Id).Select(x => LocationTicketDto.GetFrom(x)));
+            LocationTickets = new ObservableCollection<LocationTicketViewModel>(locationTickets.OrderBy(t => t.Id).Select(x => LocationTicketViewModel.GetFrom(x)));
 
             BindingContext = this;
         }

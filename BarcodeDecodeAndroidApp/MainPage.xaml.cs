@@ -1,7 +1,6 @@
 ﻿using BarcodeDecodeLib.Models.Dtos.Messages.Barcode;
 using BarcodeDecodeLib.Models.Dtos.Models;
 using BarcodeScanner.Mobile;
-using MauiAndroid.App.Data.Dtos;
 using MauiAndroid.App.Pages;
 
 namespace MauiAndroid.App;
@@ -20,7 +19,32 @@ public partial class MainPage : ContentPage
     [Obsolete]
     private async void OnScanClicked(object sender, EventArgs e)
     {
-        var status = await CheckAndRequestCameraPermission();
+        var message = new BarcodeRequestMessage("SomeBarcode1");
+        var batch = new BarcodeRequestMessageBatch(new List<BarcodeRequestMessage>{message});
+        var responseData = await _barcodeService.SendBarcodeRequest(batch);
+        if (responseData != null)
+        {
+            if (_isClientPageSelected){}
+                //await Navigation.PushAsync(new ClientDataObservePage(responseData.Tsus.Select(x => new ClientPresentationDto(){
+                //    LocationTickets = x.LocationTicketDtos,
+                //    Order = x.InnerOrder
+                //})));
+            else
+            {
+                var mappedData = new BackendResponseViewModel
+                {
+                    TransportOrders = responseData.Messages.SelectMany(x => x.TransportOrders).Select(x => new TransportOrderViewModel(x)).ToList(),
+                    TransportStorageUnits = responseData.Messages.SelectMany(x => x.TransportStorageUnits).Select(x => new TransportStorageUnitViewModel(x)).ToList()
+                };
+                await Navigation.PushAsync(new DeveloperDataObservePage(mappedData));
+            }
+                
+        }
+        else
+        {
+            await DisplayAlert("Ошибка", "Не удалось получить данные.", "OK");
+        }
+        /* var status = await CheckAndRequestCameraPermission();
 
         if (status != PermissionStatus.Granted)
         {
@@ -46,7 +70,7 @@ public partial class MainPage : ContentPage
         {
             CamViewFrame.Content = null;
             ScanBtn.Text = "Scan barcode";
-        }
+        } */
     }
 
     private void OnPageDefiningCheckboxChanged(object sender, CheckedChangedEventArgs e)
@@ -81,13 +105,21 @@ public partial class MainPage : ContentPage
         var responseData = await _barcodeService.SendBarcodeRequest(batch);
         if (responseData != null)
         {
-            if (_isClientPageSelected)
-                await Navigation.PushAsync(new ClientDataObservePage(responseData.Tsus.Select(x => new ClientPresentationDto(){
-                    LocationTickets = x.LocationTicketDtos,
-                    Order = x.InnerOrder
-                })));
+            if (_isClientPageSelected){}
+                //await Navigation.PushAsync(new ClientDataObservePage(responseData.Tsus.Select(x => new ClientPresentationDto(){
+                //    LocationTickets = x.LocationTicketDtos,
+                //    Order = x.InnerOrder
+                //})));
             else
-                await Navigation.PushAsync(new DeveloperDataObservePage(responseData));
+            {
+                var mappedData = new BackendResponseViewModel
+                {
+                    TransportOrders = responseData.Messages.SelectMany(x => x.TransportOrders).Select(x => new TransportOrderViewModel(x)).ToList(),
+                    TransportStorageUnits = responseData.Messages.SelectMany(x => x.TransportStorageUnits).Select(x => new TransportStorageUnitViewModel(x)).ToList()
+                };
+                await Navigation.PushAsync(new DeveloperDataObservePage(mappedData));
+            }
+                
         }
         else
         {

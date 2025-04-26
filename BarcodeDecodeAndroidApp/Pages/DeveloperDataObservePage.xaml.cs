@@ -1,8 +1,10 @@
+using BarcodeDecodeLib.Models.Dtos.Messages.Barcode;
+
 namespace MauiAndroid.App.Pages
 {
     public partial class DeveloperDataObservePage : ContentPage
     {
-        public DeveloperDataObservePage(ResponseData responseData)
+        public DeveloperDataObservePage(BackendResponseViewModel responseData)
         {
             InitializeComponent();
 
@@ -12,7 +14,7 @@ namespace MauiAndroid.App.Pages
         private async void OnTsuTapped(object sender, EventArgs e)
         {
             var frame = sender as Frame;
-            var selectedTsu = frame.BindingContext as AndroidTsuDto;
+            var selectedTsu = frame.BindingContext as TransportStorageUnitViewModel;
             if (selectedTsu != null)
             {
                 selectedTsu.IsExpanded = !selectedTsu.IsExpanded;
