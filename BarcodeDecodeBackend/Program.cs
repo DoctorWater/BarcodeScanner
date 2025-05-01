@@ -8,6 +8,9 @@ using BarcodeDecodeLib.Models.Dtos.Configs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using Npgsql;
+using Serilog;
+using Serilog.Sinks.OpenSearch;
+
 var appName = Assembly.GetExecutingAssembly().GetName().Name ?? "<NO NAME>";
 var builder = WebApplication.CreateBuilder(args);
 var url = builder.Configuration.GetRequiredSection("ApplicationUrl").Value!;
@@ -23,6 +26,25 @@ builder.Services
             .EnableSensitiveDataLogging()
             .UseSnakeCaseNamingConvention();
     });
+
+builder.Host.UseSerilog((builderContext, cfg) =>
+{
+    cfg.ReadFrom.Configuration(builderContext.Configuration);
+    Serilog.Debugging.SelfLog.Enable(Console.Out);
+
+    var openSearchLogConfig = builder.Configuration.GetRequiredSection(nameof(ElasticSearchLogConfig)).Get<ElasticSearchLogConfig>()!;
+    cfg.Enrich.FromLogContext();
+    cfg.WriteTo.OpenSearch(new OpenSearchSinkOptions(openSearchLogConfig.Uri)
+    {
+        IndexFormat = openSearchLogConfig.IndexFormat,
+        ModifyConnectionSettings = (c)
+            => c.BasicAuthentication(openSearchLogConfig.Username, openSearchLogConfig.Password),
+        EmitEventFailure = EmitEventFailureHandling.WriteToSelfLog,
+        AutoRegisterTemplate = openSearchLogConfig.AutoRegisterTemplate,
+        AutoRegisterTemplateVersion = AutoRegisterTemplateVersion.OSv2,
+        InlineFields = true
+    });
+});
 
 builder.Services.AddSwaggerGen(c =>
 {

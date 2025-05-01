@@ -14,10 +14,12 @@ namespace BarcodeDecodeBackend.Services.Controllers;
 public class TransportOrderController : ControllerBase
 {
     private readonly ITransportOrderMessageHandler _orderMessageHandler;
+    private readonly ILogger<TransportOrderController> _logger;
 
-    public TransportOrderController(ITransportOrderMessageHandler orderMessageHandler)
+    public TransportOrderController(ITransportOrderMessageHandler orderMessageHandler, ILogger<TransportOrderController> logger)
     {
         _orderMessageHandler = orderMessageHandler;
+        _logger = logger;
     }
 
     /// <summary>
@@ -40,10 +42,14 @@ public class TransportOrderController : ControllerBase
     public async Task<ActionResult<TransportOrderResponseMessage>> ProcessTransportOrderChange(
         [FromBody] TransportOrderChangeMessage request)
     {
+        _logger.LogInformation("Transport order change request was received. Request: {request}", request);
         var updateResult = await _orderMessageHandler.HandleOrderChange(request);
         if (updateResult is null)
+        {
+            _logger.LogWarning("Transport order with id {barcodeId} was not found", request.Id);
             return NotFound("Order not found");
-
+        }
+        _logger.LogInformation("Transport order was changed. New order: {result}", updateResult);
         return Ok(new TransportOrderResponseMessage(request.CorrelationId, updateResult));
     }
 
@@ -67,10 +73,10 @@ public class TransportOrderController : ControllerBase
     public async Task<ActionResult> ProcessTransportOrderRelaunch(
         [FromBody] TransportOrderRelaunchMessage request)
     {
+        _logger.LogInformation("Transport order relaunch request was received. Request: {request}", request);
         bool relaunchResult = await _orderMessageHandler.HandleOrderRelaunch(request);
-        if (relaunchResult)
-            return Ok();
-
-        return Problem("Ошибка при повторном запуске заказа");
+        if (relaunchResult is false) return Problem("Ошибка при повторном запуске заказа");
+        _logger.LogInformation("Transport order relaunch with correlation id {request.CorrelationId} was successful.", request.CorrelationId);
+        return Ok();
     }
 }
