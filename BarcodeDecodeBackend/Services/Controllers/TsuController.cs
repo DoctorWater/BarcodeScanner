@@ -13,11 +13,14 @@ namespace BarcodeDecodeBackend.Services.Controllers;
 public class TsuController : ControllerBase
 {
     private readonly ITsuMessageHandler _tsuMessageHandler;
+    private readonly ILogger<TsuController> _logger;
 
-    public TsuController(ITsuMessageHandler tsuMessageHandler)
+    public TsuController(ITsuMessageHandler tsuMessageHandler, ILogger<TsuController> logger)
     {
         _tsuMessageHandler = tsuMessageHandler;
+        _logger = logger;
     }
+    
 
     /// <summary>
     /// Изменение параметров TSU.
@@ -42,9 +45,15 @@ public class TsuController : ControllerBase
     public async Task<ActionResult<TsuResponseMessage>> ProcessTsuChange(
         [FromBody] TsuChangeMessage request)
     {
+        _logger.LogInformation("Tsu change request was received. Request: {request}", request);
         var updateResult = await _tsuMessageHandler.HandleTsuChange(request);
         if (updateResult is null)
+        {
+            _logger.LogWarning("Tsu with id {tsuId} was not found", request.Id);
             return NotFound("Tsu not found");
+        }
+
+        _logger.LogInformation("Tsu was changed. New tsu: {result}", updateResult);
 
         return Ok(new TsuResponseMessage(request.CorrelationId, updateResult));
     }

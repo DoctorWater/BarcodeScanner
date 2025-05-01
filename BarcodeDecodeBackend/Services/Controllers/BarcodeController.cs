@@ -16,10 +16,12 @@ namespace BarcodeDecodeBackend.Services.Controllers;
 public class BarcodeController : ControllerBase
 {
     private readonly IBarcodeMessageHandler _barcodeMessageHandler;
+    private readonly ILogger<BarcodeController> _logger;
 
-    public BarcodeController(IBarcodeMessageHandler barcodeMessageHandler)
+    public BarcodeController(IBarcodeMessageHandler barcodeMessageHandler, ILogger<BarcodeController> logger)
     {
         _barcodeMessageHandler = barcodeMessageHandler;
+        _logger = logger;
     }
 
     /// <summary>
@@ -47,13 +49,16 @@ public class BarcodeController : ControllerBase
     public async Task<ActionResult<BarcodeResponseMessageBatch>> ProcessBarcodeBatch(
         [FromBody] BarcodeRequestMessageBatch request)
     {
+        _logger.LogInformation("Barcode batch request was received. Request: {request}", request);
         if (request == null || request.Messages == null)
         {
+            _logger.LogWarning("Barcode batch request is invalid. Request: {request}", request);
             return BadRequest("Некорректный запрос");
         }
-
+        
         var decoded = await _barcodeMessageHandler.HandleBarcodes(
             request.CorrelationId ?? Guid.NewGuid(), request.Messages.Select(x => x.BarcodeText));
+        _logger.LogInformation("Barcode batch request with id {correlationId} was processed successfully.", request.CorrelationId);
         
         return Ok(decoded);
     }
