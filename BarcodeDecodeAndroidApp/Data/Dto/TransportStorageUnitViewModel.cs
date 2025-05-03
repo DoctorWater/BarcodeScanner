@@ -1,3 +1,4 @@
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using BarcodeDecodeLib.Models.Dtos.Messages.LocationTicket;
@@ -6,6 +7,8 @@ using BarcodeDecodeLib.Models.Enums;
 
 public class TransportStorageUnitViewModel : INotifyPropertyChanged
 {
+    const double TICKET_HEADER_HEIGHT = 50;
+    const double TICKET_ROW_HEIGHT = 40;
     private bool _isExpanded;
 
     public int Id { get; init; }
@@ -13,8 +16,10 @@ public class TransportStorageUnitViewModel : INotifyPropertyChanged
     public TsuStatusEnum Status { get; init; }
     public DateTimeOffset? UpdatedOn { get; init; }
     public bool IsOkay { get; init; }
-    public List<LocationTicketViewModel> LocationTicketDtos { get; set; } = new();
+    public ObservableCollection<LocationTicketViewModel> LocationTicketDtos { get; set; } = new();
     public TransportOrderViewModel? TransportOrder { get; init; }
+    public double DataGridHeight { get; }
+
 
     public TransportStorageUnitViewModel()
     {
@@ -30,10 +35,13 @@ public class TransportStorageUnitViewModel : INotifyPropertyChanged
 
         IsExpanded = false;
         IsOkay = DefineIsOkay(transportStorageUnit);
-        LocationTicketDtos = transportStorageUnit.LocationTickets
+        LocationTicketDtos = new ObservableCollection<LocationTicketViewModel>(transportStorageUnit.LocationTickets
             .Select(GetFromLocationTicketDto)
             .OrderBy(x => x.ID)
-            .ToList();
+            .ToList());
+
+        var count = transportStorageUnit.LocationTickets.Count;
+        DataGridHeight = TICKET_HEADER_HEIGHT + count * TICKET_ROW_HEIGHT;
     }
 
     private bool DefineIsOkay(TsuResponseMessage tsu)

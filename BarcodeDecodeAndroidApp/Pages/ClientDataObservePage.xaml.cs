@@ -4,14 +4,13 @@ namespace MauiAndroid.App.Pages;
 
 public partial class ClientDataObservePage : ContentPage
 {
-	public ObservableCollection<ClientPresentationDto> ClientPresentations { get; set; }
+	public ObservableCollection<TransportStorageUnitViewModel> TSUs { get; }
 
-	public ClientDataObservePage(IEnumerable<ClientPresentationDto> dtos)
+	public ClientDataObservePage(IEnumerable<TransportStorageUnitViewModel> tsus)
 	{
 		InitializeComponent();
 
-		ClientPresentations = new ObservableCollection<ClientPresentationDto>(dtos) { };
-
+		TSUs = new ObservableCollection<TransportStorageUnitViewModel>(tsus);
 		BindingContext = this;
 	}
 }

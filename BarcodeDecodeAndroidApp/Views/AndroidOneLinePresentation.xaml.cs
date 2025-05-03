@@ -1,48 +1,52 @@
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+using MauiAndroid.App.Pages;
 
 namespace MauiAndroid.App.Views;
 
 public partial class AndroidOneLinePresentation : ContentView
 {
+	public static readonly BindableProperty TSUProperty =
+			BindableProperty.Create(
+				nameof(TSU),
+				typeof(TransportStorageUnitViewModel),
+				typeof(AndroidOneLinePresentation),
+				propertyChanged: OnTsuChanged);
+
+	public TransportStorageUnitViewModel TSU
+	{
+		get => (TransportStorageUnitViewModel)GetValue(TSUProperty);
+		set => SetValue(TSUProperty, value);
+	}
+
+	public event EventHandler? EditTsuRequested;
+	public event EventHandler? EditOrderRequested;
+	public event EventHandler? RelaunchOrderRequested;
+
 	public AndroidOneLinePresentation()
 	{
 		InitializeComponent();
-		BindingContext = this;
 	}
 
-	public static readonly BindableProperty ClientPresentationProperty = BindableProperty.Create(
-		nameof(ClientPresentation),
-		typeof(ClientPresentationDto),
-		typeof(AndroidOneLinePresentation),
-		default(ClientPresentationDto),
-		propertyChanged: OnClientPresentationChanged);
-
-	public ClientPresentationDto ClientPresentation
+	private static void OnTsuChanged(BindableObject bindable, object oldVal, object newVal)
 	{
-		get => (ClientPresentationDto)GetValue(ClientPresentationProperty);
-		set => SetValue(ClientPresentationProperty, value);
+		if (bindable is AndroidOneLinePresentation view
+			&& newVal is TransportStorageUnitViewModel vm)
+		{
+			view.BindingContext = vm;
+		}
 	}
 
-	private static void OnClientPresentationChanged(BindableObject bindable, object oldValue, object newValue)
-	{
-		var control = (AndroidOneLinePresentation)bindable;
-		control.OnClientPresentationChanged();
-	}
+	void OnEditTsu_Clicked(object sender, EventArgs e)
+		=> EditTsuRequested?.Invoke(this, EventArgs.Empty);
 
-	private void OnClientPresentationChanged()
-	{
-		OnPropertyChanged(nameof(Order));
-		OnPropertyChanged(nameof(LocationTickets));
-	}
+	void OnEditOrder_Clicked(object sender, EventArgs e)
+		=> EditOrderRequested?.Invoke(this, EventArgs.Empty);
 
-	public TransportOrderViewModel Order => ClientPresentation?.Order;
-	public IEnumerable<LocationTicketViewModel> LocationTickets => ClientPresentation?.LocationTickets;
+	void OnRelaunchOrder_Clicked(object sender, EventArgs e)
+		=> RelaunchOrderRequested?.Invoke(this, EventArgs.Empty);
 
-	public new event PropertyChangedEventHandler PropertyChanged;
-	protected new void OnPropertyChanged([CallerMemberName] string propertyName = null)
+	async void OnDetailsClicked(object sender, EventArgs e)
 	{
-		var handler = PropertyChanged;
-		handler?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+		var page = new LocationTicketsPage{ BindingContext = TSU.LocationTicketDtos };
+		await Navigation.PushAsync(page);
 	}
 }

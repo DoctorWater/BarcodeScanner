@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="MauiAndroid.App.MainPage">
 
+
     <VerticalStackLayout
         Padding="30,0"
         Spacing="20"
@@ -27,10 +28,6 @@
             Text="Настройки"
             Clicked="OnSettingsButtonClicked"
             HorizontalOptions="Center" />
-        
-        <Label Text="Is Client" />
-
-        <CheckBox CheckedChanged="OnPageDefiningCheckboxChanged" IsChecked="false" />
 
     </VerticalStackLayout>
 

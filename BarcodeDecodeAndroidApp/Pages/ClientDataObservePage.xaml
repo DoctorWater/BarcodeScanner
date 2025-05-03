@@ -1,17 +1,24 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage
-    x:Class="MauiAndroid.App.Pages.ClientDataObservePage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:MauiAndroid.App.Views">
+    xmlns:views="clr-namespace:MauiAndroid.App.Views;assembly=MauiAndroid.App"
+    x:Class="MauiAndroid.App.Pages.ClientDataObservePage">
 
-     <ContentPage.Content>
-        <CollectionView ItemsSource="{Binding ClientPresentations}">
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <local:AndroidOneLinePresentation ClientPresentation="{Binding}" />
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
-    </ContentPage.Content>
+  <ScrollView>
+    <VerticalStackLayout
+        Padding="10"
+        Spacing="20"
+        BindableLayout.ItemsSource="{Binding TSUs}">
+      
+      <BindableLayout.ItemTemplate>
+        <DataTemplate>
+          <views:AndroidOneLinePresentation
+              TSU="{Binding}"
+              Margin="0,0,0,10" />
+        </DataTemplate>
+      </BindableLayout.ItemTemplate>
+      
+    </VerticalStackLayout>
+  </ScrollView>
 </ContentPage>

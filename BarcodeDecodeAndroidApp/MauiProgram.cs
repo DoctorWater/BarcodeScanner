@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using BarcodeScanner.Mobile;
+using CommunityToolkit.Maui;
 
 namespace MauiAndroid.App;
 
@@ -11,6 +12,7 @@ public static class MauiProgram
 
         builder
             .UseMauiApp<App>()
+            .UseMauiCommunityToolkit()
             .ConfigureMauiHandlers(handlers =>
             {
                 handlers.AddBarcodeScannerHandler();
