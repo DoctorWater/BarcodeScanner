@@ -4,9 +4,11 @@
         <TargetFramework>net6.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
       <PackageReference Include="Blazored.Modal" Version="6.0.1" />
       <PackageReference Include="Blazored.Toast" Version="4.2.1" />
       <PackageReference Include="MassTransit.RabbitMQ" Version="8.4.0" />
@@ -25,6 +27,9 @@
     <ItemGroup>
       <Content Update="wwwroot\css\site.css">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\.dockerignore">
+        <Link>.dockerignore</Link>
       </Content>
     </ItemGroup>
 </Project>

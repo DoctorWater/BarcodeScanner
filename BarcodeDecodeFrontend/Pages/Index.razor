@@ -4,10 +4,13 @@
 @using BarcodeDecodeFrontend.Data.Models
 @using BarcodeDecodeFrontend.Data.Services.Interfaces
 @using BarcodeDecodeFrontend.Data.Services.Messaging
+@using Blazored.LocalStorage
 @inject IBarcodeDecoder Decoder;
 @inject IVideoProcessor VideoProcessor;
-@inject HttpMessagePublisher HttpPublisher;
+@inject IHttpMessagePublisher HttpPublisher;
 @inject IToastService ToastService;
+@inject ILocalStorageService LocalStorage
+@inject ITokenProvider TokenProvider
 
 <div class="container">
     <div class="row">

@@ -1,0 +1,65 @@
+﻿@page "/login"
+@using BarcodeDecodeFrontend.Data.Services.Auth
+@using BarcodeDecodeFrontend.Data.Services.Interfaces
+@using BarcodeDecodeLib.Models.Dtos.Messages.Auth
+@using Blazored.LocalStorage
+@inject AuthService AuthService
+@inject NavigationManager Navigation
+@inject ILocalStorageService LocalStorage
+@inject ITokenProvider TokenProvider
+
+<h3>Вход в систему</h3>
+
+<EditForm Model="loginModel" OnValidSubmit="HandleLogin">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="alert alert-danger">@errorMessage</div>
+    }
+
+    <div class="mb-3">
+        <label for="username" class="form-label">Имя пользователя</label>
+        <InputText id="username"
+                   class="form-control"
+                   @bind-Value="loginModel.Username" />
+        <ValidationMessage For="@(() => loginModel.Username)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="password" class="form-label">Пароль</label>
+        <InputText id="password"
+                       class="form-control"
+                       @bind-Value="loginModel.Password" />
+        <ValidationMessage For="@(() => loginModel.Password)" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Войти</button>
+</EditForm>
+
+@code {
+    private LoginDto loginModel = new();
+    private string? errorMessage;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
+        var token = await LocalStorage.GetItemAsync<string>("authToken");
+        TokenProvider.Token = token;
+    }
+
+    private async Task HandleLogin()
+    {
+        errorMessage = null;
+        var success = await AuthService.LoginAsync(loginModel.Username, loginModel.Password);
+        if (success)
+        {
+            Navigation.NavigateTo("/");
+        }
+        else
+        {
+            errorMessage = "Неверное имя пользователя или пароль.";
+        }
+    }
+}

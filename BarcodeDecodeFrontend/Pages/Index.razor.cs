@@ -24,6 +24,12 @@ public partial class Index
     private bool _hasSearched = false;
     private Dictionary<Guid, string> _imageUrls = new();
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
+        var token = await LocalStorage.GetItemAsync<string>("authToken");
+        TokenProvider.Token = token;
+    }
 
     private async Task LoadFiles(InputFileChangeEventArgs e)
     {

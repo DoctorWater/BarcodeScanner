@@ -1,11 +1,16 @@
 using System.Reflection;
+using System.Text;
+using BarcodeDecodeAccessControl;
 using BarcodeDecodeBackend.Services.Interfaces;
 using BarcodeDecodeBackend.Services.Processing;
 using BarcodeDecodeDataAccess;
 using BarcodeDecodeDataAccess.Interfaces;
 using BarcodeDecodeDataAccess.Repositories;
 using BarcodeDecodeLib.Models.Dtos.Configs;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Npgsql;
 using Serilog;
@@ -60,6 +65,46 @@ builder.Services.AddSwaggerGen(c =>
     c.IncludeXmlComments(xmlPath);
 });
 
+#region Identity
+
+var jwt = builder.Configuration.GetSection("JwtSettings");
+var key = Encoding.UTF8.GetBytes(jwt["Key"]);
+var identitySqlConnection = AddDataAccess(builder, "IdentitySqlConfig");
+builder.Services
+    .AddDbContextPool<UserDbContext>(opt =>
+    {
+        opt.UseNpgsql(identitySqlConnection, pgOpt => pgOpt.MigrationsAssembly("BarcodeDecodeAccessControl"))
+            .EnableSensitiveDataLogging()
+            .UseSnakeCaseNamingConvention();
+    });
+
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+    .AddEntityFrameworkStores<UserDbContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme    = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer           = true,
+            ValidIssuer              = jwt["Issuer"],
+            ValidateAudience         = true,
+            ValidAudience            = jwt["Audience"],
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey         = new SymmetricSecurityKey(key),
+            ValidateLifetime         = true,
+            ClockSkew                = TimeSpan.Zero
+        };
+    });
+
+#endregion
+
+builder.Services.AddAuthorization();
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();
@@ -82,9 +127,15 @@ if (app.Environment.IsDevelopment())
         c.RoutePrefix = "swagger";
     });
 }
-
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    await IdentityDbInitializer.InitializeAsync(services);
+}
 app.UseHttpsRedirection();
-
+app.UseRouting();
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers();
 
 app.Run();

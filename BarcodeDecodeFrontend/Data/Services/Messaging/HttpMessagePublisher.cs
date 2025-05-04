@@ -4,6 +4,7 @@ using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using BarcodeDecodeLib.Models.Dtos.Configs;
+using BarcodeDecodeLib.Models.Dtos.Messages.Auth;
 using BarcodeDecodeLib.Models.Dtos.Messages.Barcode;
 using BarcodeDecodeLib.Models.Dtos.Messages.TransportOrder;
 using BarcodeDecodeLib.Models.Dtos.Messages.Tsu;
@@ -11,7 +12,7 @@ using Microsoft.Extensions.Options;
 
 namespace BarcodeDecodeFrontend.Data.Services.Messaging
 {
-    public class HttpMessagePublisher
+    public class HttpMessagePublisher : IHttpMessagePublisher
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly string _baseAddress;
@@ -26,7 +27,7 @@ namespace BarcodeDecodeFrontend.Data.Services.Messaging
 
         private HttpClient CreateClient()
         {
-            var client = _httpClientFactory.CreateClient();
+            var client = _httpClientFactory.CreateClient("API");
             client.BaseAddress = new Uri(_baseAddress);
             client.Timeout = TimeSpan.FromSeconds(30);
             return client;
@@ -81,6 +82,15 @@ namespace BarcodeDecodeFrontend.Data.Services.Messaging
             using var client = CreateClient();
             var response = await client.PostAsJsonAsync("api/order/relaunch", message, cancellationToken);
             return response.IsSuccessStatusCode;
+        }
+
+        public async Task<LoginResult?> SendLoginMessage(LoginDto message, CancellationToken cancellationToken = default)
+        {
+            using var client = CreateClient();
+            var resp = await client.PostAsJsonAsync("api/auth/login", message);
+            if (!resp.IsSuccessStatusCode)
+                return null;
+            return await resp.Content.ReadFromJsonAsync<LoginResult>(cancellationToken: cancellationToken)!;
         }
     }
 }
