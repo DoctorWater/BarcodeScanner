@@ -24,11 +24,11 @@ builder.Services.AddOptions<TimeZoneSettings>().Bind(builder.Configuration.GetSe
 
 var addresses = builder.Configuration.GetRequiredSection(nameof(HttpAddresses)).Get<HttpAddresses>();
 builder.Services.AddHttpClient<HttpMessagePublisher>((sp, client) =>
-     {
-         client.BaseAddress = new Uri(addresses.BarcodeDecodeBackendAddress);
-         client.Timeout = TimeSpan.FromSeconds(30);
-     });
-     builder.Services.AddScoped<IHttpMessagePublisher,HttpMessagePublisher>();
+{
+    client.BaseAddress = new Uri(addresses.BarcodeDecodeBackendAddress);
+    client.Timeout = TimeSpan.FromSeconds(30);
+});
+builder.Services.AddScoped<IHttpMessagePublisher, HttpMessagePublisher>();
 builder.Services.AddScoped<IBarcodeDecoder, BarcodeDecoder>()
     .AddScoped<IVideoProcessor, VideoProcessor>()
     .AddScoped<ITimeConverter, TimeConverter>();
@@ -38,14 +38,13 @@ builder.WebHost.UseUrls(url);
 
 #region Authorization
 builder.Services.AddBlazoredLocalStorage();
-builder.Services.AddSingleton<ITokenProvider, TokenProvider>();
+builder.Services.AddScoped<ITokenProvider, TokenProvider>();
 builder.Services.AddAuthorizationCore();
 builder.Services.AddScoped<AuthenticationStateProvider, JwtAuthenticationStateProvider>();
-builder.Services.AddTransient<JwtAuthorizationMessageHandler>();
 builder.Services.AddHttpClient("API", client =>
-        client.BaseAddress = new Uri(addresses.BarcodeDecodeBackendAddress))
-    .AddHttpMessageHandler<JwtAuthorizationMessageHandler>();
+        client.BaseAddress = new Uri(addresses.BarcodeDecodeBackendAddress));
 builder.Services.AddScoped<AuthService>();
+
 #endregion
 
 var app = builder.Build();

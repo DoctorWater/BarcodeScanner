@@ -1,6 +1,12 @@
-﻿@using Blazored.Toast.Configuration
+﻿@using BarcodeDecodeFrontend.Data.Services.Auth
+@using BarcodeDecodeFrontend.Data.Services.Interfaces
+@using BarcodeDecodeFrontend.Shared.Modals
+@using Blazored.Toast.Configuration
 @inherits LayoutComponentBase
-
+@inject IToastService ToastService
+@inject ITokenProvider TokenProvider
+@inject AuthService AuthService
+@inject NavigationManager NavigationManager
 <PageTitle>BarcodeDecodeFrontend</PageTitle>
 
 <div class="page">
@@ -10,7 +16,16 @@
 
     <main>
         <div class="top-row px-4">
-            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+            <div class="nav-item rounded">
+                @if (TokenProvider.Token is null)
+                {
+                    <button class="btn btn-primary" @onclick="OpenAuthModal">Авторизация</button>
+                }
+                else
+                {
+                    <button class="btn btn-danger" @onclick="Logout">Выйти</button>
+                }
+            </div>
         </div>
 
         <article class="content px-4">
@@ -22,3 +37,22 @@
                 Timeout="7"
                 ShowProgressBar="true"
                 PauseProgressOnHover="true"/>
+
+@code{
+    [CascadingParameter] IModalService Modal { get; set; } = default!;
+
+    private async Task OpenAuthModal()
+    {
+        var modal = Modal.Show<ModalAuthorize>("Authorization");
+        var result = (bool)(await modal.Result).Data;
+        if (result is false)
+            ToastService.ShowError("Пользователь не авторизован");
+    }
+
+
+    private void Logout()
+    {
+        AuthService.LogoutAsync();
+        NavigationManager.NavigateTo("/", true);
+    }
+}

@@ -1,0 +1,29 @@
+﻿@using BarcodeDecodeFrontend.Data.Services.Auth
+@using BarcodeDecodeFrontend.Data.Services.Interfaces
+@using BarcodeDecodeFrontend.Data.Services.Messaging
+@inject AuthService AuthService
+
+<div class="mb-3">
+    <label class="form-label">Имя</label>
+    <input class="form-control" @bind="_user"/>
+</div>
+
+<div class="mb-3">
+    <label class="form-label">Пароль</label>
+    <input class="form-control" type="password" @bind="_pass"/>
+</div>
+
+<button class="btn btn-primary" @onclick="SignIn">Войти</button>
+
+@code {
+    [CascadingParameter] BlazoredModalInstance BlazoredModal { get; set; } = default!;
+    private string _user = string.Empty;
+    private string _pass = string.Empty;
+
+    private async Task SignIn()
+    {
+        var result = await AuthService.LoginAsync(_user, _pass);
+        await BlazoredModal.CloseAsync(ModalResult.Ok(result));
+    }
+
+}

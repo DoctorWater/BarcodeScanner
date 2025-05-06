@@ -1,8 +1,6 @@
-﻿using System;
-using System.Net.Http;
-using System.Net.Http.Json;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Net;
+using System.Net.Http.Headers;
+using BarcodeDecodeFrontend.Data.Services.Interfaces;
 using BarcodeDecodeLib.Models.Dtos.Configs;
 using BarcodeDecodeLib.Models.Dtos.Messages.Auth;
 using BarcodeDecodeLib.Models.Dtos.Messages.Barcode;
@@ -15,19 +13,23 @@ namespace BarcodeDecodeFrontend.Data.Services.Messaging
     public class HttpMessagePublisher : IHttpMessagePublisher
     {
         private readonly IHttpClientFactory _httpClientFactory;
+        private readonly ITokenProvider _tokenProvider;
         private readonly string _baseAddress;
 
         public HttpMessagePublisher(
             IHttpClientFactory httpClientFactory,
-            IOptions<HttpAddresses> addresses)
+            IOptions<HttpAddresses> addresses, ITokenProvider tokenProvider)
         {
             _httpClientFactory = httpClientFactory;
+            _tokenProvider = tokenProvider;
             _baseAddress = addresses.Value.BarcodeDecodeBackendAddress;
         }
 
         private HttpClient CreateClient()
         {
             var client = _httpClientFactory.CreateClient("API");
+            client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", _tokenProvider.Token ?? string.Empty);
             client.BaseAddress = new Uri(_baseAddress);
             client.Timeout = TimeSpan.FromSeconds(30);
             return client;
@@ -39,6 +41,8 @@ namespace BarcodeDecodeFrontend.Data.Services.Messaging
         {
             using var client = CreateClient();
             var response = await client.PostAsJsonAsync("api/barcode/batch", message, cancellationToken);
+            if(response.StatusCode is HttpStatusCode.Unauthorized) 
+                throw new UnauthorizedAccessException("Авторизация для изменения TSU не прошла. Проверьте токен авторизации.");
             if (!response.IsSuccessStatusCode || response.Content == null)
             {
                 throw new HttpRequestException(
@@ -53,6 +57,8 @@ namespace BarcodeDecodeFrontend.Data.Services.Messaging
         {
             using var client = CreateClient();
             var response = await client.PostAsJsonAsync("api/tsu/change", message, cancellationToken);
+            if(response.StatusCode is HttpStatusCode.Unauthorized) 
+                throw new UnauthorizedAccessException("Авторизация для изменения TSU не прошла. Проверьте токен авторизации.");
             if (!response.IsSuccessStatusCode || response.Content == null)
             {
                 throw new HttpRequestException(
@@ -67,6 +73,8 @@ namespace BarcodeDecodeFrontend.Data.Services.Messaging
         {
             using var client = CreateClient();
             var response = await client.PostAsJsonAsync("api/order/change", message, cancellationToken);
+            if(response.StatusCode is HttpStatusCode.Unauthorized) 
+                throw new UnauthorizedAccessException("Авторизация для изменения TSU не прошла. Проверьте токен авторизации.");
             if (!response.IsSuccessStatusCode || response.Content == null)
             {
                 throw new HttpRequestException(

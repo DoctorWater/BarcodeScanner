@@ -1,5 +1,6 @@
 ﻿using BarcodeDecodeBackend.Services.Interfaces;
 using BarcodeDecodeLib.Models.Dtos.Messages.Tsu;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -8,7 +9,8 @@ namespace BarcodeDecodeBackend.Services.Controllers;
 /// <summary>
 /// Операции по управлению TSU (Transport Storage Unit).
 /// </summary>
-[Controller]
+[ApiController]
+[Authorize]
 [Route("api/[controller]")]
 public class TsuController : ControllerBase
 {

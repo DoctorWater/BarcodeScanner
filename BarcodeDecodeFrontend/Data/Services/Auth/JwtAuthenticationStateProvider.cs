@@ -53,6 +53,7 @@ public class JwtAuthenticationStateProvider : AuthenticationStateProvider
     public void MarkUserAsLoggedOut()
     {
         _tokenProvider.Token = null;
+        _localStorage.RemoveItemAsync("authToken");
         NotifyAuthenticationStateChanged(Task.FromResult(
             new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()))));
     }

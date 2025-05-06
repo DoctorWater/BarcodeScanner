@@ -62,17 +62,24 @@ public partial class OneLinePresentation : ComponentBase
         parameters.Add(nameof(ModalEditTsu.Item), TsuEditDto.GetFrom(Tsu));
         var modal = Modal.Show<ModalEditTsu>(Tsu?.Barcode ?? "BARCODE NOT FOUND", parameters);
         var result = (TsuEditDto?)(await modal.Result).Data;
-        if (result is not null)
+        try
         {
-            var message = new TsuChangeMessage(result.Id)
+            if (result is not null)
             {
-                Barcode = result.Barcode,
-                Status = result.Status
-            };
-            var updatedTsu = await HttpMessagePublisher.SendTsuChangeMessage(message);
-            if (updatedTsu is not null)
-                Tsu = updatedTsu;
-            await InvokeAsync(StateHasChanged);
+                var message = new TsuChangeMessage(result.Id)
+                {
+                    Barcode = result.Barcode,
+                    Status = result.Status
+                };
+                var updatedTsu = await HttpMessagePublisher.SendTsuChangeMessage(message);
+                if (updatedTsu is not null)
+                    Tsu = updatedTsu;
+                await InvokeAsync(StateHasChanged);
+            }
+        }
+        catch (UnauthorizedAccessException)
+        {
+            ToastService.ShowError("Пользователь не авторизован");
         }
     }
 
@@ -83,17 +90,24 @@ public partial class OneLinePresentation : ComponentBase
         var modal = Modal.Show<ModalEditOrder>(TransportOrder.Barcode, parameters);
 
         var result = (OrderEditDto?)(await modal.Result).Data;
-        if (result is not null)
+        try
         {
-            var message = new TransportOrderChangeMessage(result.Id)
+            if (result is not null)
             {
-                Status = result.Status,
-                Barcode = result.Barcode
-            };
-            var updatedOrder = await HttpMessagePublisher.SendTransportOrderChangeMessage(message);
-            if(updatedOrder is not null)
-                TransportOrder = updatedOrder;
-            await InvokeAsync(StateHasChanged);
+                var message = new TransportOrderChangeMessage(result.Id)
+                {
+                    Status = result.Status,
+                    Barcode = result.Barcode
+                };
+                var updatedOrder = await HttpMessagePublisher.SendTransportOrderChangeMessage(message);
+                if (updatedOrder is not null)
+                    TransportOrder = updatedOrder;
+                await InvokeAsync(StateHasChanged);
+            }
+        }
+        catch (UnauthorizedAccessException)
+        {
+            ToastService.ShowError("Пользователь не авторизован");
         }
     }
 
@@ -103,11 +117,17 @@ public partial class OneLinePresentation : ComponentBase
         {
             Destinations = TransportOrder.Destinations
         };
-        var isRelaunched = await HttpMessagePublisher.SendTransportOrderRelaunchMessage(message);
-        if(isRelaunched)
-            ToastService.ShowInfo("Заказ перезапущен");
-        else
-            ToastService.ShowError("Перезапуск не удался!");
-        
+        try
+        {
+            var isRelaunched = await HttpMessagePublisher.SendTransportOrderRelaunchMessage(message);
+            if (isRelaunched)
+                ToastService.ShowInfo("Заказ перезапущен");
+            else
+                ToastService.ShowError("Перезапуск не удался!");
+        }
+        catch (UnauthorizedAccessException)
+        {
+            ToastService.ShowError("Пользователь не авторизован");
+        }
     }
 }
