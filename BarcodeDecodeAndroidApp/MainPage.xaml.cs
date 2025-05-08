@@ -18,24 +18,7 @@ public partial class MainPage : ContentPage
     [Obsolete]
     private async void OnScanClicked(object sender, EventArgs e)
     {
-        var message = new BarcodeRequestMessage("SomeBarcode1");
-        var batch = new BarcodeRequestMessageBatch(new List<BarcodeRequestMessage> { message });
-        var responseData = await _barcodeService.SendBarcodeRequest(batch);
-        if (responseData != null)
-        {
-
-            var mappedData = new BackendResponseViewModel
-            {
-                TransportOrders = responseData.Messages.SelectMany(x => x.TransportOrders).Select(x => new TransportOrderViewModel(x)).ToList(),
-                TransportStorageUnits = responseData.Messages.SelectMany(x => x.TransportStorageUnits).Select(x => new TransportStorageUnitViewModel(x)).ToList()
-            };
-            await Navigation.PushAsync(new ClientDataObservePage(responseData.Messages.SelectMany(dto => dto.TransportStorageUnits).Select(unit => new TransportStorageUnitViewModel(unit))));
-
-        }
-        else
-        {
-            await DisplayAlert("Ошибка", "Не удалось получить данные.", "OK");
-        }
+        await Navigation.PushAsync(new BarcodeVerificationPage("SomeBarcode1"));
         /* var status = await CheckAndRequestCameraPermission();
 
         if (status != PermissionStatus.Granted)
@@ -96,15 +79,12 @@ public partial class MainPage : ContentPage
             //    LocationTickets = x.LocationTicketDtos,
             //    Order = x.InnerOrder
             //})));
-            else
+            var mappedData = new BackendResponseViewModel
             {
-                var mappedData = new BackendResponseViewModel
-                {
-                    TransportOrders = responseData.Messages.SelectMany(x => x.TransportOrders).Select(x => new TransportOrderViewModel(x)).ToList(),
-                    TransportStorageUnits = responseData.Messages.SelectMany(x => x.TransportStorageUnits).Select(x => new TransportStorageUnitViewModel(x)).ToList()
-                };
-                //await Navigation.PushAsync(new DeveloperDataObservePage(mappedData));
-            }
+                TransportOrders = responseData.Messages.SelectMany(x => x.TransportOrders).Select(x => new TransportOrderViewModel(x)).ToList(),
+                TransportStorageUnits = responseData.Messages.SelectMany(x => x.TransportStorageUnits).Select(x => new TransportStorageUnitViewModel(x)).ToList()
+            };
+            //await Navigation.PushAsync(new DeveloperDataObservePage(mappedData));
 
         }
         else
