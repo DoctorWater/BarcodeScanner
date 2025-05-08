@@ -1,24 +1,24 @@
-﻿using System.Net;
-using BarcodeDecodeBackend.Services.Interfaces;
-using BarcodeDecodeLib.Models.Dtos.Messages;
+﻿using BarcodeDecodeBackend.Services.Interfaces;
 using BarcodeDecodeLib.Models.Dtos.Messages.Barcode;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace BarcodeDecodeBackend.Services.Controllers;
 
-/// <summary>
-/// Контроллер для обработки штрихкодов.
-/// </summary>
-[Controller]
+/// <summary>Контроллер для обработки штрих‑кодов.</summary>
+[ApiController]
+[Authorize]
 [Route("api/[controller]")]
 [SwaggerTag("Операции по декодированию штрихкодов в пакетном режиме")]
-public class BarcodeController : ControllerBase
+public sealed class BarcodeController : ControllerBase
 {
     private readonly IBarcodeMessageHandler _barcodeMessageHandler;
     private readonly ILogger<BarcodeController> _logger;
 
-    public BarcodeController(IBarcodeMessageHandler barcodeMessageHandler, ILogger<BarcodeController> logger)
+    public BarcodeController(
+        IBarcodeMessageHandler barcodeMessageHandler,
+        ILogger<BarcodeController> logger)
     {
         _barcodeMessageHandler = barcodeMessageHandler;
         _logger = logger;
@@ -44,22 +44,27 @@ public class BarcodeController : ControllerBase
     [SwaggerOperation(
         Summary = "Обработка пакета штрихкодов",
         Description = "Декодирует все штрихкоды из запроса и возвращает пакет с результатами.")]
-    [SwaggerResponse(200, "Успешно декодирован пакет", typeof(BarcodeResponseMessageBatch))]
-    [SwaggerResponse(400, "BadRequest — некорректный запрос")]
+    [SwaggerResponse(StatusCodes.Status200OK,
+        "Успешно декодирован пакет", typeof(BarcodeResponseMessageBatch))]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, "Некорректный запрос")]
     public async Task<ActionResult<BarcodeResponseMessageBatch>> ProcessBarcodeBatch(
         [FromBody] BarcodeRequestMessageBatch request)
     {
-        _logger.LogInformation("Barcode batch request was received. Request: {request}", request);
-        if (request == null || request.Messages == null)
+        _logger.LogInformation("Barcode batch request received. Request: {@request}", request);
+
+        if (request is null || request.Messages is null)
         {
-            _logger.LogWarning("Barcode batch request is invalid. Request: {request}", request);
+            _logger.LogWarning("Invalid barcode batch request: {@request}", request);
             return BadRequest("Некорректный запрос");
         }
-        
+
         var decoded = await _barcodeMessageHandler.HandleBarcodes(
-            request.CorrelationId ?? Guid.NewGuid(), request.Messages.Select(x => x.BarcodeText));
-        _logger.LogInformation("Barcode batch request with id {correlationId} was processed successfully.", request.CorrelationId);
-        
+            request.CorrelationId ?? Guid.NewGuid(),
+            request.Messages.Select(x => x.BarcodeText));
+
+        _logger.LogInformation(
+            "Barcode batch with id {CorrelationId} processed.", request.CorrelationId);
+
         return Ok(decoded);
     }
 }

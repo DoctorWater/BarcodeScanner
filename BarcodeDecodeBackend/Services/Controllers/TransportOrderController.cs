@@ -1,6 +1,7 @@
 ﻿using BarcodeDecodeBackend.Services.Interfaces;
 using BarcodeDecodeLib.Models.Dtos.Messages.TransportOrder;
 using BarcodeDecodeLib.Models.Dtos.Messages.Tsu;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 
@@ -9,6 +10,8 @@ namespace BarcodeDecodeBackend.Services.Controllers;
 /// <summary>
 /// Операции по управлению заказами.
 /// </summary>
+[ApiController]
+[Authorize]
 [Controller]
 [Route("api/[controller]")]
 public class TransportOrderController : ControllerBase

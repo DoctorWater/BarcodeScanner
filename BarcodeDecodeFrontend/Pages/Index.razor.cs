@@ -24,6 +24,12 @@ public partial class Index
     private bool _hasSearched = false;
     private Dictionary<Guid, string> _imageUrls = new();
 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
+        var token = await LocalStorage.GetItemAsync<string>("authToken");
+        TokenProvider.Token = token;
+    }
 
     private async Task LoadFiles(InputFileChangeEventArgs e)
     {
@@ -160,9 +166,16 @@ public partial class Index
     {
         var messages = _recognizedImageBarcodes.Select(x => new BarcodeRequestMessage(x.Barcode));
         var message = new BarcodeRequestMessageBatch(messages.ToList());
-        var response = await HttpPublisher.SendBarcodeRequest(message);
-        _hasSearched = true;
-        await UpdatePresentations(response);
+        try
+        {
+            var response = await HttpPublisher.SendBarcodeRequest(message);
+            _hasSearched = true;
+            await UpdatePresentations(response);
+        }
+        catch (UnauthorizedAccessException)
+        {
+            ToastService.ShowError("Пользователь не авторизован");
+        }
     }
 
     private async Task UpdatePresentations(BarcodeResponseMessageBatch barcodeResponse)
