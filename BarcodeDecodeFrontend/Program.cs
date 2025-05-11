@@ -43,7 +43,7 @@ builder.Services.AddAuthorizationCore();
 builder.Services.AddScoped<AuthenticationStateProvider, JwtAuthenticationStateProvider>();
 builder.Services.AddHttpClient("API", client =>
         client.BaseAddress = new Uri(addresses.BarcodeDecodeBackendAddress));
-builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 #endregion
 
