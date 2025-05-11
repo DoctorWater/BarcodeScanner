@@ -1,10 +1,11 @@
-﻿using BarcodeDecodeFrontend.Data.Services.Messaging;
+﻿using BarcodeDecodeFrontend.Data.Services.Interfaces;
+using BarcodeDecodeFrontend.Data.Services.Messaging;
 using BarcodeDecodeLib.Models.Dtos.Messages.Auth;
 using Microsoft.AspNetCore.Components.Authorization;
 
 namespace BarcodeDecodeFrontend.Data.Services.Auth;
 
-public class AuthService
+public class AuthService : IAuthService
 {
     private readonly JwtAuthenticationStateProvider _authState;
     private readonly IHttpMessagePublisher _httpMessagePublisher;

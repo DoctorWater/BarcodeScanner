@@ -133,6 +133,7 @@ builder.Services.AddOptions<HttpAddresses>()
 builder.Services.AddScoped<ITransportStorageUnitRepository, TransportStorageUnitRepository>()
     .AddScoped<ITransportOrderRepository, TransportOrderRepository>()
     .AddScoped<ITransportOrderMessageHandler, TransportOrderMessageHandler>()
+    .AddScoped<IAuthMessageHandler, AuthMessageHandler>()
     .AddScoped<ITsuMessageHandler, TsuMessageHandler>();
 
 var app = builder.Build();

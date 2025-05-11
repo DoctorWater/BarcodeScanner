@@ -40,9 +40,7 @@ public class BarcodeDecoder : IBarcodeDecoder
 
 
         var barcodeResult = barcodeReader.Decode(image);
-        
-        Console.WriteLine($"[Serialized] Decoded barcode text: {barcodeResult?.Text}");
-        Console.WriteLine($"[Serialized] Barcode format: {barcodeResult?.BarcodeFormat}");
+
         return barcodeResult;
     }
 }
