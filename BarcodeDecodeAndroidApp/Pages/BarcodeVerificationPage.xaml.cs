@@ -1,17 +1,19 @@
 using BarcodeDecodeLib.Models.Dtos.Messages.Barcode;
 using BarcodeDecodeLib.Models.Dtos.Models;
+using MauiAndroid.App.Services;
 
 namespace MauiAndroid.App.Pages
 {
     public partial class BarcodeVerificationPage : ContentPage
     {
-        private readonly BarcodeService _barcodeService = new();
+        private readonly BarcodeService _barcodeService;
 
         public string BarcodeValue { get; set; }
 
         public BarcodeVerificationPage(string barcode)
         {
             InitializeComponent();
+            _barcodeService = App.Services.GetRequiredService<BarcodeService>();
             BarcodeValue = barcode;
             BindingContext = this;
         }

@@ -4,10 +4,12 @@ namespace MauiAndroid.App;
 
 public partial class App : Application
 {
-    public App()
+    public static IServiceProvider Services { get; private set; }
+    public App(IServiceProvider services, MainPage mainPage)
     {
         InitializeComponent();
+        Services = services;
 
-        MainPage = new NavigationPage(new MainPage());
+        MainPage = new NavigationPage(mainPage);
     }
 }

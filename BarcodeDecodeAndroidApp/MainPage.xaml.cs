@@ -8,11 +8,11 @@ namespace MauiAndroid.App;
 public partial class MainPage : ContentPage
 {
     private bool _isCamViewVisible = false;
-    private BarcodeService _barcodeService;
-    public MainPage()
+     private readonly LoginPage _loginPage;
+    public MainPage(LoginPage loginPage)
     {
         InitializeComponent();
-        _barcodeService = new();
+        _loginPage = loginPage;
     }
 
     [Obsolete]
@@ -68,29 +68,6 @@ public partial class MainPage : ContentPage
     private async void Camera_OnDetected(object sender, OnDetectedEventArg e)
     {
         var obj = e.BarcodeResults.First();
-
-        var barcodeValue = obj.DisplayValue;
-        var message = new BarcodeRequestMessage(barcodeValue);
-        var batch = new BarcodeRequestMessageBatch(new List<BarcodeRequestMessage> { message });
-        var responseData = await _barcodeService.SendBarcodeRequest(batch);
-        if (responseData != null)
-        {
-            //await Navigation.PushAsync(new ClientDataObservePage(responseData.Tsus.Select(x => new ClientPresentationDto(){
-            //    LocationTickets = x.LocationTicketDtos,
-            //    Order = x.InnerOrder
-            //})));
-            var mappedData = new BackendResponseViewModel
-            {
-                TransportOrders = responseData.Messages.SelectMany(x => x.TransportOrders).Select(x => new TransportOrderViewModel(x)).ToList(),
-                TransportStorageUnits = responseData.Messages.SelectMany(x => x.TransportStorageUnits).Select(x => new TransportStorageUnitViewModel(x)).ToList()
-            };
-            //await Navigation.PushAsync(new DeveloperDataObservePage(mappedData));
-
-        }
-        else
-        {
-            await DisplayAlert("Ошибка", "Не удалось получить данные.", "OK");
-        }
     }
 
 
@@ -98,6 +75,11 @@ public partial class MainPage : ContentPage
     private async void OnSettingsButtonClicked(object sender, EventArgs e)
     {
         await Navigation.PushAsync(new SettingsPage());
+    }
+
+    private async void OnAuthorizationButtonClicked(object sender, EventArgs e)
+    {
+        await Navigation.PushAsync(_loginPage);
     }
 
     private async void TakePhoto()

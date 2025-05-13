@@ -28,6 +28,11 @@
             Text="Настройки"
             Clicked="OnSettingsButtonClicked"
             HorizontalOptions="Center" />
+        
+        <Button
+            Text="Авторизация"
+            Clicked="OnAuthorizationButtonClicked"
+            HorizontalOptions="Center" />
 
     </VerticalStackLayout>
 
