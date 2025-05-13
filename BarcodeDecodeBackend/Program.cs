@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Npgsql;
+using Prometheus;
 using Serilog;
 using Serilog.Sinks.OpenSearch;
 
@@ -137,6 +138,9 @@ builder.Services.AddScoped<ITransportStorageUnitRepository, TransportStorageUnit
     .AddScoped<ITsuMessageHandler, TsuMessageHandler>();
 
 var app = builder.Build();
+
+app.UseHttpMetrics();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
@@ -157,6 +161,7 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+app.MapMetrics(); 
 
 app.Run();
 

@@ -1,7 +1,9 @@
 ﻿using BarcodeDecodeBackend.Services.Interfaces;
+using BarcodeDecodeBackend.Services.Processing;
 using BarcodeDecodeLib.Models.Dtos.Messages.Barcode;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Prometheus;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace BarcodeDecodeBackend.Services.Controllers;
@@ -52,9 +54,12 @@ public sealed class BarcodeController : ControllerBase
     {
         _logger.LogInformation("Barcode batch request received. Request: {@request}", request);
 
+        using var timer = MetricsRegistry.BarcodeBatchDuration.NewTimer();
+        MetricsRegistry.BarcodeBatchRequestsTotal.Inc();
         if (request is null || request.Messages is null)
         {
             _logger.LogWarning("Invalid barcode batch request: {@request}", request);
+            MetricsRegistry.BarcodeBatchErrorsTotal.Inc();
             return BadRequest("Некорректный запрос");
         }
 
@@ -64,6 +69,8 @@ public sealed class BarcodeController : ControllerBase
 
         _logger.LogInformation(
             "Barcode batch with id {CorrelationId} processed.", request.CorrelationId);
+        
+        MetricsRegistry.BarcodeBatchItemsProcessedTotal.Inc(decoded.Messages.Count);
 
         return Ok(decoded);
     }

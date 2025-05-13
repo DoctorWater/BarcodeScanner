@@ -1,8 +1,10 @@
 ﻿using BarcodeDecodeBackend.Services.Interfaces;
+using BarcodeDecodeBackend.Services.Processing;
 using BarcodeDecodeLib.Models.Dtos.Messages.TransportOrder;
 using BarcodeDecodeLib.Models.Dtos.Messages.Tsu;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Prometheus;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace BarcodeDecodeBackend.Services.Controllers;
@@ -46,13 +48,19 @@ public class TransportOrderController : ControllerBase
         [FromBody] TransportOrderChangeMessage request)
     {
         _logger.LogInformation("Transport order change request was received. Request: {request}", request);
+        
+        using var timer = MetricsRegistry.TransportOrderChangeDuration.NewTimer();
+        MetricsRegistry.TransportOrderChangeRequestsTotal.Inc();
+        
         var updateResult = await _orderMessageHandler.HandleOrderChange(request);
         if (updateResult is null)
         {
             _logger.LogWarning("Transport order with id {barcodeId} was not found", request.Id);
+            MetricsRegistry.TransportOrderChangeNotFoundTotal.Inc();
             return NotFound("Order not found");
         }
         _logger.LogInformation("Transport order was changed. New order: {result}", updateResult);
+        MetricsRegistry.TransportOrderChangeSuccessTotal.Inc();
         return Ok(new TransportOrderResponseMessage(request.CorrelationId, updateResult));
     }
 
@@ -77,8 +85,18 @@ public class TransportOrderController : ControllerBase
         [FromBody] TransportOrderRelaunchMessage request)
     {
         _logger.LogInformation("Transport order relaunch request was received. Request: {request}", request);
+        
+        using var timer = MetricsRegistry.TransportOrderRelaunchDuration.NewTimer();
+        MetricsRegistry.TransportOrderRelaunchRequestsTotal.Inc();
+        
         bool relaunchResult = await _orderMessageHandler.HandleOrderRelaunch(request);
-        if (relaunchResult is false) return Problem("Ошибка при повторном запуске заказа");
+        if (relaunchResult is false)
+        {
+            MetricsRegistry.TransportOrderRelaunchFailureTotal.Inc();
+            return Problem("Ошибка при повторном запуске заказа");
+        }
+
+        MetricsRegistry.TransportOrderRelaunchSuccessTotal.Inc();
         _logger.LogInformation("Transport order relaunch with correlation id {request.CorrelationId} was successful.", request.CorrelationId);
         return Ok();
     }

@@ -1,7 +1,9 @@
 ﻿using BarcodeDecodeBackend.Services.Interfaces;
+using BarcodeDecodeBackend.Services.Processing;
 using BarcodeDecodeLib.Models.Dtos.Messages.Tsu;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Prometheus;
 using Swashbuckle.AspNetCore.Annotations;
 
 namespace BarcodeDecodeBackend.Services.Controllers;
@@ -48,15 +50,20 @@ public class TsuController : ControllerBase
         [FromBody] TsuChangeMessage request)
     {
         _logger.LogInformation("Tsu change request was received. Request: {request}", request);
+        
+        using var timer = MetricsRegistry.TsuChangeDuration.NewTimer();
+        MetricsRegistry.TsuChangeRequestsTotal.Inc();
+        
         var updateResult = await _tsuMessageHandler.HandleTsuChange(request);
         if (updateResult is null)
         {
             _logger.LogWarning("Tsu with id {tsuId} was not found", request.Id);
+            MetricsRegistry.TsuChangeNotFoundTotal.Inc();
             return NotFound("Tsu not found");
         }
 
         _logger.LogInformation("Tsu was changed. New tsu: {result}", updateResult);
-
+        MetricsRegistry.TsuChangeSuccessTotal.Inc();
         return Ok(new TsuResponseMessage(request.CorrelationId, updateResult));
     }
 }
