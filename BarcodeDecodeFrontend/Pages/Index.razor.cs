@@ -34,6 +34,7 @@ public partial class Index
     private async Task LoadFiles(InputFileChangeEventArgs e)
     {
         var files = e.GetMultipleFiles();
+        Logger.LogDebug("{fileCount} files uploaded", files.Count);
         var fileVerifyResult = VerifyFiles(files);
         var userMessage = CreateUserMessage(fileVerifyResult);
         if (userMessage != string.Empty)
@@ -59,6 +60,7 @@ public partial class Index
                 await using MemoryStream ms = new MemoryStream();
                 await file.OpenReadStream().CopyToAsync(ms);
                 var url = $"data:{file.ContentType};base64,{Convert.ToBase64String(ms.ToArray())}";
+        Logger.LogDebug("{fileCount} photo files processed", imageFiles.Count);
                 _imageUrls.Add(id, url);
                 await InvokeAsync(StateHasChanged);
                 _recognizedImageBarcodes.Add(new BarcodeModel(id, Decoder.Decode(ms.ToArray()) ?? String.Empty));
@@ -109,7 +111,7 @@ public partial class Index
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Ошибка загрузки файла {file.Name}: {ex.Message}");
+                Logger.LogWarning("{filename} upload failed: {ex.Message}", file.Name, ex.Message);
             }
             finally
             {
@@ -120,7 +122,7 @@ public partial class Index
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Ошибка при удалении временного файла: {ex.Message}");
+                    Logger.LogWarning("Error deleting temp file: {ex.Message}", ex.Message);
                 }
             }
         }
@@ -174,6 +176,7 @@ public partial class Index
         }
         catch (UnauthorizedAccessException)
         {
+            Logger.LogInformation("User tried to send messages without authorization: {messages}", messages);
             ToastService.ShowError("Пользователь не авторизован");
         }
     }

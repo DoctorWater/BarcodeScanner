@@ -10,6 +10,8 @@ using Blazored.LocalStorage;
 using Blazored.Modal;
 using Blazored.Toast;
 using Microsoft.AspNetCore.Components.Authorization;
+using Serilog;
+using Serilog.Sinks.OpenSearch;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,6 +48,26 @@ builder.Services.AddHttpClient("API", client =>
 builder.Services.AddScoped<IAuthService, AuthService>();
 
 #endregion
+
+builder.Host.UseSerilog((builderContext, cfg) =>
+{
+    cfg.ReadFrom.Configuration(builderContext.Configuration);
+    Serilog.Debugging.SelfLog.Enable(Console.Out);
+
+    var openSearchLogConfig = builder.Configuration.GetRequiredSection(nameof(ElasticSearchLogConfig))
+        .Get<ElasticSearchLogConfig>()!;
+    cfg.Enrich.FromLogContext();
+    cfg.WriteTo.OpenSearch(new OpenSearchSinkOptions(openSearchLogConfig.Uri)
+    {
+        IndexFormat = openSearchLogConfig.IndexFormat,
+        ModifyConnectionSettings = (c)
+            => c.BasicAuthentication(openSearchLogConfig.Username, openSearchLogConfig.Password),
+        EmitEventFailure = EmitEventFailureHandling.WriteToSelfLog,
+        AutoRegisterTemplate = openSearchLogConfig.AutoRegisterTemplate,
+        AutoRegisterTemplateVersion = AutoRegisterTemplateVersion.OSv2,
+        InlineFields = true
+    });
+});
 
 var app = builder.Build();
 

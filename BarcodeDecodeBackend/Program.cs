@@ -38,7 +38,8 @@ builder.Host.UseSerilog((builderContext, cfg) =>
     cfg.ReadFrom.Configuration(builderContext.Configuration);
     Serilog.Debugging.SelfLog.Enable(Console.Out);
 
-    var openSearchLogConfig = builder.Configuration.GetRequiredSection(nameof(ElasticSearchLogConfig)).Get<ElasticSearchLogConfig>()!;
+    var openSearchLogConfig = builder.Configuration.GetRequiredSection(nameof(ElasticSearchLogConfig))
+        .Get<ElasticSearchLogConfig>()!;
     cfg.Enrich.FromLogContext();
     cfg.WriteTo.OpenSearch(new OpenSearchSinkOptions(openSearchLogConfig.Uri)
     {
