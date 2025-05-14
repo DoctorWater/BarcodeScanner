@@ -33,6 +33,9 @@ public partial class Index
 
     private async Task LoadFiles(InputFileChangeEventArgs e)
     {
+        _imageUrls.Clear();
+        loadedFiles.Clear();
+        _recognizedImageBarcodes.Clear();
         var files = e.GetMultipleFiles();
         Logger.LogDebug("{fileCount} files uploaded", files.Count);
         var fileVerifyResult = VerifyFiles(files);
@@ -44,32 +47,47 @@ public partial class Index
 
         await LoadPhotoFiles(fileVerifyResult);
         await LoadVideoFiles(fileVerifyResult);
+        
+        await InvokeAsync(StateHasChanged);
     }
 
 
     private async Task LoadPhotoFiles(Dictionary<IBrowserFile, string?> fileVerifyResult)
     {
-        _imageUrls.Clear();
-        var imageFiles = fileVerifyResult.Where(p => p.Value == "image").Select(x => x.Key).ToList();
-        loadedFiles.Clear();
-        foreach (var file in imageFiles)
-        {
-            try
-            {
-                var id = Guid.NewGuid();
-                await using MemoryStream ms = new MemoryStream();
-                await file.OpenReadStream().CopyToAsync(ms);
-                var url = $"data:{file.ContentType};base64,{Convert.ToBase64String(ms.ToArray())}";
+        var imageFiles = fileVerifyResult
+            .Where(p => p.Value == "image")
+            .Select(x => x.Key)
+            .ToList();
+
+        var processingTasks = imageFiles.Select(ProcessFileAsync);
+
+        await Task.WhenAll(processingTasks);
+
         Logger.LogDebug("{fileCount} photo files processed", imageFiles.Count);
-                _imageUrls.Add(id, url);
-                await InvokeAsync(StateHasChanged);
-                _recognizedImageBarcodes.Add(new BarcodeModel(id, Decoder.Decode(ms.ToArray()) ?? String.Empty));
-            }
-            catch (Exception ex)
+
+        async Task ProcessFileAsync(IBrowserFile file)
+        {
+            var id = Guid.NewGuid();
+            await using var ms = new MemoryStream();
+
+            await file.OpenReadStream().CopyToAsync(ms);
+
+            var base64 = Convert.ToBase64String(ms.ToArray());
+            var url = $"data:{file.ContentType};base64,{base64}";
+
+            lock (_imageUrls)
             {
+                _imageUrls.Add(id, url);
+            }
+
+            var decoded = Decoder.Decode(ms.ToArray()) ?? string.Empty;
+            lock (_recognizedImageBarcodes)
+            {
+                _recognizedImageBarcodes.Add(new BarcodeModel(id, decoded));
             }
         }
     }
+
 
     private async Task RemoveBarcode(BarcodeModel barcodeModel)
     {
@@ -83,7 +101,11 @@ public partial class Index
         var videoFiles = fileVerifyResult.Where(p => p.Value == "video").Select(x => x.Key).ToList();
         loadedFiles.Clear();
 
-        foreach (var file in videoFiles)
+        var processingTasks = videoFiles.Select(ProcessFileAsync);
+
+        await Task.WhenAll(processingTasks);
+
+        async Task ProcessFileAsync(IBrowserFile file)
         {
             string tempFolder = Path.GetTempPath();
             string extension = Path.GetExtension(file.Name);
