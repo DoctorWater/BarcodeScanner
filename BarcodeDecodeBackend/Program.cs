@@ -130,6 +130,9 @@ builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddOptions<HttpAddresses>()
     .Bind(builder.Configuration.GetSection(nameof(HttpAddresses)));
+builder.Services.AddOptions<JwtSettings>()
+    .Bind(builder.Configuration.GetSection(nameof(JwtSettings)));
+
 builder.Services.AddScoped<ITransportStorageUnitRepository, TransportStorageUnitRepository>()
     .AddScoped<ITransportOrderRepository, TransportOrderRepository>()
     .AddScoped<ITransportOrderMessageHandler, TransportOrderMessageHandler>()

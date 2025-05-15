@@ -47,7 +47,7 @@ public class TsuController : ControllerBase
     public async Task<ActionResult<TsuResponseMessage>> ProcessTsuChange(
         [FromBody] TsuChangeMessage request)
     {
-        _logger.LogInformation("Tsu change request was received. Request: {request}", request);
+        _logger.LogInformation("Tsu change request was received. Request: {@request}", request);
         var updateResult = await _tsuMessageHandler.HandleTsuChange(request);
         if (updateResult is null)
         {
