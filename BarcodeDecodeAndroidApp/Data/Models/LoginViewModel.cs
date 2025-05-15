@@ -1,7 +1,8 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
-using MauiAndroid.App.Services;
+using MauiAndroid.App.Data.Services;
+
 namespace MauiAndroid.App.Models;
 public class LoginViewModel : INotifyPropertyChanged
 {

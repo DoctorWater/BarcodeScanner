@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using BarcodeScanner.Mobile;
 using CommunityToolkit.Maui;
-using MauiAndroid.App.Services;
+using MauiAndroid.App.Data.Services;
 using MauiAndroid.App.Utils;
 using MauiAndroid.App.Handlers;
 using MauiAndroid.App.Models;
@@ -34,16 +34,14 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
 
-        builder.Services.AddScoped<BarcodeService>();
-
         builder.Services.AddSingleton<AuthService>();
         builder.Services.AddSingleton<IApiEndpointProvider, ApiEndpointProvider>();
         builder.Services.AddSingleton<ITokenProvider, TokenProvider>();
         builder.Services.AddTransient<JwtAuthorizationHandler>();
         builder.Services.AddTransient<LoginViewModel>();
-        builder.Services.AddTransient<BarcodeService>();
         builder.Services.AddTransient<MainPage>();
         builder.Services.AddTransient<LoginPage>();
+        builder.Services.AddTransient<IHttpMessagingService, HttpMessagingService>();
 
         builder.Services.AddHttpClient("AnonymousClient")
         .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler

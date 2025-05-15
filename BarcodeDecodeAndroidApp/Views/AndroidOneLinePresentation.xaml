@@ -1,138 +1,128 @@
-<?xml version="1.0" encoding="utf-8" ?>
 <ContentView
-       x:Name="Root"
-       xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-       xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-       xmlns:dg="clr-namespace:Maui.DataGrid;assembly=Maui.DataGrid"
-       x:Class="MauiAndroid.App.Views.AndroidOneLinePresentation">
+    x:Name="Root"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:dg="clr-namespace:Maui.DataGrid;assembly=Maui.DataGrid"
+    x:Class="MauiAndroid.App.Views.AndroidOneLinePresentation">
 
-       <Frame
-              BorderColor="#CCCCCC"
-              CornerRadius="8"
-              Padding="0"
-              Margin="0,0,0,10"
-              HasShadow="False"
-              BackgroundColor="White">
-              <toolkit:Expander>
+    <Frame
+        BorderColor="#CCCCCC"
+        CornerRadius="8"
+        Padding="0"
+        Margin="0,0,0,10"
+        HasShadow="False"
+        BackgroundColor="White">
 
-                     <toolkit:Expander.Header>
-                            <Grid
-                                   Padding="12"
-                                   ColumnDefinitions="*,Auto,Auto,Auto"
-                                   ColumnSpacing="16">
-                                   <Label Text="{Binding Barcode}"
-                                          FontAttributes="Bold"
-                                          VerticalOptions="Center"/>
-                                   <Label Grid.Column="1"
-                                          Text="{Binding Status, StringFormat='TSU: {0}'}"
-                                          VerticalOptions="Center"/>
-                                   <Label Grid.Column="2"
-                                          Text="{Binding TransportOrder.Status, StringFormat='Order: {0}'}"
-                                          VerticalOptions="Center"/>
-                                   <Label Grid.Column="3"
-                                          Text="{Binding LocationTicketDtos[^1].ArrivedAtLocation, StringFormat='Last Loc: {0}'}"
-                                          VerticalOptions="Center"/>
-                            </Grid>
-                     </toolkit:Expander.Header>
+        <toolkit:Expander>
+            <toolkit:Expander.Header>
+                <Grid Padding="12" ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="16">
+                    <Label Text="{Binding Barcode}" FontAttributes="Bold" FontSize="22" VerticalOptions="Center" />
+                    <Label Grid.Column="1" Text="{Binding Status, StringFormat='TSU: {0}'}" FontSize="15"
+                           VerticalOptions="Center" />
+                    <Label Grid.Column="2" Text="{Binding TransportOrder.Status, StringFormat='Order: {0}'}"
+                           FontSize="15" VerticalOptions="Center" />
+                    <Label Grid.Column="3"
+                           Text="{Binding LocationTicketDtos[^1].ArrivedAtLocation, StringFormat='Last Loc: {0}'}"
+                           FontSize="15" VerticalOptions="Center" />
+                </Grid>
+            </toolkit:Expander.Header>
 
-                     <toolkit:Expander.Content>
-                            <Grid Padding="12"
-                                  RowSpacing="16">
-                                   <Grid.RowDefinitions>
-                                          <RowDefinition Height="Auto"/>
-                                          <RowDefinition Height="*"/>
-                                   </Grid.RowDefinitions>
-                                   
-                                   <Grid
-                                          Grid.Row="0"
-                                          ColumnDefinitions="2*,2*,Auto"
-                                          ColumnSpacing="16">
-                                          <StackLayout>
-                                                 <Label Text="Transport Storage Unit Details"
-                                                        FontAttributes="Bold"/>
-                                                 <Label Text="{Binding Id,        StringFormat='Id: {0}'}"/>
-                                                 <Label Text="{Binding Status,    StringFormat='Status: {0}'}"/>
-                                                 <Label Text="{Binding UpdatedOn, StringFormat='Updated On: {0:dd/MM/yyyy HH:mm:ss zzz}'}"/>
-                                                 <Label Text="{Binding IsOkay,    StringFormat='Is Okay: {0}'}"/>
-                                          </StackLayout>
+            <toolkit:Expander.Content>
+                <VerticalStackLayout Padding="10" Spacing="0">
 
-                                          <StackLayout Grid.Column="1">
-                                                 <Label Text="Transport Order Details"
-                                                        FontAttributes="Bold"/>
-                                                 <Label Text="{Binding TransportOrder.ExternalId, StringFormat='External ID: {0}'}"/>
-                                                 <Label Text="{Binding TransportOrder.Barcode,     StringFormat='Barcode: {0}'}"/>
-                                                 <Label Text="{Binding TransportOrder.Status,      StringFormat='Status: {0}'}"/>
-                                                 <Label Text="{Binding TransportOrder.CreatedOn,   StringFormat='Created On: {0:dd/MM/yyyy HH:mm:ss zzz}'}"/>
-                                                 <Label Text="{Binding TransportOrder.ClosedOn,    StringFormat='Closed On: {0:dd/MM/yyyy HH:mm:ss zzz}'}"/>
-                                                 <Label Text="{Binding TransportOrder.IsOkay,      StringFormat='Is Okay: {0}'}"/>
-                                          </StackLayout>
+                    <Frame Margin="0,6,0,6" Padding="8" BorderColor="#E0E0E0" CornerRadius="10">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Информация о TSU" FontAttributes="Bold" FontSize="16" Margin="0,0,0,4" />
+                            <HorizontalStackLayout Spacing="4">
+                                <Label Text="Id:" FontAttributes="Bold" TextColor="#6200EE" />
+                                <Label Text="{Binding Id}" TextColor="#111" />
+                            </HorizontalStackLayout>
+                            <HorizontalStackLayout Spacing="4">
+                                <Label Text="Status:" FontAttributes="Bold" TextColor="#6200EE" />
+                                <Label Text="{Binding Status}" TextColor="#111" />
+                            </HorizontalStackLayout>
+                            <HorizontalStackLayout Spacing="4">
+                                <Label Text="Updated On:" FontAttributes="Bold" TextColor="#6200EE" />
+                                <Label Text="{Binding UpdatedOn, StringFormat='{0:dd/MM/yyyy HH:mm:ss zzz}'}"
+                                       TextColor="#111" />
+                            </HorizontalStackLayout>
+                            <HorizontalStackLayout Spacing="4">
+                                <Label Text="Is Okay:" FontAttributes="Bold" TextColor="#6200EE" />
+                                <Label Text="{Binding IsOkay}" TextColor="#111" />
+                            </HorizontalStackLayout>
+                        </VerticalStackLayout>
+                    </Frame>
 
-                                          <VerticalStackLayout
-                                                 Grid.Column="2"
-                                                 Spacing="10"
-                                                 VerticalOptions="Start">
-                                                 <Button Text="Edit TSU"
-                                                         Command="{Binding EditTsuCommand}"
-                                                         BackgroundColor="#6200EE"
-                                                         TextColor="White"
-                                                         CornerRadius="20"/>
-                                                 <Button Text="Edit Order"
-                                                         Command="{Binding EditOrderCommand}"
-                                                         BackgroundColor="#6200EE"
-                                                         TextColor="White"
-                                                         CornerRadius="20"/>
-                                                 <Button Text="Relaunch Order"
-                                                         Command="{Binding RelaunchOrderCommand}"
-                                                         BackgroundColor="#6200EE"
-                                                         TextColor="White"
-                                                         CornerRadius="20"/>
-                                                 <Button x:Name="ScanBtn"
-                                                         Text="View TSU history"
-                                                         Clicked="OnDetailsClicked"
-                                                         BackgroundColor="#6200EE"
-                                                         TextColor="White"
-                                                         CornerRadius="20"/>
-                                          </VerticalStackLayout>
-                                   </Grid>
-                                   
-                                   <dg:DataGrid
-                                          Grid.Row="1"
-                                          ItemsSource="{Binding LocationTicketDtos}"
-                                          SelectionEnabled="False"
-                                          HeightRequest="{Binding DataGridHeight}"
-                                          RowHeight="40"
-                                          HeaderHeight="50"
-                                          VerticalOptions="FillAndExpand"
-                                          HorizontalOptions="FillAndExpand">
-                                          <dg:DataGrid.Columns>
-                                                 <dg:DataGridColumn Title="ID"
-                                                                    PropertyName="ID"
-                                                                    Width="1*"/>
-                                                 <dg:DataGridColumn Title="Откуда"
-                                                                    PropertyName="DepartureLocation"
-                                                                    Width="2*"/>
-                                                 <dg:DataGridColumn Title="План"
-                                                                    PropertyName="PlannedLocation"
-                                                                    Width="2*"/>
-                                                 <dg:DataGridColumn Title="Прибыл"
-                                                                    PropertyName="ArrivedAtLocation"
-                                                                    Width="2*"/>
-                                                 <dg:DataGridColumn Title="Статус"
-                                                                    PropertyName="Status"
-                                                                    Width="2*"/>
-                                                 <dg:DataGridColumn Title="Дата"
-                                                                    PropertyName="ArrivedOn"
-                                                                    Width="3*"
-                                                                    StringFormat="{}{0:yyyy-MM-dd}"/>
-                                                 <dg:DataGridColumn Title="Успех"
-                                                                    PropertyName="IsSuccess"
-                                                                    Width="1*"/>
-                                          </dg:DataGrid.Columns>
-                                   </dg:DataGrid>
-                            </Grid>
-                     </toolkit:Expander.Content>
+                    <Frame Margin="0,0,0,6" Padding="8" BorderColor="#E0E0E0" CornerRadius="10">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Информация о заказе" FontAttributes="Bold" FontSize="16" Margin="0,0,0,4" />
+                            <HorizontalStackLayout Spacing="4">
+                                <Label Text="External ID:" FontAttributes="Bold" TextColor="#6200EE" />
+                                <Label Text="{Binding TransportOrder.ExternalId}" TextColor="#111" />
+                            </HorizontalStackLayout>
+                            <HorizontalStackLayout Spacing="4">
+                                <Label Text="Barcode:" FontAttributes="Bold" TextColor="#6200EE" />
+                                <Label Text="{Binding TransportOrder.Barcode}" TextColor="#111" />
+                            </HorizontalStackLayout>
+                            <HorizontalStackLayout Spacing="4">
+                                <Label Text="Status:" FontAttributes="Bold" TextColor="#6200EE" />
+                                <Label Text="{Binding TransportOrder.Status}" TextColor="#111" />
+                            </HorizontalStackLayout>
+                            <HorizontalStackLayout Spacing="4">
+                                <Label Text="Created On:" FontAttributes="Bold" TextColor="#6200EE" />
+                                <Label
+                                    Text="{Binding TransportOrder.CreatedOn, StringFormat='{0:dd/MM/yyyy HH:mm:ss zzz}'}"
+                                    TextColor="#111" />
+                            </HorizontalStackLayout>
+                            <HorizontalStackLayout Spacing="4">
+                                <Label Text="Closed On:" FontAttributes="Bold" TextColor="#6200EE" />
+                                <Label
+                                    Text="{Binding TransportOrder.ClosedOn, StringFormat='{0:dd/MM/yyyy HH:mm:ss zzz}'}"
+                                    TextColor="#111" />
+                            </HorizontalStackLayout>
+                            <HorizontalStackLayout Spacing="4">
+                                <Label Text="Is Okay:" FontAttributes="Bold" TextColor="#6200EE" />
+                                <Label Text="{Binding TransportOrder.IsOkay}" TextColor="#111" />
+                            </HorizontalStackLayout>
+                        </VerticalStackLayout>
+                    </Frame>
 
-              </toolkit:Expander>
-       </Frame>
+                    <HorizontalStackLayout Spacing="10" Margin="0,4,0,10">
+                        <Button Text="Edit TSU" Command="{Binding EditTsuCommand}" BackgroundColor="#6200EE"
+                                TextColor="White" CornerRadius="16" />
+                        <Button Text="Edit Order" Command="{Binding EditOrderCommand}" BackgroundColor="#6200EE"
+                                TextColor="White" CornerRadius="16" />
+                        <Button Text="Relaunch Order" Command="{Binding RelaunchOrderCommand}"
+                                BackgroundColor="#6200EE" TextColor="White" CornerRadius="16" />
+                    </HorizontalStackLayout>
+
+                    <Label Text="История перемещений" FontAttributes="Bold" FontSize="17" Margin="0,6,0,2" />
+
+                    <ScrollView Orientation="Horizontal" HorizontalScrollBarVisibility="Always">
+                        <dg:DataGrid
+                            ItemsSource="{Binding LocationTicketDtos}"
+                            SelectionEnabled="False"
+                            HeightRequest="{Binding DataGridHeight}"
+                            WidthRequest="{Binding DataGridWidth}"
+                            RowHeight="40"
+                            HeaderHeight="50"
+                            VerticalOptions="FillAndExpand">
+                            <dg:DataGrid.Columns>
+                                <dg:DataGridColumn Title="ID" PropertyName="ID" Width="1*" />
+                                <dg:DataGridColumn Title="Откуда" PropertyName="DepartureLocation" Width="2*" />
+                                <dg:DataGridColumn Title="План" PropertyName="PlannedLocation" Width="2*" />
+                                <dg:DataGridColumn Title="Прибыл" PropertyName="ArrivedAtLocation" Width="2*" />
+                                <dg:DataGridColumn Title="Статус" PropertyName="Status" Width="2*" />
+                                <dg:DataGridColumn Title="Дата" PropertyName="ArrivedOn" Width="3*"
+                                                   StringFormat="{}{0:yyyy-MM-dd}" />
+                                <dg:DataGridColumn Title="Успех" PropertyName="IsSuccess" Width="2*" />
+                            </dg:DataGrid.Columns>
+                        </dg:DataGrid>
+                    </ScrollView>
+
+                </VerticalStackLayout>
+            </toolkit:Expander.Content>
+        </toolkit:Expander>
+    </Frame>
 </ContentView>

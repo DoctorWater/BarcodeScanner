@@ -9,6 +9,8 @@ public class TransportStorageUnitViewModel : INotifyPropertyChanged
 {
     const double TICKET_HEADER_HEIGHT = 50;
     const double TICKET_ROW_HEIGHT = 40;
+    const double TICKET_COLUMN_WIDTH = 70;
+    const double TICKET_COLUMN_COUNT = 7;
     private bool _isExpanded;
 
     public int Id { get; init; }
@@ -19,6 +21,7 @@ public class TransportStorageUnitViewModel : INotifyPropertyChanged
     public ObservableCollection<LocationTicketViewModel> LocationTicketDtos { get; set; } = new();
     public TransportOrderViewModel? TransportOrder { get; init; }
     public double DataGridHeight { get; }
+    public double DataGridWidth { get; }
 
 
     public TransportStorageUnitViewModel()
@@ -42,6 +45,7 @@ public class TransportStorageUnitViewModel : INotifyPropertyChanged
 
         var count = transportStorageUnit.LocationTickets.Count;
         DataGridHeight = TICKET_HEADER_HEIGHT + count * TICKET_ROW_HEIGHT;
+        DataGridWidth = TICKET_COLUMN_WIDTH * TICKET_COLUMN_COUNT;
     }
 
     private bool DefineIsOkay(TsuResponseMessage tsu)
