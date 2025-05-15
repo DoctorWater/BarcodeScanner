@@ -1,19 +1,19 @@
 using BarcodeDecodeLib.Models.Dtos.Messages.Barcode;
 using BarcodeDecodeLib.Models.Dtos.Models;
-using MauiAndroid.App.Services;
+using MauiAndroid.App.Data.Services;
 
 namespace MauiAndroid.App.Pages
 {
     public partial class BarcodeVerificationPage : ContentPage
     {
-        private readonly BarcodeService _barcodeService;
+        private readonly IHttpMessagingService _messagingService;
 
         public string BarcodeValue { get; set; }
 
         public BarcodeVerificationPage(string barcode)
         {
             InitializeComponent();
-            _barcodeService = App.Services.GetRequiredService<BarcodeService>();
+            _messagingService = App.Services.GetRequiredService<IHttpMessagingService>();
             BarcodeValue = barcode;
             BindingContext = this;
         }
@@ -30,34 +30,40 @@ namespace MauiAndroid.App.Pages
 
 
             var message = new BarcodeRequestMessage(cleanCode);
-            var batch   = new BarcodeRequestMessageBatch(new List<BarcodeRequestMessage> { message });
+            var batch = new BarcodeRequestMessageBatch(new List<BarcodeRequestMessage> { message });
 
-            var responseData = await _barcodeService.SendBarcodeRequest(batch);
-
-            if (responseData is null)
+            try
             {
-                await DisplayAlert("Ошибка", "Не удалось получить данные от сервера.", "OK");
-                return;
+                var responseData = await _messagingService.SendBarcodeRequest(batch);
+                if (responseData is null)
+                {
+                    await DisplayAlert("Ошибка", "Не удалось получить данные от сервера.", "OK");
+                    return;
+                }
+
+                var mappedData = new BackendResponseViewModel
+                {
+                    TransportOrders = responseData.Messages
+                        .SelectMany(m => m.TransportOrders)
+                        .Select(to => new TransportOrderViewModel(to))
+                        .ToList(),
+                    TransportStorageUnits = responseData.Messages
+                        .SelectMany(m => m.TransportStorageUnits)
+                        .Select(tu => new TransportStorageUnitViewModel(tu))
+                        .ToList()
+                };
+
+                await Navigation.PushAsync(
+                    new ClientDataObservePage(
+                        responseData.Messages
+                            .SelectMany(dto => dto.TransportStorageUnits)
+                            .Select(unit => new TransportStorageUnitViewModel(unit)))
+                );
             }
-
-            var mappedData = new BackendResponseViewModel
+            catch (Exception)
             {
-                TransportOrders      = responseData.Messages
-                                               .SelectMany(m => m.TransportOrders)
-                                               .Select(to => new TransportOrderViewModel(to))
-                                               .ToList(),
-                TransportStorageUnits = responseData.Messages
-                                               .SelectMany(m => m.TransportStorageUnits)
-                                               .Select(tu => new TransportStorageUnitViewModel(tu))
-                                               .ToList()
-            };
-
-            await Navigation.PushAsync(
-                new ClientDataObservePage(
-                    responseData.Messages
-                                .SelectMany(dto => dto.TransportStorageUnits)
-                                .Select(unit => new TransportStorageUnitViewModel(unit)))
-            );
+                await DisplayAlert("Ошибка", "Возникла ошибка при отправке запроса.", "OK");
+            }
         }
 
         private async void OnCancelClicked(object sender, EventArgs e)

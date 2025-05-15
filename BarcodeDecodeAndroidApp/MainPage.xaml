@@ -10,17 +10,9 @@
         Spacing="20"
         VerticalOptions="FillAndExpand">
 
-        <Frame
-            x:Name="CamViewFrame"
-            Padding="0"
-            CornerRadius="0"
-            BorderColor="Transparent"
-            VerticalOptions="FillAndExpand">
-        </Frame>
-
         <Button
             x:Name="ScanBtn"
-            Text="Scan barcode"
+            Text="Сканировать"
             Clicked="OnScanClicked"
             HorizontalOptions="Center" />
 

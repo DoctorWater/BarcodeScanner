@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiAndroid.App.Pages.BarcodeScanPage">
+    <ContentPage.Content>
+        <Frame
+            x:Name="CamViewFrame"
+            Padding="0"
+            CornerRadius="0"
+            BorderColor="Transparent"
+            VerticalOptions="FillAndExpand">
+        </Frame>
+    </ContentPage.Content>
+</ContentPage>
