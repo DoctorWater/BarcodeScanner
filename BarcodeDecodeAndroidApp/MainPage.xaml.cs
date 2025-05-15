@@ -1,18 +1,20 @@
 ﻿using BarcodeDecodeLib.Models.Dtos.Messages.Barcode;
 using BarcodeDecodeLib.Models.Dtos.Models;
 using BarcodeScanner.Mobile;
+using MauiAndroid.App.Data.Utils;
 using MauiAndroid.App.Pages;
 
 namespace MauiAndroid.App;
 
 public partial class MainPage : ContentPage
 {
-    private bool _isCamViewVisible = false;
-     private readonly LoginPage _loginPage;
-    public MainPage(LoginPage loginPage)
+    private readonly LoginPage _loginPage;
+    private readonly ITokenProvider _tokenProvider;
+    public MainPage(LoginPage loginPage, ITokenProvider tokenProvider)
     {
         InitializeComponent();
         _loginPage = loginPage;
+        _tokenProvider = tokenProvider;
     }
 
     [Obsolete]
@@ -20,9 +22,7 @@ public partial class MainPage : ContentPage
     {
         await Navigation.PushAsync(new BarcodeScanPage());
     }
-
-
-
+    
     private async void OnSettingsButtonClicked(object sender, EventArgs e)
     {
         await Navigation.PushAsync(new SettingsPage());
@@ -32,17 +32,24 @@ public partial class MainPage : ContentPage
     {
         await Navigation.PushAsync(_loginPage);
     }
-
-    private async void TakePhoto()
+    
+    protected override async void OnAppearing()
     {
-        if (MediaPicker.Default.IsCaptureSupported)
-        {
-            var photo = await MediaPicker.Default.CapturePhotoAsync();
+        base.OnAppearing();
+        await UpdateButtonStates();
+    }
+    
+    private async Task UpdateButtonStates()
+    {
+        var token = await _tokenProvider.GetTokenAsync();
+        bool isAuthorized = !string.IsNullOrEmpty(token);
 
-            if (photo is not null)
-            {
-                using var stream = await photo.OpenReadAsync();
-            }
-        }
+        ScanBtn.IsEnabled = isAuthorized;
+        SettingsBtn.IsEnabled = isAuthorized;
+    }
+
+    private void OnTestClicked(object sender, EventArgs e)
+    {
+        _tokenProvider.ClearToken();
     }
 }

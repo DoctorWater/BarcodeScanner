@@ -74,16 +74,23 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Update="Pages\LocationTicketsPage.xaml.cs">
-        <DependentUpon>LocationTicketsPage.xaml</DependentUpon>
-      </Compile>
       <Compile Update="Pages\DeveloperDataObservePage.xaml.cs">
         <DependentUpon>DeveloperDataObservePage.xaml</DependentUpon>
+      </Compile>
+      <Compile Update="Pages\OrderChangePage.xaml.cs">
+        <DependentUpon>OrderChangePage.xaml</DependentUpon>
+        <SubType>Code</SubType>
       </Compile>
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\BarcodeDecodeLib\BarcodeDecodeLib.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <MauiXaml Update="Pages\OrderChangePage.xaml">
+        <SubType>Designer</SubType>
+      </MauiXaml>
     </ItemGroup>
 
 </Project>

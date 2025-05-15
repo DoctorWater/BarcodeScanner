@@ -63,4 +63,9 @@ public partial class BarcodeScanPage : ContentPage
 
         return status;
     }
+
+    private async void OnManualInputClicked(object? sender, EventArgs e)
+    {
+        await Navigation.PushAsync(new BarcodeVerificationPage(string.Empty));
+    }
 }

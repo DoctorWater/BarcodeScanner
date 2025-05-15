@@ -1,6 +1,6 @@
 using System.Net;
 using System.Net.Http.Headers;
-using MauiAndroid.App.Utils;
+using MauiAndroid.App.Data.Utils;
 
 namespace MauiAndroid.App.Handlers;
 public class JwtAuthorizationHandler : DelegatingHandler

@@ -6,11 +6,37 @@
 
     <StackLayout Padding="20" Spacing="20">
         <Label Text="Введите адрес сервера:" FontSize="Medium" />
-        <Entry x:Name="AddressEntry" Placeholder="Например: 192.168.1.104" />
-
+        
+        <Border Stroke="Gray"
+                StrokeThickness="1"
+                Padding="4"
+                HorizontalOptions="Fill"
+                VerticalOptions="Center">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="10,10,10,10"/>
+            </Border.StrokeShape>
+            <Entry x:Name="AddressEntry"
+                   Placeholder="Например: 192.168.1.104"
+                   BackgroundColor="Transparent"
+                   Keyboard="Text"
+                   HorizontalOptions="Fill"/>
+        </Border>
+        
         <Label Text="Введите порт сервера:" FontSize="Medium" />
-        <Entry x:Name="PortEntry" Placeholder="Например: 7214" Keyboard="Numeric" />
-
+        <Border Stroke="Gray"
+                StrokeThickness="1"
+                Padding="4"
+                HorizontalOptions="Fill"
+                VerticalOptions="Center">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="10,10,10,10"/>
+            </Border.StrokeShape>
+            <Entry x:Name="PortEntry" Placeholder="Например: 7214" 
+                   Keyboard="Numeric"
+                   HorizontalOptions="FillAndExpand"
+                   WidthRequest="0"/>
+        </Border>
+        
         <Button Text="Сохранить" Clicked="OnSaveButtonClicked" />
     </StackLayout>
 </ContentPage>

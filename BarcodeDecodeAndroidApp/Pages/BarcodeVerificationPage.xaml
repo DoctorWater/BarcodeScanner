@@ -34,8 +34,7 @@
                     Clicked="OnContinueClicked"
                     BackgroundColor="#5B4BFF"
                     TextColor="White"/>
-
-            <!-- Кнопка отмены теперь выглядит активной -->
+            
             <Button Text="Отмена"
                     Padding="14,10"
                     Clicked="OnCancelClicked"

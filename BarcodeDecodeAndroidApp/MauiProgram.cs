@@ -3,7 +3,6 @@ using BarcodeScanner.Mobile;
 using CommunityToolkit.Maui;
 using MauiAndroid.App.Data.Services;
 using MauiAndroid.App.Data.Utils;
-using MauiAndroid.App.Utils;
 using MauiAndroid.App.Handlers;
 using MauiAndroid.App.Models;
 using MauiAndroid.App.Pages;
@@ -36,7 +35,6 @@ public static class MauiProgram
             });
 
         builder.Services.AddSingleton<AuthService>();
-        builder.Services.AddSingleton<IApiEndpointProvider, ApiEndpointProvider>();
         builder.Services.AddSingleton<ITokenProvider, TokenProvider>();
         builder.Services.AddTransient<JwtAuthorizationHandler>();
         builder.Services.AddTransient<LoginViewModel>();

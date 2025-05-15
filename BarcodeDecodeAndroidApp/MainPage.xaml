@@ -14,16 +14,24 @@
             x:Name="ScanBtn"
             Text="Сканировать"
             Clicked="OnScanClicked"
-            HorizontalOptions="Center" />
+            HorizontalOptions="Center"
+            IsEnabled="{Binding IsAuthorized}" />
 
         <Button
+            x:Name="SettingsBtn"
             Text="Настройки"
             Clicked="OnSettingsButtonClicked"
-            HorizontalOptions="Center" />
-        
+            HorizontalOptions="Center"
+            IsEnabled="{Binding IsAuthorized}" />
+
         <Button
             Text="Авторизация"
             Clicked="OnAuthorizationButtonClicked"
+            HorizontalOptions="Center" />
+        
+        <Button
+            Text="Тест"
+            Clicked="OnTestClicked"
             HorizontalOptions="Center" />
 
     </VerticalStackLayout>

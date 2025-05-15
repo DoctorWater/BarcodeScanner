@@ -41,28 +41,17 @@ namespace MauiAndroid.App.Pages
                     return;
                 }
 
-                var mappedData = new BackendResponseViewModel
-                {
-                    TransportOrders = responseData.Messages
-                        .SelectMany(m => m.TransportOrders)
-                        .Select(to => new TransportOrderViewModel(to))
-                        .ToList(),
-                    TransportStorageUnits = responseData.Messages
-                        .SelectMany(m => m.TransportStorageUnits)
-                        .Select(tu => new TransportStorageUnitViewModel(tu))
-                        .ToList()
-                };
+                var tsus = responseData.Messages
+                    .SelectMany(dto => dto.TransportStorageUnits)
+                    .Select(unit => new TransportStorageUnitViewModel(unit));
 
                 await Navigation.PushAsync(
-                    new ClientDataObservePage(
-                        responseData.Messages
-                            .SelectMany(dto => dto.TransportStorageUnits)
-                            .Select(unit => new TransportStorageUnitViewModel(unit)))
+                    new ClientDataObservePage(tsus)
                 );
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                await DisplayAlert("Ошибка", "Возникла ошибка при отправке запроса.", "OK");
+                await DisplayAlert("Ошибка", ex.Message, "OK");
             }
         }
 
