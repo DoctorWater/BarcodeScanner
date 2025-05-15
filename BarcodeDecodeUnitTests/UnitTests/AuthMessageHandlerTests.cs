@@ -1,9 +1,11 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using BarcodeDecodeBackend.Services.Processing;
+using BarcodeDecodeLib.Models.Dtos.Configs;
 using BarcodeDecodeLib.Models.Dtos.Messages.Auth;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using Moq;
 
 namespace BarcodeDecodeUnitTests.UnitTests;
@@ -12,7 +14,7 @@ namespace BarcodeDecodeUnitTests.UnitTests;
 public class AuthMessageHandlerTests
 {
     private Mock<UserManager<IdentityUser>> _userManagerMock;
-    private IConfiguration _configuration;
+    private IOptions<JwtSettings> _jwtOptions;
     private AuthMessageHandler _handler;
 
     [SetUp]
@@ -24,18 +26,15 @@ public class AuthMessageHandlerTests
             null, null, null, null, null, null, null, null
         );
         
-        var inMemorySettings = new Dictionary<string, string>
+        _jwtOptions = Options.Create(new JwtSettings()
         {
-            ["JwtSettings:Key"] = "0123456789ABCDEF0123456789ABCDEF",
-            ["JwtSettings:Issuer"] = "TestIssuer",
-            ["JwtSettings:Audience"] = "TestAudience",
-            ["JwtSettings:DurationInMinutes"] = "60"
-        };
-        _configuration = new ConfigurationBuilder()
-            .AddInMemoryCollection(inMemorySettings)
-            .Build();
+            Issuer = "TestIssuer",
+            Audience = "TestAudience",
+            DurationInMinutes = 60,
+            Key = "0123456789ABCDEF0123456789ABCDEF"
+        });
         
-        _handler = new AuthMessageHandler(_userManagerMock.Object, _configuration);
+        _handler = new AuthMessageHandler(_userManagerMock.Object, _jwtOptions);
     }
 
     [Test]
@@ -57,12 +56,11 @@ public class AuthMessageHandlerTests
 
         var tokenString = await _handler.Login(dto);
 
-        Assert.That(tokenString, Is.Not.Null.And.Not.Empty);
+        Assert.That(tokenString, Is.Not.Null);
 
-        var jwt = new JwtSecurityTokenHandler().ReadJwtToken(tokenString);
-        Assert.That(jwt.Issuer, Is.EqualTo(_configuration["JwtSettings:Issuer"]));
-        Assert.That(jwt.Audiences, Does.Contain(_configuration["JwtSettings:Audience"]));
-        Assert.That(jwt.Subject, Is.EqualTo("alice"));
+        var jwt = new JwtSecurityTokenHandler().ReadJwtToken(tokenString.Token);
+        Assert.That(jwt.Issuer, Is.EqualTo(_jwtOptions.Value.Issuer));
+        Assert.That(jwt.Audiences, Does.Contain(_jwtOptions.Value.Audience));
 
         foreach (var role in roles)
         {

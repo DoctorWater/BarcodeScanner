@@ -31,15 +31,14 @@ public class AuthController : ControllerBase
 
         MetricsRegistry.AuthLoginAttemptsTotal.Inc();
         var token = await _authMessageHandler.Login(dto);
-        var result = new LoginResult{ Token = token };
 
-        if (result.Token is null)
+        if (token is null)
         {
             MetricsRegistry.AuthLoginFailureTotal.Inc();
             return Unauthorized("Invalid username or password");
         }
 
         MetricsRegistry.AuthLoginSuccessTotal.Inc();
-        return Ok(result);
+        return Ok(token);
     }
 }
