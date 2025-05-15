@@ -89,11 +89,11 @@
                     </Frame>
 
                     <HorizontalStackLayout Spacing="10" Margin="0,4,0,10">
-                        <Button Text="Edit TSU" Command="{Binding EditTsuCommand}" BackgroundColor="#6200EE"
-                                TextColor="White" CornerRadius="16" />
-                        <Button Text="Edit Order" Command="{Binding EditOrderCommand}" BackgroundColor="#6200EE"
-                                TextColor="White" CornerRadius="16" />
-                        <Button Text="Relaunch Order" Command="{Binding RelaunchOrderCommand}"
+                        <Button x:Name="EditTsuButton" Text="Edit TSU" Clicked="OnEditTsu_Clicked" BackgroundColor="#6200EE"
+                                TextColor="White" CornerRadius="16"/>
+                        <Button x:Name="EditOrderButton" Text="Edit Order" Clicked="OnEditOrder_Clicked" BackgroundColor="#6200EE"
+                                TextColor="White" CornerRadius="16"/>
+                        <Button x:Name="RelaunchOrderButton" Text="Relaunch Order" Clicked="OnRelaunchOrder_Clicked"
                                 BackgroundColor="#6200EE" TextColor="White" CornerRadius="16" />
                     </HorizontalStackLayout>
 

@@ -1,7 +1,6 @@
 using System.Net.Http.Json;
 using BarcodeDecodeLib.Models.Dtos.Messages.Auth;
 using MauiAndroid.App.Data.Utils;
-using MauiAndroid.App.Utils;
 
 namespace MauiAndroid.App.Data.Services;
 public class AuthService

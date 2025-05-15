@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="MauiAndroid.App.Pages.OrderChangePage"
+    Title="Изменить заказ">
+
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="15">
+
+            <Label Text="ID заказа" FontAttributes="Bold" />
+            <Label x:Name="IdLabel" />
+
+            <Label Text="Штрихкод" FontAttributes="Bold" />
+            <Frame
+                CornerRadius="10"
+                Padding="0"
+                HasShadow="False"
+                BorderColor="LightGray"
+                BackgroundColor="White">
+                <Entry
+                    x:Name="BarcodeEntry"
+                    Margin="8,4"
+                    BackgroundColor="Transparent"
+                    Placeholder="Введите штрихкод" />
+            </Frame>
+
+            <Label Text="Статус" FontAttributes="Bold" />
+            <Picker x:Name="StatusPicker" Title="Выберите статус" />
+
+            <Button
+                x:Name="SaveButton"
+                Text="Сохранить"
+                Clicked="OnSaveClicked" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

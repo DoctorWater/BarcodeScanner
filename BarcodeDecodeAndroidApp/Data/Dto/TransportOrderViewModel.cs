@@ -4,6 +4,7 @@ using BarcodeDecodeLib.Models.Enums;
 
 public class TransportOrderViewModel
 {
+    public int Id { get; set; }
     public string ExternalId { get; set; }
     public string? Barcode { get; set; }
     public int? Destination { get; set; }
@@ -11,20 +12,23 @@ public class TransportOrderViewModel
     public DateTimeOffset CreatedOn { get; set; }
     public DateTimeOffset? ClosedOn { get; set; }
     public bool IsOkay { get; set; }
-    public TransportOrderViewModel(){}
+
+    public TransportOrderViewModel()
+    {
+    }
 
     public TransportOrderViewModel(TransportOrderResponseMessage order)
     {
-
         var destination = order.Destinations is not null && order.Destinations.Any() ? order.Destinations[0] : 0;
         bool isOkay = false;
         if (destination is not 0
-        && order.Status != TransportOrderStatusEnum.Error
-        && string.IsNullOrEmpty(order.Barcode))
+            && order.Status != TransportOrderStatusEnum.Error
+            && string.IsNullOrEmpty(order.Barcode))
         {
             isOkay = true;
         }
 
+        Id = order.Id;
         ExternalId = order.ExternalId;
         Barcode = order.Barcode;
         Status = order.Status;

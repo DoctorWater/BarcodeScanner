@@ -1,9 +1,13 @@
+using BarcodeDecodeLib.Models.Dtos.Messages.TransportOrder;
+using MauiAndroid.App.Data.Services;
 using MauiAndroid.App.Pages;
 
 namespace MauiAndroid.App.Views;
 
 public partial class AndroidOneLinePresentation : ContentView
 {
+	private readonly IHttpMessagingService _messagingService = App.Services.GetRequiredService<IHttpMessagingService>();
+
 	public static readonly BindableProperty TSUProperty =
 			BindableProperty.Create(
 				nameof(TSU),
@@ -16,10 +20,6 @@ public partial class AndroidOneLinePresentation : ContentView
 		get => (TransportStorageUnitViewModel)GetValue(TSUProperty);
 		set => SetValue(TSUProperty, value);
 	}
-
-	public event EventHandler? EditTsuRequested;
-	public event EventHandler? EditOrderRequested;
-	public event EventHandler? RelaunchOrderRequested;
 
 	public AndroidOneLinePresentation()
 	{
@@ -36,17 +36,20 @@ public partial class AndroidOneLinePresentation : ContentView
 	}
 
 	void OnEditTsu_Clicked(object sender, EventArgs e)
-		=> EditTsuRequested?.Invoke(this, EventArgs.Empty);
+	{
+		var page = new TsuChangePage(TSU);
+		Navigation.PushAsync(page);
+	}
 
 	void OnEditOrder_Clicked(object sender, EventArgs e)
-		=> EditOrderRequested?.Invoke(this, EventArgs.Empty);
+	{
+		var page = new OrderChangePage(TSU.TransportOrder);
+		Navigation.PushAsync(page);
+	}
 
 	void OnRelaunchOrder_Clicked(object sender, EventArgs e)
-		=> RelaunchOrderRequested?.Invoke(this, EventArgs.Empty);
-
-	async void OnDetailsClicked(object sender, EventArgs e)
 	{
-		var page = new LocationTicketsPage{ BindingContext = TSU.LocationTicketDtos };
-		await Navigation.PushAsync(page);
+		var msg = new TransportOrderRelaunchMessage(TSU.TransportOrder.Barcode);
+		_messagingService.SendTransportOrderRelaunchMessage(msg);
 	}
 }
