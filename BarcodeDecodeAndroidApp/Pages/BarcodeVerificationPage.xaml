@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiAndroid.App.Pages.BarcodeVerificationPage">
+
+    <VerticalStackLayout Padding="20"
+                         Spacing="24">
+
+        <Label Text="Проверьте (и при необходимости исправьте) штрих‑код"
+               FontAttributes="Bold"
+               FontSize="18"
+               HorizontalOptions="Center"/>
+
+        <Border Stroke="Gray"
+                StrokeThickness="1"
+                Padding="4"
+                HorizontalOptions="Fill"
+                VerticalOptions="Center">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="10,10,10,10"/>
+            </Border.StrokeShape>
+            <Entry x:Name="BarcodeEntry"
+                   FontSize="20"
+                   BackgroundColor="Transparent"
+                   Keyboard="Text"
+                   HorizontalOptions="Fill"
+                   Text="{Binding BarcodeValue}"/>
+        </Border>
+
+        <HorizontalStackLayout Spacing="16"
+                               HorizontalOptions="Center">
+            <Button Text="Продолжить"
+                    Padding="14,10"
+                    Clicked="OnContinueClicked"
+                    BackgroundColor="#5B4BFF"
+                    TextColor="White"/>
+            
+            <Button Text="Отмена"
+                    Padding="14,10"
+                    Clicked="OnCancelClicked"
+                    BackgroundColor="Transparent"
+                    TextColor="#5B4BFF"
+                    BorderColor="#5B4BFF"
+                    BorderWidth="1"/>
+        </HorizontalStackLayout>
+    </VerticalStackLayout>
+</ContentPage>

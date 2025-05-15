@@ -49,7 +49,7 @@ public class TsuController : ControllerBase
     public async Task<ActionResult<TsuResponseMessage>> ProcessTsuChange(
         [FromBody] TsuChangeMessage request)
     {
-        _logger.LogInformation("Tsu change request was received. Request: {request}", request);
+        _logger.LogInformation("Tsu change request was received. Request: {@request}", request);
         
         using var timer = MetricsRegistry.TsuChangeDuration.NewTimer();
         MetricsRegistry.TsuChangeRequestsTotal.Inc();

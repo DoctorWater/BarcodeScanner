@@ -1,0 +1,128 @@
+<ContentView
+    x:Name="Root"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+    xmlns:dg="clr-namespace:Maui.DataGrid;assembly=Maui.DataGrid"
+    x:Class="MauiAndroid.App.Views.AndroidOneLinePresentation">
+
+    <Frame
+        BorderColor="#CCCCCC"
+        CornerRadius="8"
+        Padding="0"
+        Margin="0,0,0,10"
+        HasShadow="False"
+        BackgroundColor="White">
+
+        <toolkit:Expander>
+            <toolkit:Expander.Header>
+                <Grid Padding="12" ColumnDefinitions="*,Auto,Auto,Auto" ColumnSpacing="16">
+                    <Label Text="{Binding Barcode}" FontAttributes="Bold" FontSize="22" VerticalOptions="Center" />
+                    <Label Grid.Column="1" Text="{Binding Status, StringFormat='TSU: {0}'}" FontSize="15"
+                           VerticalOptions="Center" />
+                    <Label Grid.Column="2" Text="{Binding TransportOrder.Status, StringFormat='Order: {0}'}"
+                           FontSize="15" VerticalOptions="Center" />
+                    <Label Grid.Column="3"
+                           Text="{Binding LocationTicketDtos[^1].ArrivedAtLocation, StringFormat='Last Loc: {0}'}"
+                           FontSize="15" VerticalOptions="Center" />
+                </Grid>
+            </toolkit:Expander.Header>
+
+            <toolkit:Expander.Content>
+                <VerticalStackLayout Padding="10" Spacing="0">
+
+                    <Frame Margin="0,6,0,6" Padding="8" BorderColor="#E0E0E0" CornerRadius="10">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Информация о TSU" FontAttributes="Bold" FontSize="16" Margin="0,0,0,4" />
+                            <HorizontalStackLayout Spacing="4">
+                                <Label Text="Id:" FontAttributes="Bold" TextColor="#6200EE" />
+                                <Label Text="{Binding Id}" TextColor="#111" />
+                            </HorizontalStackLayout>
+                            <HorizontalStackLayout Spacing="4">
+                                <Label Text="Status:" FontAttributes="Bold" TextColor="#6200EE" />
+                                <Label Text="{Binding Status}" TextColor="#111" />
+                            </HorizontalStackLayout>
+                            <HorizontalStackLayout Spacing="4">
+                                <Label Text="Updated On:" FontAttributes="Bold" TextColor="#6200EE" />
+                                <Label Text="{Binding UpdatedOn, StringFormat='{0:dd/MM/yyyy HH:mm:ss zzz}'}"
+                                       TextColor="#111" />
+                            </HorizontalStackLayout>
+                            <HorizontalStackLayout Spacing="4">
+                                <Label Text="Is Okay:" FontAttributes="Bold" TextColor="#6200EE" />
+                                <Label Text="{Binding IsOkay}" TextColor="#111" />
+                            </HorizontalStackLayout>
+                        </VerticalStackLayout>
+                    </Frame>
+
+                    <Frame Margin="0,0,0,6" Padding="8" BorderColor="#E0E0E0" CornerRadius="10">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="Информация о заказе" FontAttributes="Bold" FontSize="16" Margin="0,0,0,4" />
+                            <HorizontalStackLayout Spacing="4">
+                                <Label Text="External ID:" FontAttributes="Bold" TextColor="#6200EE" />
+                                <Label Text="{Binding TransportOrder.ExternalId}" TextColor="#111" />
+                            </HorizontalStackLayout>
+                            <HorizontalStackLayout Spacing="4">
+                                <Label Text="Barcode:" FontAttributes="Bold" TextColor="#6200EE" />
+                                <Label Text="{Binding TransportOrder.Barcode}" TextColor="#111" />
+                            </HorizontalStackLayout>
+                            <HorizontalStackLayout Spacing="4">
+                                <Label Text="Status:" FontAttributes="Bold" TextColor="#6200EE" />
+                                <Label Text="{Binding TransportOrder.Status}" TextColor="#111" />
+                            </HorizontalStackLayout>
+                            <HorizontalStackLayout Spacing="4">
+                                <Label Text="Created On:" FontAttributes="Bold" TextColor="#6200EE" />
+                                <Label
+                                    Text="{Binding TransportOrder.CreatedOn, StringFormat='{0:dd/MM/yyyy HH:mm:ss zzz}'}"
+                                    TextColor="#111" />
+                            </HorizontalStackLayout>
+                            <HorizontalStackLayout Spacing="4">
+                                <Label Text="Closed On:" FontAttributes="Bold" TextColor="#6200EE" />
+                                <Label
+                                    Text="{Binding TransportOrder.ClosedOn, StringFormat='{0:dd/MM/yyyy HH:mm:ss zzz}'}"
+                                    TextColor="#111" />
+                            </HorizontalStackLayout>
+                            <HorizontalStackLayout Spacing="4">
+                                <Label Text="Is Okay:" FontAttributes="Bold" TextColor="#6200EE" />
+                                <Label Text="{Binding TransportOrder.IsOkay}" TextColor="#111" />
+                            </HorizontalStackLayout>
+                        </VerticalStackLayout>
+                    </Frame>
+
+                    <HorizontalStackLayout Spacing="10" Margin="0,4,0,10">
+                        <Button x:Name="EditTsuButton" Text="Edit TSU" Clicked="OnEditTsu_Clicked" BackgroundColor="#6200EE"
+                                TextColor="White" CornerRadius="16"/>
+                        <Button x:Name="EditOrderButton" Text="Edit Order" Clicked="OnEditOrder_Clicked" BackgroundColor="#6200EE"
+                                TextColor="White" CornerRadius="16"/>
+                        <Button x:Name="RelaunchOrderButton" Text="Relaunch Order" Clicked="OnRelaunchOrder_Clicked"
+                                BackgroundColor="#6200EE" TextColor="White" CornerRadius="16" />
+                    </HorizontalStackLayout>
+
+                    <Label Text="История перемещений" FontAttributes="Bold" FontSize="17" Margin="0,6,0,2" />
+
+                    <ScrollView Orientation="Horizontal" HorizontalScrollBarVisibility="Always">
+                        <dg:DataGrid
+                            ItemsSource="{Binding LocationTicketDtos}"
+                            SelectionEnabled="False"
+                            HeightRequest="{Binding DataGridHeight}"
+                            WidthRequest="{Binding DataGridWidth}"
+                            RowHeight="40"
+                            HeaderHeight="50"
+                            VerticalOptions="FillAndExpand">
+                            <dg:DataGrid.Columns>
+                                <dg:DataGridColumn Title="ID" PropertyName="ID" Width="1*" />
+                                <dg:DataGridColumn Title="Откуда" PropertyName="DepartureLocation" Width="2*" />
+                                <dg:DataGridColumn Title="План" PropertyName="PlannedLocation" Width="2*" />
+                                <dg:DataGridColumn Title="Прибыл" PropertyName="ArrivedAtLocation" Width="2*" />
+                                <dg:DataGridColumn Title="Статус" PropertyName="Status" Width="2*" />
+                                <dg:DataGridColumn Title="Дата" PropertyName="ArrivedOn" Width="3*"
+                                                   StringFormat="{}{0:yyyy-MM-dd}" />
+                                <dg:DataGridColumn Title="Успех" PropertyName="IsSuccess" Width="2*" />
+                            </dg:DataGrid.Columns>
+                        </dg:DataGrid>
+                    </ScrollView>
+
+                </VerticalStackLayout>
+            </toolkit:Expander.Content>
+        </toolkit:Expander>
+    </Frame>
+</ContentView>

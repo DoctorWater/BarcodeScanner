@@ -15,7 +15,7 @@ namespace BarcodeDecodeBackend.Services.Controllers;
 [ApiController]
 [Authorize]
 [Controller]
-[Route("api/[controller]")]
+[Route("api/order")]
 public class TransportOrderController : ControllerBase
 {
     private readonly ITransportOrderMessageHandler _orderMessageHandler;
@@ -47,7 +47,8 @@ public class TransportOrderController : ControllerBase
     public async Task<ActionResult<TransportOrderResponseMessage>> ProcessTransportOrderChange(
         [FromBody] TransportOrderChangeMessage request)
     {
-        _logger.LogInformation("Transport order change request was received. Request: {request}", request);
+
+        _logger.LogInformation("Transport order change request was received. Request: {@request}", request);
         
         using var timer = MetricsRegistry.TransportOrderChangeDuration.NewTimer();
         MetricsRegistry.TransportOrderChangeRequestsTotal.Inc();
@@ -59,7 +60,7 @@ public class TransportOrderController : ControllerBase
             MetricsRegistry.TransportOrderChangeNotFoundTotal.Inc();
             return NotFound("Order not found");
         }
-        _logger.LogInformation("Transport order was changed. New order: {result}", updateResult);
+        _logger.LogInformation("Transport order was changed. New order: {@result}", updateResult);
         MetricsRegistry.TransportOrderChangeSuccessTotal.Inc();
         return Ok(new TransportOrderResponseMessage(request.CorrelationId, updateResult));
     }

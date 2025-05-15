@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiAndroid.App.Pages.BarcodeScanPage">
+    <ContentPage.Content>
+        <VerticalStackLayout
+            Padding="10,10"
+            Spacing="20"
+            VerticalOptions="FillAndExpand">
+            <Frame
+                x:Name="CamViewFrame"
+                Padding="0"
+                CornerRadius="0"
+                BorderColor="Transparent"
+                VerticalOptions="FillAndExpand">
+            </Frame>
+
+            <Button Text="Ввести вручную"
+                    Padding="14,10"
+                    Clicked="OnManualInputClicked"
+                    BackgroundColor="#5B4BFF"
+                    TextColor="White" />
+        </VerticalStackLayout>
+    </ContentPage.Content>
+</ContentPage>

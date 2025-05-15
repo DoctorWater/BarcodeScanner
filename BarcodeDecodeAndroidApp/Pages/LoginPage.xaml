@@ -1,0 +1,25 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiAndroid.App.Pages.LoginPage"
+             Title="Авторизация">
+
+    <VerticalStackLayout Padding="30" Spacing="20">
+        <Label Text="Введите логин и пароль"
+               FontSize="22"
+               HorizontalOptions="Center" />
+
+        <Entry Placeholder="Логин"
+               Text="{Binding Username}" />
+
+        <Entry Placeholder="Пароль"
+               Text="{Binding Password}"
+               IsPassword="True" />
+
+        <Button Text="Войти"
+                Command="{Binding LoginCommand}" />
+
+        <Label Text="{Binding ErrorMessage}"
+               TextColor="Red"
+               IsVisible="{Binding HasError}" />
+    </VerticalStackLayout>
+</ContentPage>

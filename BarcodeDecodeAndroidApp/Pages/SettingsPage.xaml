@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiAndroid.App.Pages.SettingsPage"
+             Title="Настройки подключения">
+
+    <StackLayout Padding="20" Spacing="20">
+        <Label Text="Введите адрес сервера:" FontSize="Medium" />
+        
+        <Border Stroke="Gray"
+                StrokeThickness="1"
+                Padding="4"
+                HorizontalOptions="Fill"
+                VerticalOptions="Center">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="10,10,10,10"/>
+            </Border.StrokeShape>
+            <Entry x:Name="AddressEntry"
+                   Placeholder="Например: 192.168.1.104"
+                   BackgroundColor="Transparent"
+                   Keyboard="Text"
+                   HorizontalOptions="Fill"/>
+        </Border>
+        
+        <Label Text="Введите порт сервера:" FontSize="Medium" />
+        <Border Stroke="Gray"
+                StrokeThickness="1"
+                Padding="4"
+                HorizontalOptions="Fill"
+                VerticalOptions="Center">
+            <Border.StrokeShape>
+                <RoundRectangle CornerRadius="10,10,10,10"/>
+            </Border.StrokeShape>
+            <Entry x:Name="PortEntry" Placeholder="Например: 7214" 
+                   Keyboard="Numeric"
+                   HorizontalOptions="FillAndExpand"
+                   WidthRequest="0"/>
+        </Border>
+        
+        <Button Text="Сохранить" Clicked="OnSaveButtonClicked" />
+    </StackLayout>
+</ContentPage>
