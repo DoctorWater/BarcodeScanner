@@ -1,6 +1,7 @@
 ﻿namespace BarcodeDecodeLib.Models.Dtos.Messages.Auth;
 
-public class LoginResult
+public class LoginResult : HttpMessage
 {
-    public string Token { get; set; } = null!;
+    public string Token { get; init; } = null!;
+    public DateTimeOffset TokenExpiration { get; init; }
 }

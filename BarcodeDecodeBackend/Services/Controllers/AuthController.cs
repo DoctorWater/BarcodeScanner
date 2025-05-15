@@ -26,8 +26,8 @@ public class AuthController : ControllerBase
     public async Task<IActionResult> Login([FromBody] LoginDto dto)
     {
         var token = await _authMessageHandler.Login(dto);
-        if (token == null) return Unauthorized("Invalid username or password");
-        var result = new LoginResult { Token = token };
-        return Ok(result);
+        if (token is null || token.Token is null) return Unauthorized("Invalid username or password");
+        token.CorrelationId = dto.CorrelationId;
+        return Ok(token);
     }
 }

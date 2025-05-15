@@ -4,5 +4,5 @@ namespace BarcodeDecodeBackend.Services.Interfaces;
 
 public interface IAuthMessageHandler
 {
-    Task<string?> Login(LoginDto dto);
+    Task<LoginResult?> Login(LoginDto dto);
 }

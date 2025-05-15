@@ -2,6 +2,7 @@
 using BarcodeScanner.Mobile;
 using CommunityToolkit.Maui;
 using MauiAndroid.App.Data.Services;
+using MauiAndroid.App.Data.Utils;
 using MauiAndroid.App.Utils;
 using MauiAndroid.App.Handlers;
 using MauiAndroid.App.Models;

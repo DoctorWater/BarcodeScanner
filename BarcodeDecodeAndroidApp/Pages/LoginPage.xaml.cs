@@ -11,6 +11,7 @@ namespace MauiAndroid.App.Pages
             BindingContext = viewModel;
             MessagingCenter.Subscribe<LoginViewModel>(this, "LoginSuccess", async vm =>
             {
+                await DisplayAlert("Успех", "Вы успешно авторизовались.", "OK");
                 await Navigation.PopAsync();
             });
         }

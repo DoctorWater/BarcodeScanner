@@ -33,8 +33,12 @@ public class HttpMessagingService : IHttpMessagingService
         using var client = CreateClient();
         var response = await client.PostAsJsonAsync("api/barcode/batch", message, cancellationToken);
         if (response.StatusCode is HttpStatusCode.Unauthorized)
+        {
             throw new UnauthorizedAccessException(
-                "Авторизация для изменения TSU не прошла. Проверьте токен авторизации.");
+                "Авторизация не прошла. Проверьте данные авторизации.");
+        }
+
+        
         if (!response.IsSuccessStatusCode || response.Content == null)
         {
             throw new HttpRequestException(
@@ -53,7 +57,7 @@ public class HttpMessagingService : IHttpMessagingService
         var response = await client.PostAsJsonAsync("api/tsu/change", message, cancellationToken);
         if (response.StatusCode is HttpStatusCode.Unauthorized)
             throw new UnauthorizedAccessException(
-                "Авторизация для изменения TSU не прошла. Проверьте токен авторизации.");
+                "Авторизация не прошла. Проверьте данные авторизации.");
         if (!response.IsSuccessStatusCode || response.Content == null)
         {
             throw new HttpRequestException(
@@ -71,7 +75,7 @@ public class HttpMessagingService : IHttpMessagingService
         var response = await client.PostAsJsonAsync("api/order/change", message, cancellationToken);
         if (response.StatusCode is HttpStatusCode.Unauthorized)
             throw new UnauthorizedAccessException(
-                "Авторизация для изменения TSU не прошла. Проверьте токен авторизации.");
+                "Авторизация не прошла. Проверьте данные авторизации.");
         if (!response.IsSuccessStatusCode || response.Content == null)
         {
             throw new HttpRequestException(

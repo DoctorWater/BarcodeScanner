@@ -1,9 +1,9 @@
 using System.Net.Http.Json;
-using System.Text.Json;
 using BarcodeDecodeLib.Models.Dtos.Messages.Auth;
+using MauiAndroid.App.Data.Utils;
 using MauiAndroid.App.Utils;
 
-namespace MauiAndroid.App.Services;
+namespace MauiAndroid.App.Data.Services;
 public class AuthService
 {
     private readonly IHttpClientFactory _httpClientFactory;
@@ -14,65 +14,26 @@ public class AuthService
         _httpClientFactory = httpClientFactory;
         _tokenProvider = tokenProvider;
     }
+    
+    private HttpClient CreateClient()
+    {
+        var client = _httpClientFactory.CreateClient("AnonymousClient");
+        var baseHost = Preferences.Get("ServerAddress", "192.168.1.104");
+        var basePort = Preferences.Get("ServerPort", "21101");
+        var uri = new Uri($"https://{baseHost}:{basePort}");
+        client.BaseAddress = uri;
+        client.Timeout = TimeSpan.FromSeconds(30);
+        return client;
+    }
 
     public async Task<bool> LoginAsync(string username, string password)
     {
-        var client = _httpClientFactory.CreateClient("AnonymousClient");
+        using var client = CreateClient();
 
         try
         {
-            string rawAddress = Preferences.Get("ServerAddress", "192.168.1.104")
-    .Trim()                      // обрезаем пробелы по краям
-    .TrimEnd('/', '\\');         // убираем случайные слеши в конце
-
-            rawAddress = rawAddress.Trim().Trim('\uFEFF', '\u200B');
-            rawAddress = new string(rawAddress.Where(c => !char.IsControl(c)).ToArray());
-            // 2) Выведем в лог каждый символ и длину
-            Console.WriteLine($"[{rawAddress}] (Length = {rawAddress.Length})");
-            for (int i = 0; i < rawAddress.Length; i++)
-                Console.WriteLine($" char #{i} = '{rawAddress[i]}' (0x{(int)rawAddress[i]:X2})");
-
-            // 3) Попробуем собрать базовый Uri через TryCreate
-            if (!Uri.TryCreate(rawAddress, UriKind.Absolute, out var baseUri))
-            {
-                Console.WriteLine("❌ rawAddress can't be parsed as absolute URI");
-            }
-            else
-            {
-                Console.WriteLine($"✔ baseUri = {baseUri}");
-            }
-
-            // 4) Если rawAddress — это просто хост без схемы/порта, вручную добавляем схему
-            if (!rawAddress.Contains("://"))
-                rawAddress = "https://" + rawAddress;
-
-            if (!Uri.TryCreate(rawAddress, UriKind.Absolute, out baseUri))
-            {
-                Console.WriteLine("❌ Even schema doesn't help");
-            }
-            else
-            {
-                // 5) Пробуем окончательную сборку с путем
-                Uri testUri = new Uri(baseUri, "/api/auth/login");
-                Console.WriteLine($"✔ loginUri = {testUri}");
-            }
-
-            string serverPortStr = Preferences.Get("ServerPort", "21101");
-            int serverPort = int.TryParse(serverPortStr, out var p) ? p : 21101;
-
-            var builder = new UriBuilder
-            {
-                Scheme = "https",
-                Host = "192.168.1.106",
-                Port = 21101,
-                Path = "/api/auth/login"
-            };
-            Uri loginUri = builder.Uri;
-
-            Console.WriteLine($"Login URI: {loginUri}");
-
             var dto = new LoginDto { Username = username, Password = password };
-            HttpResponseMessage response = await client.PostAsJsonAsync(loginUri, dto);
+            HttpResponseMessage response = await client.PostAsJsonAsync("api/auth/login", dto);
 
             if (!response.IsSuccessStatusCode)
                 return false;
@@ -82,7 +43,7 @@ public class AuthService
             if(result.Token is null || string.IsNullOrEmpty(result.Token))
                 return false;
             string token = result.Token;
-            await _tokenProvider.SaveTokenAsync(token);
+            await _tokenProvider.SaveTokenAsync(token, result.TokenExpiration);
             return true;
         }
         catch (Exception ex)
