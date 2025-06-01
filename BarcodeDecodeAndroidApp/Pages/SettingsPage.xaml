@@ -31,10 +31,11 @@
             <Border.StrokeShape>
                 <RoundRectangle CornerRadius="10,10,10,10"/>
             </Border.StrokeShape>
-            <Entry x:Name="PortEntry" Placeholder="Например: 7214" 
-                   Keyboard="Numeric"
-                   HorizontalOptions="FillAndExpand"
-                   WidthRequest="0"/>
+            <Entry x:Name="PortEntry"
+                   Placeholder="Например: 7214"
+                   BackgroundColor="Transparent"
+                   Keyboard="Text"
+                   HorizontalOptions="Fill"/>
         </Border>
         
         <Button Text="Сохранить" Clicked="OnSaveButtonClicked" />
